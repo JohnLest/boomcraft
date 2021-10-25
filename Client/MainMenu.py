@@ -3,7 +3,7 @@ from tkinter import *
 window=Tk()
 
 # add background
-img = PhotoImage(file="../bg-img.png")
+img = PhotoImage(file="../Ressources/bg-img.png")
 label = Label(
     window,
     image=img
@@ -11,7 +11,7 @@ label = Label(
 label.place(x=0, y=0)
 
 # add logo
-img2 = PhotoImage(file="../logo_MM.png")
+img2 = PhotoImage(file="../Ressources/logo_MM.png")
 label2 = Label(
     window,
     image=img2, bg='#26e6bd'

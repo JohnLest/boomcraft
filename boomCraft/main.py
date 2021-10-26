@@ -1,10 +1,11 @@
 import pygame
 from mainWindow import MainWindow
 
+
 def main():
     pygame.init()
     mainWin = MainWindow()
-    btn = mainWin.button(mainWin.mainWindow, "API", rect=mainWin.gbMenuButton)
+    btn = mainWin.button()
 
     while True:
         for event in pygame.event.get():
@@ -17,8 +18,8 @@ def main():
                 if btn.collidepoint(pygame.mouse.get_pos()):
                     print("API")
         pygame.display.update()
-    pygame.quit()
-    return
+    return None
+
 
 if __name__ == "__main__":
     main()

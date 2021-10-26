@@ -1,30 +1,40 @@
 import pygame
 from pygame.locals import *
 from widget import Widget
+from window import Window
 
 
-class MainWindow(Widget):
+class MainWindow(Window):
     """ Class for main window """
+
     def __init__(self):
-        self.mainWindow = pygame.display.set_mode((1080, 720))#, pygame.FULLSCREEN) # Initialisation full screen
-        pygame.display.set_caption("BoomCraft")
-        self.mainWinX, self.mainWinY = self.mainWindow.get_size()
-        self.mainWinXPercent = self.mainWinX / 100
-        self.mainWinYPercent = self.mainWinY / 100
-        self.gbMenuButton = Rect(0, 0, self.mainWinXPercent*10, self.mainWinYPercent*5)
-        self.gbResourceBanner = Rect(self.gbMenuButton.topright[0], self.gbMenuButton.topright[1], self.mainWinXPercent*90, self.mainWinYPercent*5)
-        self.gbGame = Rect(self.gbMenuButton.bottomleft[0], self.gbMenuButton.bottomleft[1], self.mainWinX, self.mainWinYPercent*75)
-        self.gbAction = Rect(self.gbGame.bottomleft[0], self.gbGame.bottomleft[1], self.mainWinX, self.mainWinYPercent*20)
-        self.__drawWindow()
-        return
-    
-    def __drawWindow(self):
-        pygame.draw.rect(self.mainWindow, (255, 0, 0), self.gbMenuButton, 4)
-        pygame.draw.rect(self.mainWindow, (0, 255, 0), self.gbResourceBanner, 4)
-        pygame.draw.rect(self.mainWindow, (255, 255, 255), self.gbGame, 4)
-        pygame.draw.rect(self.mainWindow, (0, 0, 255), self.gbAction, 4)
-        pygame.display.flip()
+        self.main_win = Window.__init__(self, (1080, 720), "Boomcraft")
+
+        # GroupBox for Menu Button
+        self.gbMenuButton = Widget.groupbox(
+            self.main_win.window,
+            (0, 0),
+            (self.main_win.winXPercent * 10, self.main_win.winYPercent * 5)
+        )
+        # GroupBox for banner resources
+        self.gbResourceBanner = Widget.groupbox(
+            self.main_win.window,
+            (self.gbMenuButton.topright[0], self.gbMenuButton.topright[1]),
+            (self.main_win.winXPercent * 90, self.main_win.winYPercent * 5)
+        )
+        # GroupBox for the play board
+        self.gbGame = Widget.groupbox(
+            self.main_win.window,
+            (self.gbMenuButton.bottomleft[0], self.gbMenuButton.bottomleft[1]),
+            (self.main_win.winX, self.main_win.winYPercent * 75)
+        )
+        # GroupBox for the action in game
+        self.gbAction = Widget.groupbox(
+            self.main_win.window,
+            (self.gbGame.bottomleft[0], self.gbGame.bottomleft[1]),
+            (self.main_win.winX, self.main_win.winYPercent * 20)
+        )
         return
 
-    def button_(self):
-        return Widget.button(self.mainWindow, "API", rect=self.gbMenuButton)
+    def button(self):
+        return Widget.button(self.main_win.window, "API", rect=self.gbMenuButton)

@@ -1,11 +1,12 @@
 import pygame
 from mainWindow import MainWindow
+from widget import Widget
 
 
 def main():
     pygame.init()
     mainWin = MainWindow()
-    btn = mainWin.button()
+    btn = mainWin.btn
 
     while True:
         for event in pygame.event.get():
@@ -16,7 +17,7 @@ def main():
                     pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btn.collidepoint(pygame.mouse.get_pos()):
-                    print("API")
+                    Widget.button(mainWin.window, "Click", position=(255, 255))
         pygame.display.update()
     return None
 

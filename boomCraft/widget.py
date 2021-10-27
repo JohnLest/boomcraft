@@ -15,11 +15,11 @@ class Widget:
             x, y, w, h = btn = rectText
             rectText.x, rectText.y = x, y = position
 
-        pygame.draw.line(window, (150, 150, 150), (x, y), (x + w, y), 5)
-        pygame.draw.line(window, (150, 150, 150), (x, y - 2), (x, y + h), 5)
-        pygame.draw.line(window, (50, 50, 50), (x, y + h), (x + w, y + h), 5)
-        pygame.draw.line(window, (50, 50, 50), (x + w, y + h), [x + w, y], 5)
         pygame.draw.rect(window, (100, 100, 100), (x, y, w, h))
+        pygame.draw.line(window, (150, 150, 150), (x, y+1), (x + w, y+1), 3)  # Bord Haut
+        pygame.draw.line(window, (150, 150, 150), (x+1, y), (x+1, y + h), 3)  # Bord Gauche
+        pygame.draw.line(window, (50, 50, 50), (x, y + h-1), (x + w, y + h-1), 3)  # Bord Bas
+        pygame.draw.line(window, (50, 50, 50), (x + w-1, y + h), [x + w-1, y], 3)  # Bord Droit
         window.blit(text_render, (rectText.x, rectText.y))
         return btn
 
@@ -31,3 +31,8 @@ class Widget:
         pygame.draw.rect(window, (250, 250, 250), gb, 1)
         pygame.display.flip()
         return gb
+
+    @staticmethod
+    def menuStrip(windoww):
+
+        return None

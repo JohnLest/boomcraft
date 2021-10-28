@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from widget import Button, Widget, MenuStrip, GroupBox
+from widget import Button, MenuStrip, GroupBox
 from window import Window
 
 

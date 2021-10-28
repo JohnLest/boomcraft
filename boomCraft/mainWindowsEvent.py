@@ -1,5 +1,5 @@
 import pygame
-from widget import Widget, MenuStrip
+from widget import MenuStrip
 from mainWindow import MainWindow
 
 
@@ -19,10 +19,16 @@ class MainWindowEvent:
                         return
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if btn.btn_rect.collidepoint(pygame.mouse.get_pos()):
-                        menu_strip = {"twitch": "Twitch", "fcb": "Facebook", "discord": "Discord"}
-                        print(menu_strip)
+                        menu_stripe_dico = {"twitch": "Twitch", "fcb": "Facebook", "discord": "Discord"}
+                        print(menu_stripe_dico)
+                        menu_sprite = MenuStrip(self.main_win.btnAPI.btn_rect, menu_stripe_dico)
+                        menu_sprite.menu_strip_item.draw(self.main_win.window)
+
+                        """
                         self.__menu_strip_on_click(
-                            Widget.menu_strip(self.main_win.window, self.main_win.btnAPI.btn_rect, menu_strip))
+                            MenuStrip(self.main_win.btnAPI.btn_rect, menu_strip)
+                        )
+                        """
             pygame.display.update()
         return
 

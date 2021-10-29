@@ -14,7 +14,6 @@ async def listen():
         while True:
             msg = await ws.recv()
             print(msg)
-            await ws.send("Hello DOCU")
 
 # Start the connection
 asyncio.get_event_loop().run_until_complete(listen())

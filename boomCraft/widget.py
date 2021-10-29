@@ -44,18 +44,26 @@ class Button:
 
 
 class MenuStripItem(pygame.sprite.Sprite):
-    def __init__(self, size):
+    def __init__(self, size, text):
         super().__init__()
         self.image = pygame.Surface(size)
         self.rect = self.image.get_rect()
         pygame.draw.rect(self.image, (100, 100, 100), self.rect)
 
+        font = pygame.font.SysFont("Arial", 18)
+        text_render = font.render(text, 1, (0, 255, 0))
+        rect_text = text_render.get_rect()
+        rect_text.midleft = self.rect.midleft
+        self.image.blit(text_render, (rect_text.x, rect_text.y))
+
+
 
 class MenuStrip:
     def __init__(self, btn_attach:Rect, lst_choice:dict):
-        max_width = self.__set_max_width(lst_choice)
-        coord = btn_attach.bottomleft
-        self.menu_strip_item = self.__draw_menu_strip_items(lst_choice, max_width, coord)
+        self.max_width = self.__set_max_width(lst_choice)
+        self.coord = btn_attach.bottomleft
+        self.menu_strip_item = self.__draw_menu_strip_items(lst_choice, self.max_width, self.coord)
+        self.tighten()
 
     def __set_max_width(self, lst_choice):
         max_width = 120
@@ -67,23 +75,31 @@ class MenuStrip:
         return max_width
 
     def __draw_menu_strip_items(self, lst_choice, max_width, coord):
+        self.menu_strip_item_dict = dict()
         menu_strip_item_group = pygame.sprite.Group()
         h = 30
         boucle = 0
         for clef, choice in lst_choice.items():
-            font = pygame.font.SysFont("Arial", 18)
-            #text_render = font.render(choice, 1, (0, 255, 0))
-            #rect_text = text_render.get_rect()
-            menu_strip_item_test = MenuStripItem((max_width, h))
-            menu_strip_item_test.rect.topleft = (coord[0], coord[1] + (h*boucle))
-            #rect_text.midleft = case.midleft
-            #window.blit(text_render, (rect_text.x, rect_text.y))
-            #menu_strip_item[clef] = case
-            locals()[clef] = menu_strip_item_test
-            menu_strip_item_group.add(locals()[clef])
+            menu_strip_item = MenuStripItem((max_width, h), choice)
+            menu_strip_item.rect.topleft = (coord[0], coord[1] + (h*boucle))
+            self.menu_strip_item_dict[clef] = menu_strip_item
+            menu_strip_item_group.add(menu_strip_item)
             boucle += 1
         return menu_strip_item_group
 
+    def tighten(self):
+        for sprite in self.menu_strip_item.sprites():
+            sprite.rect.update(0, 0, 0, 0)
+        self.menu_strip_item = pygame.sprite.RenderUpdates(self.menu_strip_item)
+        return
+
+    def enlarge(self):
+        boucle = 0
+        for sprite in self.menu_strip_item.sprites():
+            sprite.rect.update(self.coord[0], self.coord[1] + (30*boucle), self.max_width, 30)
+            boucle += 1
+        self.menu_strip_item = pygame.sprite.RenderUpdates(self.menu_strip_item)
+        return
 
 class GroupBox:
     def __init__(self, position, size, color):

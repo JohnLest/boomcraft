@@ -19,33 +19,24 @@ class MainWindowEvent:
                         return
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if btn.btn_rect.collidepoint(pygame.mouse.get_pos()):
-                        menu_stripe_dico = {"twitch": "Twitch", "fcb": "Facebook", "discord": "Discord"}
-                        print(menu_stripe_dico)
-                        menu_sprite = MenuStrip(self.main_win.btnAPI.btn_rect, menu_stripe_dico)
-                        menu_sprite.menu_strip_item.draw(self.main_win.window)
-
-                        """
-                        self.__menu_strip_on_click(
-                            MenuStrip(self.main_win.btnAPI.btn_rect, menu_strip)
-                        )
-                        """
+                        self.main_win.menu_sprite.enlarge()
+                        self.main_win.menu_sprite.menu_strip_item.draw(self.main_win.window)
+                        self.__menu_strip_on_click()
             pygame.display.update()
         return
 
-    def __menu_strip_on_click(self, menu_strip):
+    def __menu_strip_on_click(self):
         while True:
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if menu_strip.get("twitch").collidepoint(pygame.mouse.get_pos()):
+                    if self.main_win.menu_sprite.menu_strip_item_dict.get("twitch").rect.collidepoint(pygame.mouse.get_pos()):
                         print("Un")
-                        for elem in menu_strip.values():
-                            elem.update(0, 0, 0, 0)
-                            pygame.draw.rect(self.main_win.window, (0, 0, 0), elem)
-                    elif menu_strip.get("fcb").collidepoint(pygame.mouse.get_pos()):
+                    elif self.main_win.menu_sprite.menu_strip_item_dict.get("fcb").rect.collidepoint(pygame.mouse.get_pos()):
                         print("Deux")
-                    elif menu_strip.get("discord").collidepoint(pygame.mouse.get_pos()):
+                    elif self.main_win.menu_sprite.menu_strip_item_dict.get("discord").rect.collidepoint(pygame.mouse.get_pos()):
                         print("Long")
                     else:
+                        self.main_win.menu_sprite.tighten()
                         self.main_win.gbGame.show_groupbox(self.main_win.window)
                         return

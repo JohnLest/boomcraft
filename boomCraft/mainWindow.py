@@ -12,28 +12,7 @@ class MainWindow(Window):
         self.__gbResourceBanner()
         self.__gbGame()
         self.__gbAction()
-
-        """
-        self.test = Widget.groupbox(
-            self.main_win.window,
-            (255, 255),
-            (120, 30)
-        )
-        self.all_sprites_list = pygame.sprite.Group()
-        self.ms = MenuStrip(self.gbGame.surface, self.btn, dict())
-        self.ms.rect.x = 200
-        self.ms.rect.y = 300
-        self.all_sprites_list.add(self.ms)
-        self.all_sprites_list.update()
-        #test = pygame.sprite.RenderPlain(self.all_sprites_list)
-        #test.update()
-        #test.draw(self.gbGame.surface)
-        #test = pygame.sprite.RenderClear(self.all_sprites_list)
-        #test.draw(self.main_win.window)
-        self.all_sprites_list.draw(self.gbGame.surface)
-        pygame.display.flip()
-        """
-
+        self.__menu_strip_api()
 
     def __gbMenuButton(self):
         """ GroupBox for Menu Button """
@@ -73,4 +52,6 @@ class MainWindow(Window):
         )
         return self
 
-
+    def __menu_strip_api(self):
+        self.menu_stripe_dict = {"twitch": "Twitch", "fcb": "Facebook", "discord": "Discord"}
+        self.menu_sprite = MenuStrip(self.btnAPI.btn_rect, self.menu_stripe_dict)

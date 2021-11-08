@@ -6,7 +6,7 @@ class Button:
     def __init__(self, window, text, position=(0, 0), rect: pygame.Rect = None):
         self.window = window
         font = pygame.font.SysFont("Arial", 18)
-        self.text_render = font.render(text, 1, (0, 0, 0))
+        self.text_render = font.render(text, True, (0, 0, 0))
         self.rect_text = self.text_render.get_rect()
         if rect is not None:
             self.btn_rect = rect
@@ -51,15 +51,14 @@ class MenuStripItem(pygame.sprite.Sprite):
         pygame.draw.rect(self.image, (100, 100, 100), self.rect)
 
         font = pygame.font.SysFont("Arial", 18)
-        text_render = font.render(text, 1, (0, 255, 0))
+        text_render = font.render(text, True, (0, 255, 0))
         rect_text = text_render.get_rect()
         rect_text.midleft = self.rect.midleft
         self.image.blit(text_render, (rect_text.x, rect_text.y))
 
 
-
 class MenuStrip:
-    def __init__(self, btn_attach:Rect, lst_choice:dict):
+    def __init__(self, btn_attach: Rect, lst_choice: dict):
         self.max_width = self.__set_max_width(lst_choice)
         self.coord = btn_attach.bottomleft
         self.menu_strip_item = self.__draw_menu_strip_items(lst_choice, self.max_width, self.coord)
@@ -69,7 +68,7 @@ class MenuStrip:
         max_width = 120
         for choice in lst_choice.values():
             font = pygame.font.SysFont("Arial", 18)
-            text_render = font.render(choice, 1, (0, 0, 0))
+            text_render = font.render(choice, True, (0, 0, 0))
             if text_render.get_rect().w > max_width:
                 max_width = text_render.get_rect().w
         return max_width
@@ -101,6 +100,7 @@ class MenuStrip:
         self.menu_strip_item = pygame.sprite.RenderUpdates(self.menu_strip_item)
         return
 
+
 class GroupBox:
     def __init__(self, position, size, color):
         self.coord = position
@@ -112,29 +112,12 @@ class GroupBox:
     def show_groupbox(self, window):
         window.blit(self.surface, self.coord)
 
-"""
-class Widget:
-    @staticmethod
-    def menu_strip(window, btn_attach:Rect, lst_choice:dict):
-        menu_strip_item = dict()
-        max_width = 120
-        x, y = btn_attach.bottomleft
-        h = 30
-        for choice in lst_choice.values():
-            font = pygame.font.SysFont("Arial", 18)
-            text_render = font.render(choice, 1, (0, 0, 0))
-            if text_render.get_rect().w > max_width:
-                max_width = text_render.get_rect().w
-        boucle = 0
-        for clef, choice in lst_choice.items():
-            font = pygame.font.SysFont("Arial", 18)
-            text_render = font.render(choice, 1, (0, 255, 0))
-            rect_text = text_render.get_rect()
-            case = Rect(x, y + (h*boucle), max_width, h)
-            pygame.draw.rect(window, (100, 100, 100), case)
-            rect_text.midleft = case.midleft
-            window.blit(text_render, (rect_text.x, rect_text.y))
-            menu_strip_item[clef] = case
-            boucle += 1
-        return menu_strip_item
-"""
+
+class ImageAndText:
+    def __init__(self, image, text, position):
+        self.image = pygame.image.load(image)
+        self.data_rect = self.image.get_rect()
+        self.data_rect.topleft = position
+
+    def show_image_and_text(self, surface):
+        pass

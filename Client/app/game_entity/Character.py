@@ -22,24 +22,23 @@ class Character():
         print(entity)
 
 
-    def setcharacterType(self,characterType):
-        
+    def set_characterType(self,characterType):
         self.characterType=characterType
-    def setname(self,name):
+    def set_name(self,name):
         self.name=name
-    def setweapon(self,weapon):
+    def set_weapon(self,weapon):
         self.weapon=weapon
-    def setattack(self,attack):
+    def set_attack(self,attack):
         self.attack=attack
 
 
-    def getcharacterType(self):
+    def get_characterType(self):
         return self.characterType
-    def getname(self):
+    def get_name(self):
         return self.name
-    def getweapon(self):
+    def get_weapon(self):
         return self.weapon
-    def getattack(self):
+    def get_attack(self):
         return self.attack
 
 

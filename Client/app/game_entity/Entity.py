@@ -1,18 +1,27 @@
+import pygame, random, sys
+
+
+from app.game_entity.Ressource import RessourceType
+
 class Entity :
     
-    def __init__(self):
+    def __init__(self, active : bool, disappear : bool, coords : list, life : int, look_in_game : str, ressource_dropped : RessourceType):
         
-            self.active = "boolean"
+        self.active = active
 
-            self.disappear = "boolean"
+        self.disappear = disappear
 
-            self.coords = "List[Coord]"
+        self.coords = coords
 
-            self.life = "int"
+        self.life = life
 
-            self.look_in_game = "String"
+        self.look_in_game = look_in_game
 
-            self.ressource_dropped = "RessourceType"
+        self.ressource_dropped = ressource_dropped
+
+        pygame.sprite.Sprite.__init__(self)
+
+
 
 
     """ 
@@ -63,11 +72,13 @@ class Entity :
     def get_active(self):
         return self.active
 
-    def set_active(self,active):
-        self.active = active
 
-    def get_active(self):
-        return self.active
+
+    def set_disappear(self,active):
+        self.active = disappear
+
+    def get_disappear(self):
+        return self.disappear
 
 
         

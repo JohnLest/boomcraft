@@ -10,3 +10,10 @@ class Environment :
     """
     def followSeason(self):
         print("active " + self.active)
+
+
+
+class Tree(Environment) :
+    
+    def __init__(self):
+        super(Tree, self).__init__()

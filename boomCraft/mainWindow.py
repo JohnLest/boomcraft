@@ -30,16 +30,32 @@ class MainWindow(Window):
             (self.winXPercent * 90, self.winYPercent * 5),
             (0, 0, 0)
         )
-
+        self.resource_position_x = self.gbResourceBanner.data_rect.width / 5
         self.wood = ImageAndText("../resources/wood.png",
-                     "Text",
-                     (0, 0)
-                     )
-
-        self.wood.data_rect.midleft = self.gbResourceBanner.data_rect.midleft
-        pygame.draw.rect(self.gbResourceBanner.surface, (0, 0, 0), self.wood.data_rect, 1)
-        self.gbResourceBanner.surface.blit(self.wood.image, self.wood.data_rect)
-        pygame.display.update()
+                                 "wood : 2632",
+                                 position_midleft=(self.resource_position_x * 0, self.gbResourceBanner.data_rect.midleft[1])
+                                )
+        self.food = ImageAndText("../resources/food.png",
+                                 "food : 2632",
+                                 position_midleft=(self.resource_position_x * 1, self.gbResourceBanner.data_rect.midleft[1])
+                                )
+        self.iron = ImageAndText("../resources/iron.png",
+                                 "iron : 2632",
+                                 position_midleft=(self.resource_position_x * 2, self.gbResourceBanner.data_rect.midleft[1])
+                                )
+        self.stone = ImageAndText("../resources/stone.png",
+                                 "stone : 2632",
+                                 position_midleft=(self.resource_position_x * 3, self.gbResourceBanner.data_rect.midleft[1])
+                                )
+        self.gold = ImageAndText("../resources/gold.png",
+                                 "gold : 2632",
+                                 position_midleft=(self.resource_position_x * 4, self.gbResourceBanner.data_rect.midleft[1])
+                                )
+        self.wood.show_image_and_text(self.gbResourceBanner.surface)
+        self.food.show_image_and_text(self.gbResourceBanner.surface)
+        self.iron.show_image_and_text(self.gbResourceBanner.surface)
+        self.stone.show_image_and_text(self.gbResourceBanner.surface)
+        self.gold.show_image_and_text(self.gbResourceBanner.surface)
         self.gbResourceBanner.show_groupbox(self.window)
         return self
 

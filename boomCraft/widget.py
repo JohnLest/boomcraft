@@ -114,10 +114,31 @@ class GroupBox:
 
 
 class ImageAndText:
-    def __init__(self, image, text, position):
+    def __init__(self, image, text, position_topleft:tuple = None, position_midleft:tuple = None):
         self.image = pygame.image.load(image)
-        self.data_rect = self.image.get_rect()
-        self.data_rect.topleft = position
+        self.image_rect = self.image.get_rect()
+        self.data_rect = self.image_rect.copy()
+        if position_midleft is not None:
+            self.data_rect.midleft = position_midleft
+        elif position_topleft is not None:
+            self.data_rect.topleft = position_topleft
+        else :
+            self.data_rect.topleft = (0, 0)
+        self.image_rect.midleft = self.data_rect.midleft
+
+        font = pygame.font.SysFont("Arial", 18)
+        self.text_render = font.render(text, True, (255, 255, 255))
+        self.rect_text = self.text_render.get_rect()
+        self.data_rect.width = self.data_rect.width + self.rect_text.width
+
+        self.rect_text.midleft = self.image_rect.midright
+        self.rect_text.x = self.rect_text.x + 5
+
+
+
 
     def show_image_and_text(self, surface):
-        pass
+        pygame.draw.rect(surface, (0, 0, 0), self.data_rect, 1)
+        surface.blit(self.image, self.data_rect)
+        surface.blit(self.text_render, (self.rect_text.x, self.rect_text.y))
+        pygame.display.update()

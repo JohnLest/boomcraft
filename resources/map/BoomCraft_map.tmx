@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="70" height="45" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
- <tileset firstgid="1" source="OneDrive/Documents/Masi/M2/Appli_distri/assets carte Boomcraft/tile2map_tileset/tile2map_tileset/tile2map16.tsx"/>
+ <tileset firstgid="1" source="tile2map16.tsx"/>
  <tileset firstgid="1321" source="height16_trees_mega_pack_cc_by_3_0.tsx"/>
  <tileset firstgid="1682" source="Stones_ores_gems_without_grass.tsx"/>
  <layer id="1" name="Calque de Tuiles 1" width="70" height="45">

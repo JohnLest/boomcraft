@@ -1,4 +1,7 @@
 import pygame
+import pyscroll.data
+import pytmx.util_pygame
+
 from widget import *
 from window import Window
 
@@ -66,6 +69,13 @@ class MainWindow(Window):
             (self.winX, self.winYPercent * 75),
             (180, 250, 150)
         )
+
+        tmx_data = pytmx.util_pygame.load_pygame("../resources/map/BoomCraft_map.tmx")
+        map_data = pyscroll.data.TiledMapData(tmx_data)
+        map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.gbGame.surface.get_size())
+        group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
+        group.draw(self.gbGame.surface)
+
         self.gbGame.show_groupbox(self.window)
         return self
 

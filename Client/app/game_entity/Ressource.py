@@ -1,3 +1,6 @@
+from enum import Enum
+
+
 class RessourceType(Enum):
     MOBILE = 1
     CHARACTER = 2
@@ -12,11 +15,11 @@ class Ressource :
     
     def __init__(self, ressource_type : RessourceType):
         
-        self.ressource_type = ressource_type
+        self.__ressource_type = ressource_type
 
 
     def set_ressource_type(self,ressource_type : RessourceType):
-        self.ressource_type = ressource_type
+        self.__ressource_type = ressource_type
 
     def get_ressource_type(self) :
-        return self.ressource_type
+        return self.__ressource_type

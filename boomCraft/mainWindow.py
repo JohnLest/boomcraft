@@ -9,7 +9,7 @@ from window import Window
 class MainWindow(Window):
     """ Class for main window """
     def __init__(self):
-        self.main_win = Window.__init__(self, (1080, 720), "Boomcraft")
+        self.main_win = Window.__init__(self, (1200, 900), "Boomcraft")
         self.__gb_menu_button()
         self.__gb_resource_banner()
         self.__gb_game()
@@ -66,9 +66,10 @@ class MainWindow(Window):
         """ GroupBox for the play board """
         self.gbGame = GroupBox(
             (self.gbMenuButton.data_rect.bottomleft[0], self.gbMenuButton.data_rect.bottomleft[1]),
-            (self.winX, self.winYPercent * 75),
-            (180, 250, 150)
+            (1120, self.winYPercent * 80),
+            (255, 0, 0)
         )
+        self.gbGame.data_rect.midtop = (self.winX / 2, self.gbGame.data_rect.midtop[1])
 
         tmx_data = pytmx.util_pygame.load_pygame("../resources/map/BoomCraft_map.tmx")
         map_data = pyscroll.data.TiledMapData(tmx_data)
@@ -83,7 +84,7 @@ class MainWindow(Window):
         """ GroupBox for the action in game """
         self.gbAction = GroupBox(
             (self.gbGame.data_rect.bottomleft[0], self.gbGame.data_rect.bottomleft[1]),
-            (self.winX, self.winYPercent * 20),
+            (self.winX, self.winYPercent * 15),
             (0, 0, 0)
         )
         return self

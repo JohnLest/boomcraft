@@ -110,7 +110,7 @@ class GroupBox:
         self.data_rect.topleft = self.coord
 
     def show_groupbox(self, window):
-        window.blit(self.surface, self.coord)
+        window.blit(self.surface, self.data_rect.topleft)
 
 
 class ImageAndText:

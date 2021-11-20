@@ -24,7 +24,7 @@ class CharacterType(Enum):
 class Character(Mobile):
 
     def __init__(self,character_type : CharacterType, name : str, weapon : WeaponType, attack : int, coords : list[Coord], life : int, look_in_game : str, ressource_dropped : RessourceType):
-        super().__init__(character_type, True, False, coords, 2, 2, life, look_in_game, ressource_dropped)
+        super().__init__(character_type, coords, 2, 2, life, look_in_game, ressource_dropped)
 
         self.__character_type=character_type
         self.__name=name
@@ -67,7 +67,6 @@ class Character(Mobile):
 
 
 
-
 class Worker(Character):
     path_to_img = "ressources/worker_img.png"
     ''' 
@@ -89,3 +88,5 @@ class Worker(Character):
                     EnvironmentType.RUIN :  RessourceType.STONE
         }
         return switcher.get(envi.get_env_type(),"Invalid environment type")
+
+        

@@ -1,4 +1,7 @@
 from enum import Enum
+from app.game_entity.Entity import Entity
+from app.game_entity.Ressource import RessourceType
+from app.game_structure.Coord import Coord
 
 
 class EnvironmentType(Enum):
@@ -8,11 +11,11 @@ class EnvironmentType(Enum):
     CREVASSE = 4
     RUIN = 5
 
-class Environment :
+class Environment(Entity):
     
-    def __init__(self, env_type : EnvironmentType):
-        
-            self.__env_type = env_type
+    def __init__(self, env_type : EnvironmentType, coords : list[Coord], life : int, look_in_game : str, ressource_dropped : RessourceType, ressource_to_create : list[RessourceType]):
+        super().__init__(coords, life, look_in_game, ressource_dropped)
+        self.__env_type = env_type
 
 
 

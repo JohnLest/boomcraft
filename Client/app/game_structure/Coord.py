@@ -12,6 +12,15 @@ class Coord :
 
         return (self.__line == c.get_line() & self.__col == c.get_col())
 
+    def add(self,c : Coord):
+        
+        return Coord(self.__line + c.line, self.__col + c.col);
+
+    def toString(self):
+    
+        return "(" + self.__line + ", " + self.__col + ")";
+
+
     def set_line(self,line):
         self.__line = line
 

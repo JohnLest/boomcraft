@@ -6,7 +6,7 @@ from app.game_entity.Entity import Entity
 from app.game_entity.Ressource import Ressource
 from app.game_entity.Ressource import RessourceType
 from app.game_entity.TrainerInterface import TrainerInterface
-from app.game_entity.Character import Worker
+from app.game_entity.Character import Character, Worker
 from app.game_entity.Character import CharacterType
 from app.game_structure.Coord import Coord
 
@@ -20,7 +20,7 @@ class BuildingType(Enum):
 
 class Building(Entity):
     
-    def __init__(self, building_type : BuildingType, active : bool, disappear : bool, coords : list[Coord], life : int, look_in_game : str, ressource_dropped : RessourceType, ressource_to_create : list[RessourceType]):
+    def __init__(self, building_type : BuildingType, coords : list[Coord], life : int, look_in_game : str, ressource_dropped : RessourceType, ressource_to_create : list[RessourceType]):
         
         """
         Construct a new 'Building' object.
@@ -30,7 +30,7 @@ class Building(Entity):
 
         :return: returns nothing
         """
-        super().__init__(active, disappear, coords, life, look_in_game, ressource_dropped)
+        super().__init__(coords, life, look_in_game, ressource_dropped)
         self.__building_type = building_type
         ''' 
         The type of the building
@@ -63,23 +63,32 @@ class Forum(Building, implements(TrainerInterface)):
     '''
     def __init__(self, coords : list[Coord]):
         super().__init__(BuildingType.FORUM, True, False, coords, Tools.give_random_int_between(200,500), Forum.path_to_img, RessourceType.WOOD, [CharacterType.WORKER,CharacterType.HERO])
+        self.set_ressource_to_create(RessourceType.WORKER)
 
     def train(self, character_type) :
-
+        ''' 
+        create a unity of character_type and return it 
+        '''
         if character_type == CharacterType.WORKER:
-            self.appear_next_to(CharacterType.WORKER)
+            
+            return Worker(name, weapon, self.appear_next_to())
+            
 
-        elif character_type == CharacterType.WARRIOR:
-            return Warrior()
+        '''         elif character_type == CharacterType.WARRIOR:
+                    return Warrior()
 
-        elif character_type == CharacterType.ARCHER:
-            return Archer()
+                elif character_type == CharacterType.ARCHER:
+                    return Archer()
 
-        elif character_type == CharacterType.HERO:
-            return Hero()
+                elif character_type == CharacterType.HERO:
+                    return Hero()
+        '''
 
 
     def appear_next_to(self,character_type : CharacterType):
+        ''' 
+        return a coord on the left or the right of the building 
+        '''
         self.__coords
 
 

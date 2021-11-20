@@ -7,7 +7,7 @@ from app.game_entity.Ressource import RessourceType
 
 class Entity :
     
-    def __init__(self, active : bool, disappear : bool, coords : list, width : int, height : int, life : int, look_in_game : str, ressource_dropped : RessourceType):
+    def __init__(self, coords : list, width : int, height : int, life : int, look_in_game : str, ressource_dropped : RessourceType):
         
         """
         Construct a new 'Entity' object.
@@ -27,9 +27,9 @@ class Entity :
 
         :return: returns nothing
         """
-        self.__active = active
+        self.__active = True
 
-        self.__disappear = disappear
+        self.__disappear = False
 
         self.__coords = coords
 

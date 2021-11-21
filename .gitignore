@@ -1,7 +1,7 @@
-<<<<<<< .gitignore
 # IDEs folders
 /.vs/*
 /.idea/*
+__pycache__/
 
 # Python folders
 /venv/*
@@ -9,5 +9,4 @@
 resources/char01.jpg
 resources/char02.jpg
 /.pytest_cache
-
-
+/*.pyc

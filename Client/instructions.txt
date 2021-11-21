@@ -1,3 +1,7 @@
 pip freeze > requirements.txt
 
 pour rentrer dans un venv python depuis vscode --> aller au niveau du dossier --> code .
+
+
+
+pour lancer les tests  --> python -m unittest discover tests/unit

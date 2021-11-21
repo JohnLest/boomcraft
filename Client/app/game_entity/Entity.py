@@ -72,17 +72,9 @@ class Entity :
         """ 
         make entity appear inactive
         """
-        print("active " + self.__active)
+        self.set_disappear(True)
+   
 
-    
-    def define_look_in_game(self, path_to_entity_image):
-        """
-        define the path to follow to get the entity image
-        """
-        print("look_in_game " + self.__look_in_game)
-
-
-    
     def give_area(self):
         """
         return the area of tile occupied by the entity
@@ -96,8 +88,7 @@ class Entity :
         give the amount of ressource in parameter to the ressource counter
         """
         dict_of_ressources[ressource] =+ amount  
-        print(amount + " of " + ressource + " dropped")
-
+        return self.__ressource_dropped
 
     '''----------setters  AND getters--------- '''
     

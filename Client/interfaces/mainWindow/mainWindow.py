@@ -2,8 +2,9 @@ import pygame
 import pyscroll.data
 import pytmx.util_pygame
 
-from widget import *
-from window import Window
+from interfaces.mainWindow.window import Window
+
+from interfaces.mainWindow.widget import *
 
 
 class MainWindow(Window):

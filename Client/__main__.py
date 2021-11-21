@@ -1,4 +1,15 @@
+import pygame
+from interfaces.mainWindow.mainWindow import MainWindow
+from interfaces.mainWindow.mainWindowsEvent import MainWindowEvent
 
-from app.Alloa import Alloa
 
-newAllo = Alloa(10,25)
+def main():
+    pygame.init()
+    main_win = MainWindow()
+    MainWindowEvent(main_win)
+    pygame.quit()
+    return
+
+
+if __name__ == "__main__":
+    main()

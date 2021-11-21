@@ -1,6 +1,9 @@
 import pygame
-from widget import MenuStrip
-from mainWindow import MainWindow
+""" from widget import MenuStrip
+from mainWindow import MainWindow """
+
+from interfaces.mainWindow.widget import MenuStrip
+from interfaces.mainWindow.mainWindow import MainWindow
 
 
 class MainWindowEvent:

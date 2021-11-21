@@ -1,124 +1,114 @@
 import unittest
 
+from app.game_entity.Entity import Entity
+from app.game_entity.Ressource import RessourceType
+
 """ 
 https://docs.python.org/3/library/unittest.html#unittest.TestCase.assertNotEqual
  """
 class TestApp(unittest.TestCase):
 
-    def test_inactiveAppearance(self) : 
-        """ 
+   def test_reduce_life(self) : 
+      """ 
+      Test that the results of an incoming attack gives the expected output 
+      """
+
+      entityTest = Entity([0,1],1,2,100,"olacabzon",RessourceType.FOOD)
+
+      entityTest.reduce_life(55)
+
+      self.assertEqual(entityTest.get_life(),45)
+
+
+   def test_inactiveAppearance(self) : 
+      """ 
+      Test that the boolean disapear is set to true 
+      """
+
+      entityTest = Entity([0,1],1,2,100,"olacabzon",RessourceType.FOOD)
+
+      entityTest.inactive_appeareance()
+
+      self.assertEqual(entityTest.get_disappear(),True)
+
+
+   def test_giveArea(self) : 
+      """ 
         
-        Test that the boolean disapear is set to true 
+      Test that the returned value is correct
         
-        """
-        """ 
-        -----------------------------------------
-        entity instance disappear
+      """
+      entityTest = Entity([0,1],5,8,100,"../resources/forum.png",RessourceType.WOOD)
 
-        self.assertEqual(disappear.get(),true)
+      self.assertEqual(entityTest.give_area(),40)
+
+   def test_get_width(self) : 
+      """ 
         
-        """
-
-
-    def test_defineLookInGame(self) : 
-        """ 
+      Test that the return value is correct
         
-        Test that the file exist ? 
+      """
+
+      entityTest = Entity([0,1],5,8,100,"../resources/forum.png",RessourceType.WOOD)
+
+      self.assertEqual(entityTest.get_width(),5)
+
+   def test_get_height(self) : 
+      """ 
         
-        """
-
-        """ 
-        -----------------------------------------
-        *** import os.path ***
-        FileName
-
-        entity instance lookInGame
-
-        self.assertTrue(os.path.isfile(FileName))
-
-        """
-
-    def test_giveArea(self) : 
-        """ 
+      Test that the return value is correct
         
-        Test that the return value is correct
+      """
+      entityTest = Entity([0,1],5,8,100,"../resources/forum.png",RessourceType.WOOD)
+
+      self.assertEqual(entityTest.get_height(),8)
+
+   def test_isRessourceTypeExists(self) : 
+      """ 
         
-        """
-
-        """    
-        -----------------------------------------     
-        entity instance rectangle 
-
-        self.assertEqual(entity.giveArea(),[25,15])
-        """
-
-     def test_giveWidth(self) : 
-        """ 
+      Test that the RessourceType entered is recognized
         
-        Test that the return value is correct
+      """
+
+      """    
+      -----------------------------------------     
+      ressourceToCheck
+
+      Ressource instance RessourceType 
+
+      *****self.assertEqual(ressource.getRessourceType(),[25,15])
+      """
+
+   def test_giveRessources(self) : 
+      """ 
         
-        """
-
-        """    
-        -----------------------------------------     
-        entity instance width 
-
-        self.assertEqual(entity.giveWidth(),20)
-        """
-
-     def test_giveHeight(self) : 
-        """ 
+      Test that the amount of ressources to give is well given
         
-        Test that the return value is correct
+      """
+
+      """    entityTest = Entity([0,1],1,2,100,"Gerard Menvuca",RessourceType.FOOD)
+
+      entityTest.give_ressources(RessourceType.FOOD, 50)
+
+      self.assertEqual(entityTest.get_disappear(),True)
+      """
+
+      """    
+      -----------------------------------------     
+      amount
         
-        """
+      RessourceCounter instance 
 
-        """    
-        -----------------------------------------     
-        entity instance coords 
+      quantityBeforeTest = getQuantity(RessourceType)
 
-        self.assertEqual(entity.giveHeight(),15)
-        """
+      test
 
-     def test_isRessourceTypeExists(self) : 
-        """ 
-        
-        Test that the RessourceType entered is recognized
-        
-        """
+      quantityAfterTest = getQuantity(RessourceType)
 
-        """    
-        -----------------------------------------     
-        ressourceToCheck
+      result = quantityAfterTest - quantityBeforeTest
 
-        Ressource instance RessourceType 
-
-        *****self.assertEqual(ressource.getRessourceType(),[25,15])
-        """
-
-     def test_giveRessources(self) : 
-        """ 
-        
-        Test that the amount of ressources to give is well given
-        
-        """
-
-        """    
-        -----------------------------------------     
-        amount
-        
-        RessourceCounter instance 
-
-        quantityBeforeTest = getQuantity(RessourceType)
-
-        test
-
-        quantityAfterTest = getQuantity(RessourceType)
-
-        result = quantityAfterTest - quantityBeforeTest
-
-        self.assertTrue(result == amount)
-        """
+      self.assertTrue(result == amount)
+      """
 
 
 

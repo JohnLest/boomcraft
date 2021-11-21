@@ -1,5 +1,3 @@
-from app.Sum import Sum
-
 
 import unittest
 

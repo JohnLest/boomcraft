@@ -27,10 +27,11 @@ class Mobile(Ressource, Entity):
 
 
 
-        def move(coord : Coord) -> bool :
+        def move(coord : Coord) :
             ''' 
             Permits the mobile entity to move from one place to another
             '''
+            self.__coords = Coord(coord)
             return True
         
         def set_deplacement(self,deplacement):

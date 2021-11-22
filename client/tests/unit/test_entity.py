@@ -3,17 +3,14 @@ import unittest
 from app.game_entity.Entity import Entity
 from app.game_entity.Ressource import RessourceType
 
-""" 
-https://docs.python.org/3/library/unittest.html#unittest.TestCase.assertNotEqual
- """
-class TestApp(unittest.TestCase):
+class TestEntity(unittest.TestCase):
 
    def test_reduce_life(self) : 
       """ 
       Test that the results of an incoming attack gives the expected output 
       """
 
-      entityTest = Entity([0,1],1,2,100,"olacabzon",RessourceType.FOOD)
+      entityTest = Entity([0,1],1,2,100,"../resources/worker.png",RessourceType.FOOD)
 
       entityTest.reduce_life(55)
 
@@ -25,7 +22,7 @@ class TestApp(unittest.TestCase):
       Test that the boolean disapear is set to true 
       """
 
-      entityTest = Entity([0,1],1,2,100,"olacabzon",RessourceType.FOOD)
+      entityTest = Entity([0,1],1,2,100,"../resources/worker.png",RessourceType.FOOD)
 
       entityTest.inactive_appeareance()
 
@@ -66,49 +63,16 @@ class TestApp(unittest.TestCase):
    def test_isRessourceTypeExists(self) : 
       """ 
         
-      Test that the RessourceType entered is recognized
+      Test that the RessourceType entered is not recognized
         
       """
+      entityTest = Entity([0,1],5,8,100,"../resources/forum.png","henri")
+      value = entityTest.get_ressource_dropped()
+      mustReturnFalse = isinstance(value, RessourceType)
+      self.assertEqual(mustReturnFalse,False)
 
-      """    
-      -----------------------------------------     
-      ressourceToCheck
 
-      Ressource instance RessourceType 
 
-      *****self.assertEqual(ressource.getRessourceType(),[25,15])
-      """
-
-   def test_giveRessources(self) : 
-      """ 
-        
-      Test that the amount of ressources to give is well given
-        
-      """
-
-      """    entityTest = Entity([0,1],1,2,100,"Gerard Menvuca",RessourceType.FOOD)
-
-      entityTest.give_ressources(RessourceType.FOOD, 50)
-
-      self.assertEqual(entityTest.get_disappear(),True)
-      """
-
-      """    
-      -----------------------------------------     
-      amount
-        
-      RessourceCounter instance 
-
-      quantityBeforeTest = getQuantity(RessourceType)
-
-      test
-
-      quantityAfterTest = getQuantity(RessourceType)
-
-      result = quantityAfterTest - quantityBeforeTest
-
-      self.assertTrue(result == amount)
-      """
 
 
 

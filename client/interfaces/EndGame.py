@@ -9,9 +9,11 @@ lbl.place(x=600, y=100, anchor='center')
 if victory == 1:
      lbl=Label(window, text="VICTORY !", fg='green', bg='white', font=("Helvetica", 20), width=40)
      lbl=Label(window, text="Ressources exported to your account", fg='black', bg='white', font=("Helvetica", 15), width=58)
-lbl.place(x=600, y=400, anchor='center')
+     lbl.place(x=600, y=400, anchor='center')
+
 else:
      lbl=Label(window, text="DEFEAT !", fg='red', bg='white', font=("Helvetica", 20), width=40)
+
 lbl.place(x=600, y=200, anchor='center')
 btn=Button(window, text="Find a new game", fg='blue',width='20', height='2',font=("Helvetica", 17))
 btn.place(x=600, y=300, anchor='center')

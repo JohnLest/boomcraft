@@ -54,7 +54,7 @@ async def analyzeMsg(websocket, message):
             port = str(item)
             print("PORT -->" + str(item))
     clientIpPort = address+":"+port 
-    print(clientIpPort +"with the message " + message)
+    print(clientIpPort +" with the message " + message)
     await websocket.send("Pong: " + message)
 
 

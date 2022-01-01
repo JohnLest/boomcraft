@@ -1,10 +1,9 @@
 # IDEs folders
 /.vs/*
-*/.vs/*
 /.vscode/*
-*/.vscode/*
 /.idea/*
-*/.idea/*
+boomcraft/client/.idea/*
+boomcraft/serveur/.idea/*
 __pycache__/
 
 # Python folders

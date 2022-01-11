@@ -62,8 +62,10 @@ class MenuWindow:
 
     def __btn_connect_click(self):
         conn = ConnectWindow()
-        pseudo = conn.connect()
-        connect.connect(pseudo)
+        msg = conn.connect()
+        conn.window.destroy()
+        del conn
+        connect.connect(msg)
 
     def __btn_new_game_click(self):
         print(f"New game")

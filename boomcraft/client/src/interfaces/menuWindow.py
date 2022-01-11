@@ -1,5 +1,6 @@
 from tkinter import *
 from interfaces.connectWindow import ConnectWindow
+import connect
 
 
 class MenuWindow:
@@ -24,6 +25,7 @@ class MenuWindow:
         self.__set_buttons()
 
         self.window.mainloop()
+        self.window.destroy()
 
     def __set_buttons(self):
         #add buttons
@@ -61,8 +63,7 @@ class MenuWindow:
     def __btn_connect_click(self):
         conn = ConnectWindow()
         pseudo = conn.connect()
-        print(pseudo)
-
+        connect.connect(pseudo)
 
     def __btn_new_game_click(self):
         print(f"New game")
@@ -71,6 +72,6 @@ class MenuWindow:
         print(f"Settings")
 
     def __btn_quit_click(self):
-        print(f"Quit")
+        self.window.quit()
 
 

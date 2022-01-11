@@ -1,15 +1,13 @@
 import socket
-import time
-
 from tool import deserialize, serialize
 
 HOST = "127.0.0.1"
 PORT = 8080
 
 
-def connect():
+def connect(pseudo):
     print(f"Hello client")
-    obj = {1: "hi2", 2: "test"}
+    obj = {1: pseudo}
     msg = serialize(obj)
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))

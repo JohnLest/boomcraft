@@ -1,4 +1,6 @@
 from app.game_entity.RessourceCounter import RessourceCounter
+from app.game_entity.Ressource import RessourceType
+from app.game_entity.RessourceCounter import RessourceCounter
 
 
 class PlayerInfo :
@@ -7,11 +9,16 @@ class PlayerInfo :
         
             self.__pseudo = "default"
 
-            self.__own_ressources = "type par défaut"
+            self.__own_ressources = RessourceCounter()
 
-            self.__game_ressources = "type par défaut"
-
-            #self.__achievements = "type par défaut"
+            self.__game_ressources = {
+                                RessourceType.WORKER : 0,
+                                RessourceType.GOLD : 0,
+                                RessourceType.STONE : 0,
+                                RessourceType.WOOD : 0,
+                                RessourceType.IRON : 0,
+                                RessourceType.FOOD : 0
+                            }
 
     """ 
      get ressources amount from a ressource counter and add it to the own ressources variable

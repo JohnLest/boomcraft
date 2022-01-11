@@ -1,12 +1,26 @@
 import socket
 import selectors
+import threading
 import types
+from typing import List, Dict
 
-from tool import deserialize, serialize
+from tool import *
 
 HOST = "127.0.0.1"
 PORT = 8080
 sel = selectors.DefaultSelector()
+dico_connect = {}
+
+
+def connection():
+    # AF_INET == ipv4
+    # SOCK_STREAM == TCP
+    lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    lsock.bind((HOST, PORT))
+    lsock.listen()
+    print('listening on', (HOST, PORT))
+    lsock.setblocking(False)
+    sel.register(lsock, selectors.EVENT_READ, data=None)
 
 
 def accept_wrapper(sock):
@@ -29,25 +43,37 @@ def service_connection(key, mask):
             print('closing connection to', data.addr)
             sel.unregister(sock)
             sock.close()
-    if mask & selectors.EVENT_WRITE:
-        if data.outb:
-            print(f'echoing {deserialize(data.outb)} to {data.addr}', )
-            sent = sock.send(data.outb)  # Should be ready to write
-            data.outb = data.outb[sent:]
+        analyse_msg(deserialize(data.outb), key)
+
+
+def write(sock, message: List[bytes]):
+    while len(message) != 0:
+        sent = sock.send(message)
+        message = message[sent:]
+
+
+def send_all(msg):
+    for key in dico_connect.values():
+        write(key.fileobj, serialize(msg))
+
+
+def analyse_msg(msg: Dict, key_socket):
+    key = first_or_default(msg)
+    if key is None:
+        return
+    body = msg.get(key, None)
+    if msg is None:
+        return
+    if key == 1:
+        print(f"Le pseudo est : {body}")
+        dico_connect[body] = key_socket
+        send_all(f"New connection from {body}")
+
 
 
 def main():
     print(f"Hello server")
-
-    # AF_INET == ipv4
-    # SOCK_STREAM == TCP
-    lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    lsock.bind((HOST, PORT))
-    lsock.listen()
-    print('listening on', (HOST, PORT))
-    lsock.setblocking(False)
-    sel.register(lsock, selectors.EVENT_READ, data=None)
-
+    connection()
     while True:
         events = sel.select(timeout=None)
         for key, mask in events:

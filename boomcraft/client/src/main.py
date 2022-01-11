@@ -1,9 +1,9 @@
-from interfaces.mainMenu import MainMenu
+from interfaces.menuWindow import MenuWindow
 
 
 def main():
     print(f"Hello Client")
-    MainMenu()
+    MenuWindow()
 
 
 if __name__ == "__main__":

@@ -1,17 +1,15 @@
 from tkinter import *
-import os
+from interfaces.connectWindow import ConnectWindow
 
 
-class MainMenu:
+class MenuWindow:
     def __init__(self):
-        directory_path = os.getcwd()
-        print("My current directory is : " + directory_path)
-        folder_name = os.path.basename(directory_path)
-        print("My directory name is : " + folder_name)
-
         self.bck_img = "../resources/bg-img.png"
         self.logo_img = "../resources/logo_MM.png"
+
         self.window = Tk()
+        self.window.title('BoomCraft - Menu')
+        self.window.geometry("1200x900+10+20")
 
         # add background
         self.background = PhotoImage(file=self.bck_img)
@@ -23,18 +21,26 @@ class MainMenu:
         self.lb_logo = Label(self.window, image=self.logo, bg='#26e6bd')
         self.lb_logo.place(x=450, y=50)
 
-        self.__set_button()
-        self.__show_window()
+        self.__set_buttons()
 
-    def __set_button(self):
+        self.window.mainloop()
+
+    def __set_buttons(self):
         #add buttons
+        self.btn_connect = Button(self.window,
+                                  text="Connection",
+                                  fg='blue', width='30',
+                                  height='2',
+                                  font=("Helvetica", 12),
+                                  command=self.__btn_connect_click)
+        self.btn_connect.place(x=380, y=240)
         self.btn_new_game = Button(self.window,
                                    text="New Game",
                                    fg='blue', width='30',
                                    height='2',
                                    font=("Helvetica", 12),
                                    command=self.__btn_new_game_click)
-        self.btn_new_game.place(x=380, y=240)
+        self.btn_new_game.place(x=380, y=300)
         self.btn_settings = Button(self.window,
                                    text="Settings",
                                    fg='blue',
@@ -42,7 +48,7 @@ class MainMenu:
                                    height='2',
                                    font=("Helvetica", 12),
                                    command=self.__btn_settings_click)
-        self.btn_settings.place(x=380, y=300)
+        self.btn_settings.place(x=380, y=360)
         self.btn_quit = Button(self.window,
                                text="Quit",
                                fg='red',
@@ -50,12 +56,13 @@ class MainMenu:
                                height='2',
                                font=("Helvetica", 12),
                                command=self.__btn_quit_click)
-        self.btn_quit.place(x=380, y=360)
+        self.btn_quit.place(x=380, y=420)
 
-    def __show_window(self):
-        self.window.title('BoomCraft - Main Menu')
-        self.window.geometry("1200x900+10+20")
-        self.window.mainloop()
+    def __btn_connect_click(self):
+        conn = ConnectWindow()
+        pseudo = conn.connect()
+        print(pseudo)
+
 
     def __btn_new_game_click(self):
         print(f"New game")

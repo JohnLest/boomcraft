@@ -7,7 +7,7 @@ HOST = "127.0.0.1"
 PORT = 8080
 
 
-def main():
+def connect():
     print(f"Hello client")
     obj = {1: "hi2", 2: "test"}
     msg = serialize(obj)
@@ -19,5 +19,3 @@ def main():
             print('Received', deserialize(data))
 
 
-if __name__ == "__main__":
-    main()

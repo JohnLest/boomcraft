@@ -3,14 +3,13 @@ from app.game_entity.RessourceCounter import RessourceCounter
 
 class PlayerInfo :
 
-    def __init__(self):
+    def __init__(self, pseudo: str, own_ressources : RessourceCounter, game_ressources : RessourceCounter):
         
-            self.__pseudo = "default"
+            self.__pseudo : str = pseudo
 
-            self.__own_ressources = "type par défaut"
+            self.__own_ressources : RessourceCounter= own_ressources
 
-            self.__game_ressources = "type par défaut"
-
+            self.__game_ressources : RessourceCounter = game_ressources
             #self.__achievements = "type par défaut"
 
     """ 

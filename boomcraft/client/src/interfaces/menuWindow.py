@@ -1,6 +1,7 @@
 import time
 from tkinter import *
 from interfaces.connectWindow import ConnectWindow
+from interfaces.newGameWindow import NewGameWindow
 
 
 class MenuWindow:
@@ -75,6 +76,7 @@ class MenuWindow:
 
     def __btn_new_game_click(self):
         print(f"New game")
+        NewGameWindow()
 
     def __btn_settings_click(self):
         print(f"Settings")

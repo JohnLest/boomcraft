@@ -27,6 +27,9 @@ importIron = IntVar(window)
 importWarrior = IntVar(window)
 importArcher = IntVar(window)
 
+def btn_click():
+    print(importWood.get())
+
 lbl=Label(window, text="Name", fg='black', bg='#DDDBDB', font=("Helvetica", 12), width=20)
 lbl.place(x=278, y=420)
 lbl=Label(window, text="Ressources own", fg='black', bg='#DDDBDB', font=("Helvetica", 12), width=20)
@@ -90,8 +93,9 @@ entryBox.place(x=651, y=595)
 btn=Button(window, text="All", fg='blue', width=8, font=("Helvetica", 10))
 btn.place(x=849, y=593)
 
-btn=Button(window, text="Quit", fg='red',width='30', height='2',font=("Helvetica", 12))
+btn=Button(window, text="Quit", fg='red',width='30', height='2',font=("Helvetica", 12), command=btn_click)
 btn.place(x=600, y=650, anchor='center')
+
 
 
 #list = ttk.Treeview(window)

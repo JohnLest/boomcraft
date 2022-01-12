@@ -1,8 +1,10 @@
+import json
 import socket
 import selectors
 import threading
 import types
 from typing import List, Dict
+from boomcraftApi import BoomcraftApi
 
 from tool import *
 
@@ -10,6 +12,7 @@ HOST = "127.0.0.1"
 PORT = 8080
 sel = selectors.DefaultSelector()
 dico_connect = {}
+boomcraft_api = BoomcraftApi()
 
 
 def connection():
@@ -65,12 +68,17 @@ def analyse_msg(msg: Dict, key_socket):
     if msg is None:
         return
     if key == 1:
-        print(f"Le pseudo est : {body.get('pseudo')}")
-        dico_connect[body.get('pseudo')] = key_socket
-        send_all({1: body})
+        mail = body.get("mail")
+        password = body.get("password")
+        user = boomcraft_api.connect(mail, password)
+        print(f"Le pseudo est : {user.get('pseudo')}")
+        dico_connect[user.get('id_user')] = key_socket
+        send_all({1: user})
     if key == 2:
-        print(f"Send message to API")
-        print(body)
+        user = boomcraft_api.post_new_user(json.dumps(body))
+        print(f"Le pseudo est : {user.get('pseudo')}")
+        dico_connect[user.get('id_user')] = key_socket
+        send_all({1: user})
 
 
 

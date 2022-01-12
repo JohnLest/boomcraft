@@ -8,6 +8,7 @@ from typing import Dict
 from tool import *
 from userDTO import UserDTO
 
+
 class Connection:
     def __init__(self, host, port):
         self.host = host
@@ -67,6 +68,7 @@ class Connection:
         if msg is None:
             return
         if key == 1:
+            print(body)
             pseudo = body.get('pseudo')
             self.usr = UserDTO(pseudo)
             print(f"Le pseudo est : {pseudo}")

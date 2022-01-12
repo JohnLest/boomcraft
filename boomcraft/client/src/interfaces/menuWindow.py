@@ -69,9 +69,9 @@ class MenuWindow:
         self.connection.service()
         self.connection.write(msg)
         self.btn_connect["state"] = "disabled"
+        time.sleep(1)
         pseudo = self.connection.usr.get_pseudo()
         self.btn_connect["text"] = f"hello {pseudo}"
-
 
     def __btn_new_game_click(self):
         print(f"New game")

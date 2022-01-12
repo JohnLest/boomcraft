@@ -68,3 +68,4 @@ class ConnectWindow:
                 "password": self.txt_password.get()}
         msg = {self.head: user}
         return msg
+

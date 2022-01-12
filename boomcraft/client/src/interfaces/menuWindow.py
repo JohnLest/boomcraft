@@ -1,10 +1,12 @@
+import time
 from tkinter import *
 from interfaces.connectWindow import ConnectWindow
-import connect
 
 
 class MenuWindow:
-    def __init__(self):
+    def __init__(self, connection):
+        self.connection = connection
+        self.pseudo = ""
         self.bck_img = "../resources/bg-img.png"
         self.logo_img = "../resources/logo_MM.png"
 
@@ -25,7 +27,6 @@ class MenuWindow:
         self.__set_buttons()
 
         self.window.mainloop()
-        self.window.destroy()
 
     def __set_buttons(self):
         #add buttons
@@ -61,11 +62,16 @@ class MenuWindow:
         self.btn_quit.place(x=380, y=420)
 
     def __btn_connect_click(self):
-        conn = ConnectWindow()
-        msg = conn.connect()
-        conn.window.destroy()
-        del conn
-        connect.connect(msg)
+        conn_win = ConnectWindow()
+        msg = conn_win.connect()
+        conn_win.window.destroy()
+        del conn_win
+        self.connection.service()
+        self.connection.write(msg)
+        self.btn_connect["state"] = "disabled"
+        pseudo = self.connection.usr.get_pseudo()
+        self.btn_connect["text"] = f"hello {pseudo}"
+
 
     def __btn_new_game_click(self):
         print(f"New game")
@@ -75,5 +81,8 @@ class MenuWindow:
 
     def __btn_quit_click(self):
         self.window.quit()
+
+    def __del__(self):
+        self.window.destroy()
 
 

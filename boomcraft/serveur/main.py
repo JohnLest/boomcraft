@@ -67,7 +67,7 @@ def analyse_msg(msg: Dict, key_socket):
     if key == 1:
         print(f"Le pseudo est : {body.get('pseudo')}")
         dico_connect[body.get('pseudo')] = key_socket
-        send_all(f"New connection from {body.get('pseudo')}")
+        send_all({1: body})
     if key == 2:
         print(f"Send message to API")
         print(body)

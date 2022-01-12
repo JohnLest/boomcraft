@@ -1,59 +1,61 @@
-from typing import Dict, List
+from typing import Dict
+
 from app.game_entity.Ressource import RessourceType
+
+
 class RessourceCounter :
     
-    def __init__(self): 
-     
-        self.__dict_of_ressources : dict[RessourceType, int] = {
-                                RessourceType.WORKER : 5,
-                                RessourceType.GOLD : 1,
-                                RessourceType.STONE : 500,
-                                RessourceType.WOOD : 650,
-                                RessourceType.IRON : 100,
-                                RessourceType.FOOD : 1000
-                            }
-
-    """ 
-     add a new type of ressources into dictOfRessources
-    """
-    def add_ressource_type_to_dict(self, ressourceType : RessourceType):
-        self.__dict_of_ressources[ressourceType]=0
+    def __init__(self, dict_of_ressources : Dict[RessourceType,int]):
         
-    """ 
-     add an amount of ressources into dictOfRessources
-    """
-    def add_ressource_amount(self, listAmountOfEachRessources : dict[RessourceType, int]):
-        
-        for x in self.__dict_of_ressources:
-            if(x in listAmountOfEachRessources) :
-                print("self.__dict_of_ressources["+str(x)+"] -->" + str(self.__dict_of_ressources[x]))
-                print("listAmountOfEachRessources["+str(x)+"] -->" + str(listAmountOfEachRessources[x]))
-
-                self.__dict_of_ressources[x] += listAmountOfEachRessources[x]  
-                
-                print("Results -->" + self.__dict_of_ressources[x])
-
-        self.get_dict_of_ressources()
+            self.__dict_of_ressources : Dict[RessourceType,int] = dict_of_ressources
 
 
 
-    def set_dict_of_ressources(self,dict_of_ressources):
+    ################################################################
+    #  Methods
+    ################################################################
+
+    def add_ressource_type_to_dict(self, ressourceType):
+        """ 
+        add a new type of ressources into dictOfRessources
+        """
+        print("before add " + self.__dict_of_ressources)
+        self.__dict_of_ressources[ressourceType] = 0
+        print("after add " + self.__dict_of_ressources)
+
+    
+    def add_ressource_amount(self, listAmountOfEachRessources : Dict[RessourceType,int]):
+        """ 
+        add an amount of ressources into dictOfRessources
+        """
+        print("before add an amount" + self.__dict_of_ressources)
+
+        for item in self.__dict_of_ressources: 
+            self.__dict_of_ressources[item] += listAmountOfEachRessources[item]
+
+        print("after add an amount" + self.__dict_of_ressources)
+
+
+
+    ################################################################
+    #  Getters and Setters
+    ################################################################
+
+    def set_dict_of_ressources(self,dict_of_ressources : Dict[RessourceType,int]):
         self.__dict_of_ressources = dict_of_ressources
 
     def get_dict_of_ressources(self) :
-        for x in self.__dict_of_ressources:
-            print(x + "--> "+str(self.__dict_of_ressources[x]))
         return self.__dict_of_ressources
 
     
-    def set_quantity(self, ressourceType : RessourceType, amount : int):
+    def set_quantity(self, amount : int, ressource_type: RessourceType):
         """ 
-        set the quantity of a ressource type in the dictionnary of ressources
+        set the quantity of a ressource
         """
-        self.__dict_of_ressources[ressourceType] = amount
+        self.__dict_of_ressources[ressource_type] = amount
 
-    def get_quantity(self, ressourceType : RessourceType) :
+    def get_quantity(self, ressource_type: RessourceType) :
         """ 
-        get the quantity of a ressource type in the dictionnary of ressources
+        get the quantity of a ressource in the dict of ressources
         """
-        return self.__dict_of_ressources[ressourceType]
+        return self.__dict_of_ressources[ressource_type]

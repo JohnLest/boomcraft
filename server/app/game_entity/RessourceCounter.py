@@ -24,7 +24,7 @@ class RessourceCounter :
         print("after add " + self.__dict_of_ressources)
 
     
-    def add_ressource_amount(self, listAmountOfEachRessources):
+    def add_ressource_amount(self, listAmountOfEachRessources : Dict[RessourceType,int]):
         """ 
         add an amount of ressources into dictOfRessources
         """
@@ -41,7 +41,7 @@ class RessourceCounter :
     #  Getters and Setters
     ################################################################
 
-    def set_dict_of_ressources(self,dict_of_ressources):
+    def set_dict_of_ressources(self,dict_of_ressources : Dict[RessourceType,int]):
         self.__dict_of_ressources = dict_of_ressources
 
     def get_dict_of_ressources(self) :

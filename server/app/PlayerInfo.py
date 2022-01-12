@@ -15,13 +15,21 @@ class PlayerInfo :
     """ 
      get ressources amount from a ressource counter and add it to the own ressources variable
     """
-    def update_own_ressources(self, ressourceCounter):
-        print("update_own_ressources " + self.__own_ressources)
+    def update_own_ressources(self, ressourceCounter : RessourceCounter):
+        print("before update_own_ressources " + self.__own_ressources)
+        self.__own_ressources.add_ressource_amount(ressourceCounter)
+        print("after update_own_ressources " + self.__own_ressources)
+
     """ 
      import amount of ressources from own ressources to game_ressources
     """
-    def import_from_own_ressources(self, listAmountOfEachRessources):
-        print("import_from_own_ressources " + self.__own_ressources)
+    def import_from_own_ressources(self):
+        print("before import_from_own_ressources " + self.__own_ressources)
+
+        self.__game_ressources.add_ressource_amount(self.__own_ressources)
+        print("after import_from_own_ressources " + self.__own_ressources)
+
+
 
 
     def set_pseudo(self,pseudo : str):

@@ -2,10 +2,13 @@ from tkinter import *
 
 
 class NewGameWindow:
-    def __init__(self):
+    def __init__(self, connection, user):
+        self.user = user
+        self.connection = connection
         self.window = Tk()
         self.__set_labels()
         self.__set_buttons()
+        self.__get_db_resource()
         self.__set_resources()
 
         self.window.title('BoomCraft - New Game')
@@ -51,17 +54,26 @@ class NewGameWindow:
                                font=("Helvetica", 12))
         self.btn_quit.place(x=600, y=680, anchor='center')
 
+    def __get_db_resource(self):
+        self.connection.write({3: self.user.get_id()})
+        self.db_wood = 542
+        self.db_stone = 421
+        self.db_food = 325
+        self.db_iron = 150
+        self.db_gold = 41
+        self.db_worker = 2
+
     def __set_resources(self):
         self.resources_total = {}
         self.resources_import = {}
 
         # region self variable
-        self.wood = IntVar()
-        self.stone = IntVar()
-        self.food = IntVar()
-        self.iron = IntVar()
-        self.gold = IntVar()
-        self.worker = IntVar()
+        self.wood = IntVar(self.window)
+        self.stone = IntVar(self.window)
+        self.food = IntVar(self.window)
+        self.iron = IntVar(self.window)
+        self.gold = IntVar(self.window)
+        self.worker = IntVar(self.window)
         # endregion
 
         # region Header
@@ -95,67 +107,14 @@ class NewGameWindow:
         lbl_header_all.place(x=836, y=420)
         # endregion
 
-        # region Wood
-        self.__create_table_resource("Wood", 0, self.wood, 450)
-        btn_wood = Button(self.window,
-                          text="All",
-                          fg='blue',
-                          width=8,
-                          font=("Helvetica", 10))
-        btn_wood.place(x=849, y=447)
-        # endregion
+        self.__create_table_resource("Wood", self.db_wood, self.wood, 450)
+        self.__create_table_resource("Stone", self.db_stone, self.stone, 480)
+        self.__create_table_resource("Food", self.db_food, self.food, 510)
+        self.__create_table_resource("Iron", self.db_iron, self.iron, 540)
+        self.__create_table_resource("Gold", self.db_gold, self.gold, 570)
+        self.__create_table_resource("Worker", self.db_worker, self.worker, 600)
 
-        # region Stone
-        self.__create_table_resource("Stone", 0, self.stone, 480)
-        btn_stone = Button(self.window,
-                           text="All",
-                           fg='blue',
-                           width=8,
-                           font=("Helvetica", 10))
-        btn_stone.place(x=849, y=477)
-        # endregion
-
-        # region Food
-        self.__create_table_resource("Food", 0, self.food, 510)
-        btn_food = Button(self.window,
-                          text="All",
-                          fg='blue',
-                          width=8,
-                          font=("Helvetica", 10))
-        btn_food.place(x=849, y=507)
-        # endregion
-
-        # region Iron
-        self.__create_table_resource("Iron", 0, self.iron, 540)
-        btn_iron = Button(self.window,
-                          text="All",
-                          fg='blue',
-                          width=8,
-                          font=("Helvetica", 10))
-        btn_iron.place(x=849, y=537)
-        # endregion
-
-        # region Gold
-        self.__create_table_resource("Gold", 0, self.gold, 570)
-        btn_gold = Button(self.window,
-                          text="All",
-                          fg='blue',
-                          width=8,
-                          font=("Helvetica", 10))
-        btn_gold.place(x=849, y=567)
-        # endregion
-
-        # region Worker
-        self.__create_table_resource("Worker", 0, self.worker, 600)
-        btn_worker = Button(self.window,
-                            text="All",
-                            fg='blue',
-                            width=8,
-                            font=("Helvetica", 10))
-        btn_worker.place(x=849, y=597)
-        # endregion
-
-    def __create_table_resource(self, name_resource, resource_own, resource_import, y):
+    def __create_table_resource(self, name_resource, resource_own, resource, y):
         lbl_res = Label(self.window,
                          text=name_resource,
                          fg='black',
@@ -171,8 +130,18 @@ class NewGameWindow:
                              width=20)
         lbl_res_own.place(x=464, y=y)
         entry_res = Entry(self.window,
-                           textvariable=resource_import,
-                           width=21,
-                           font=("Helvetica", 12))
+                          textvariable=resource,
+                          width=21,
+                          font=("Helvetica", 12))
         entry_res.place(x=651, y=y)
+        btn = Button(self.window,
+                          text="All",
+                          fg='blue',
+                          width=8,
+                          font=("Helvetica", 10),
+                          command=lambda: self.__btn_click(resource_own, resource))
+        btn.place(x=849, y=y-3)
+
+    def __btn_click(self, max_res, import_res):
+        import_res.set(max_res)
 

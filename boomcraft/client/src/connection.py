@@ -6,7 +6,7 @@ import threading
 from typing import Dict
 
 from tool import *
-from userDTO import UserDTO
+from src.dtos.userDTO import UserDTO
 
 
 class Connection:
@@ -69,8 +69,10 @@ class Connection:
             return
         if key == 1:
             print(body)
+            id = body.get("id_user")
             pseudo = body.get('pseudo')
-            self.usr = UserDTO(pseudo)
+            mail = body.get("mail")
+            self.usr = UserDTO(id, pseudo, mail)
             print(f"Le pseudo est : {pseudo}")
 
 

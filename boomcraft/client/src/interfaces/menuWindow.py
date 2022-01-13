@@ -45,6 +45,7 @@ class MenuWindow:
                                    font=("Helvetica", 12),
                                    command=self.__btn_new_game_click)
         self.btn_new_game.place(x=380, y=300)
+        self.btn_new_game["state"] = "disabled"
         self.btn_settings = Button(self.window,
                                    text="Settings",
                                    fg='blue',
@@ -73,6 +74,7 @@ class MenuWindow:
         time.sleep(1)
         pseudo = self.connection.usr.get_pseudo()
         self.btn_connect["text"] = f"hello {pseudo}"
+        self.btn_new_game["state"] = "active"
 
     def __btn_new_game_click(self):
         print(f"New game")

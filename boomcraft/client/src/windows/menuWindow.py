@@ -1,14 +1,13 @@
 import time
 from tkinter import *
-from interfaces.connectWindow import ConnectWindow
-from interfaces.newGameWindow import NewGameWindow
-from src.models.userModel import UserModel
+from src.windows.connectWindow import ConnectWindow
+from src.windows.newGameWindow import NewGameWindow
 
 
 class MenuWindow:
     def __init__(self, connection):
         self.connection = connection
-        self.pseudo = ""
+        self.pseudo = "John"
         self.bck_img = "../resources/bg-img.png"
         self.logo_img = "../resources/logo_MM.png"
 

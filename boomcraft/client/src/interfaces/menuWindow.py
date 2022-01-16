@@ -2,6 +2,7 @@ import time
 from tkinter import *
 from interfaces.connectWindow import ConnectWindow
 from interfaces.newGameWindow import NewGameWindow
+from src.models.userModel import UserModel
 
 
 class MenuWindow:
@@ -72,13 +73,13 @@ class MenuWindow:
         self.connection.write(msg)
         self.btn_connect["state"] = "disabled"
         time.sleep(1)
-        pseudo = self.connection.usr.get_pseudo()
+        pseudo = self.connection.user.pseudo
         self.btn_connect["text"] = f"hello {pseudo}"
         self.btn_new_game["state"] = "active"
 
     def __btn_new_game_click(self):
         print(f"New game")
-        NewGameWindow()
+        NewGameWindow(self.connection, self.connection.user)
 
     def __btn_settings_click(self):
         print(f"Settings")

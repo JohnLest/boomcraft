@@ -47,17 +47,19 @@ def service_connection(key, mask):
             sel.unregister(sock)
             sock.close()
         analyse_msg(deserialize(data.outb), key)
+        data.outb = b''
 
 
-def write(sock, message: List[bytes]):
-    while len(message) != 0:
-        sent = sock.send(message)
-        message = message[sent:]
+def write(sock, message):
+    msg_bytes = serialize(message)
+    while len(msg_bytes) != 0:
+        sent = sock.send(msg_bytes)
+        msg_bytes = msg_bytes[sent:]
 
 
 def send_all(msg):
     for key in dico_connect.values():
-        write(key.fileobj, serialize(msg))
+        write(key.fileobj, msg)
 
 
 def analyse_msg(msg: Dict, key_socket):
@@ -74,11 +76,14 @@ def analyse_msg(msg: Dict, key_socket):
         print(f"Le pseudo est : {user.get('pseudo')}")
         dico_connect[user.get('id_user')] = key_socket
         send_all({1: user})
-    if key == 2:
+    elif key == 2:
         user = boomcraft_api.post_new_user(json.dumps(body))
         print(f"Le pseudo est : {user.get('pseudo')}")
         dico_connect[user.get('id_user')] = key_socket
         send_all({1: user})
+    elif key == 3:
+        resource = boomcraft_api.get_resources_by_id(body)
+        write(dico_connect.get(resource.get("pseudo").get("id_user")).fileobj, {2: resource})
 
 
 

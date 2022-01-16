@@ -4,9 +4,9 @@ import time
 import types
 import threading
 from typing import Dict
-
+from src.models.userModel import UserModel
+from src.models.resourcesModel import AllResourcesModel
 from tool import *
-from src.dtos.userDTO import UserDTO
 
 
 class Connection:
@@ -68,14 +68,10 @@ class Connection:
         if msg is None:
             return
         if key == 1:
+            self.user = UserModel(**body)
+        elif key == 2:
             print(body)
-            id = body.get("id_user")
-            pseudo = body.get('pseudo')
-            mail = body.get("mail")
-            self.usr = UserDTO(id, pseudo, mail)
-            print(f"Le pseudo est : {pseudo}")
-
-
-
+            self.resources = AllResourcesModel(**body)
+            print("stop")
 
 

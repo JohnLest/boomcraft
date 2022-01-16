@@ -55,7 +55,7 @@ class NewGameWindow:
         self.btn_quit.place(x=600, y=680, anchor='center')
 
     def __get_db_resource(self):
-        self.connection.write({3: self.user.get_id()})
+        self.connection.write({3: self.user.id_user})
         self.db_wood = 542
         self.db_stone = 421
         self.db_food = 325

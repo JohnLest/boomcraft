@@ -85,6 +85,10 @@ def analyse_msg(msg: Dict, key_socket):
         resource = boomcraft_api.get_resources_by_id(body)
         write(dico_connect.get(resource.get("pseudo").get("id_user")).fileobj, {2: resource})
 
+    elif key == 101:
+        print(f"new connection since facebook : {body}")
+        write(key_socket.fileobj, {101: body})
+
 
 
 def main():

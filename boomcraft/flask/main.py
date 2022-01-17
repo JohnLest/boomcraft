@@ -1,24 +1,16 @@
-# The user details get print in the console.
-# so you can do whatever you want to do instead
-# of printing it
-
 from flask import Flask, render_template, url_for, redirect
 from authlib.integrations.flask_client import OAuth
 import os
+from server import Server
 
 app = Flask(__name__)
 app.secret_key = "4867fac88b26f7a225178b09cf9ec538"
 
-'''
-    Set SERVER_NAME to localhost as twitter callback
-    url does not accept 127.0.0.1
-    Tip : set callback origin(site) for facebook and twitter
-    as http://domain.com (or use your domain name) as this provider
-    don't accept 127.0.0.1 / localhost
-'''
 
 app.config['SERVER_NAME'] = 'localhost:8000'
 oauth = OAuth(app)
+serv = Server("127.0.0.1", 8080)
+serv.service()
 
 
 @app.route('/')
@@ -115,6 +107,7 @@ def facebook_auth():
         'https://graph.facebook.com/me?fields=id,name,email,picture{url}')
     profile = resp.json()
     print("Facebook User ", profile)
+    serv.write({101: profile})
     return redirect('/')
 
 

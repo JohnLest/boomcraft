@@ -12,6 +12,7 @@ HOST = "127.0.0.1"
 PORT = 8080
 sel = selectors.DefaultSelector()
 dico_connect = {}
+s_n_connect = {}
 boomcraft_api = BoomcraftApi()
 
 
@@ -50,7 +51,8 @@ def service_connection(key, mask):
         data.outb = b''
 
 
-def write(sock, message):
+def write(key, message):
+    sock = key.fileobj
     msg_bytes = serialize(message)
     while len(msg_bytes) != 0:
         sent = sock.send(msg_bytes)
@@ -59,14 +61,14 @@ def write(sock, message):
 
 def send_all(msg):
     for key in dico_connect.values():
-        write(key.fileobj, msg)
+        write(key, msg)
 
 
 def analyse_msg(msg: Dict, key_socket):
     key = first_or_default(msg)
     if key is None:
         return
-    body = msg.get(key, None)
+    body: Dict = msg.get(key, None)
     if msg is None:
         return
     if key == 1:
@@ -83,11 +85,16 @@ def analyse_msg(msg: Dict, key_socket):
         send_all({1: user})
     elif key == 3:
         resource = boomcraft_api.get_resources_by_id(body)
-        write(dico_connect.get(resource.get("pseudo").get("id_user")).fileobj, {2: resource})
+        write(dico_connect.get(resource.get("pseudo").get("id_user")), {2: resource})
 
+    elif key == 100:
+        s_n_connect.update({body.get("uuid"): key_socket})
     elif key == 101:
         print(f"new connection since facebook : {body}")
-        write(key_socket.fileobj, {101: body})
+        _uuid = body.get("uuid")
+        dico_connect.update({body.get("id"): s_n_connect.get(_uuid)})
+        write(key_socket, {101: body})
+        write(dico_connect.get(body.get("id")), {11: body})
 
 
 

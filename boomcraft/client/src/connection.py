@@ -69,6 +69,8 @@ class Connection:
             return
         if key == 1:
             self.user = UserModel(**body)
+        elif key == 11:  # TODO Condition tempo
+            print(body)
         elif key == 2:
             print(body)
             self.resources = AllResourcesModel(**body)

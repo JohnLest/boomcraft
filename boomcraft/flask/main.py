@@ -11,16 +11,12 @@ app.config['SERVER_NAME'] = 'localhost:8000'
 oauth = OAuth(app)
 serv = Server("127.0.0.1", 8080)
 serv.service()
+uuid_ = None
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
-
-@app.route('/<_uuid>')
-def uuid(_uuid):
-    return _uuid
 
 @app.route('/google/')
 def google():
@@ -84,9 +80,13 @@ def twitter_auth():
     return redirect('/')
 
 
-@app.route('/facebook/')
-def facebook():
+@app.route('/facebook/<_uuid>')
+def facebook(_uuid):
     # Facebook Oauth Config
+    global uuid_
+    uuid_ = _uuid
+    print(f"1 : {_uuid}")
+    print(f"2 : {uuid_}")
     FACEBOOK_CLIENT_ID = "697143707944336"
     FACEBOOK_CLIENT_SECRET = "4867fac88b26f7a225178b09cf9ec538"
     oauth.register(
@@ -106,11 +106,14 @@ def facebook():
 
 @app.route('/facebook/auth/')
 def facebook_auth():
+    global uuid_
+    print(f"3 : {uuid_}")
     token = oauth.facebook.authorize_access_token()
     resp = oauth.facebook.get(
-        'https://graph.facebook.com/me?fields=id,name,email,picture{url}')
+        'https://graph.facebook.com/me?fields=id,name,email')
     profile = resp.json()
     print("Facebook User ", profile)
+    profile.update({"uuid": uuid_})
     serv.write({101: profile})
     return redirect('/')
 

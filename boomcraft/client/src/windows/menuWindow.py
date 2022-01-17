@@ -64,14 +64,11 @@ class MenuWindow:
         self.btn_quit.place(x=380, y=420)
 
     def __btn_connect_click(self):
-        conn_win = ConnectWindow()
-        msg = conn_win.connect()
+        conn_win = ConnectWindow(self.connection)
         conn_win.window.destroy()
-        del conn_win
-        self.connection.service()
-        self.connection.write(msg)
-        self.btn_connect["state"] = "disabled"
         time.sleep(1)
+        del conn_win
+        self.btn_connect["state"] = "disabled"
         pseudo = self.connection.user.pseudo
         self.btn_connect["text"] = f"hello {pseudo}"
         self.btn_new_game["state"] = "active"

@@ -4,7 +4,8 @@ import uuid
 
 
 class ConnectWindow:
-    def __init__(self):
+    def __init__(self, connection):
+        self.connection = connection
         self.head = 0
         self.window = Tk()
         self.window.title('BoomCraft - Menu')
@@ -32,6 +33,7 @@ class ConnectWindow:
         self.txt_password.place(x=50, y=130)
 
         self.__set_buttons()
+        self.window.mainloop()
 
     def __set_buttons(self):
         self.btn_connect = Button(self.window,
@@ -41,12 +43,12 @@ class ConnectWindow:
                                command=self.__btn_connect_click)
         self.btn_connect.place(x=350, y=110, height=30, width=300)
 
-        self.btn_api = Button(self.window,
-                                 text="Connect with Social Network",
+        self.btn_facebook = Button(self.window,
+                                 text="Connect with Facebook",
                                  fg='blue',
                                  font=("Helvetica", 12),
-                                 command=self.__btn_api_click)
-        self.btn_api.place(x=350, y=150, height=30, width=300)
+                                 command=self.__btn_facebook_click)
+        self.btn_facebook.place(x=350, y=150, height=30, width=300)
 
         self.btn_create = Button(self.window,
                                  text="Create new user",
@@ -64,23 +66,22 @@ class ConnectWindow:
 
     def __btn_connect_click(self):
         self.head = 1
+        self.__connect()
         self.window.quit()
 
     def __btn_create_click(self):
         self.head = 2
+        self.__connect()
         self.window.quit()
 
-    def __btn_api_click(self):
+    def __btn_facebook_click(self):
         _uuid = uuid.uuid4()
-        print(_uuid)
-        url = f"http://localhost:8000/{_uuid}"
+        self.connection.write({100: {"uuid": str(_uuid)}})
+        url = f"http://localhost:8000/facebook/{_uuid}"
         webbrowser.open(url)
 
-    def connect(self):
-        self.window.mainloop()
+    def __connect(self):
         user = {"pseudo": self.txt_pseudo.get(),
                 "mail": self.txt_mail.get(),
                 "password": self.txt_password.get()}
-        msg = {self.head: user}
-        return msg
-
+        self.connection.write({self.head: user})

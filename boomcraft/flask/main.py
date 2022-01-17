@@ -18,6 +18,10 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/<_uuid>')
+def uuid(_uuid):
+    return _uuid
+
 @app.route('/google/')
 def google():
     # Google Oauth Config

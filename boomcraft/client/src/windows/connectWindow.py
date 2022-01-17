@@ -1,4 +1,6 @@
 from tkinter import *
+import webbrowser
+import uuid
 
 
 class ConnectWindow:
@@ -39,19 +41,26 @@ class ConnectWindow:
                                command=self.__btn_connect_click)
         self.btn_connect.place(x=350, y=110, height=30, width=300)
 
+        self.btn_api = Button(self.window,
+                                 text="Connect with Social Network",
+                                 fg='blue',
+                                 font=("Helvetica", 12),
+                                 command=self.__btn_api_click)
+        self.btn_api.place(x=350, y=150, height=30, width=300)
+
         self.btn_create = Button(self.window,
                                  text="Create new user",
                                  fg='blue',
                                  font=("Helvetica", 12),
                                  command=self.__btn_create_click)
-        self.btn_create.place(x=350, y=150, height=30, width=300)
+        self.btn_create.place(x=350, y=190, height=30, width=300)
 
         self.btn_quit = Button(self.window,
                                  text="Quit",
                                  fg='red',
                                  font=("Helvetica", 12),
                                  command=self.__btn_connect_click)
-        self.btn_quit.place(x=350, y=190, height=30, width=300)
+        self.btn_quit.place(x=50, y=190, height=30, width=300)
 
     def __btn_connect_click(self):
         self.head = 1
@@ -60,6 +69,12 @@ class ConnectWindow:
     def __btn_create_click(self):
         self.head = 2
         self.window.quit()
+
+    def __btn_api_click(self):
+        _uuid = uuid.uuid4()
+        print(_uuid)
+        url = f"http://localhost:8000/{_uuid}"
+        webbrowser.open(url)
 
     def connect(self):
         self.window.mainloop()

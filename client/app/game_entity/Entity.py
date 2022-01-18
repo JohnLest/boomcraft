@@ -1,14 +1,23 @@
-from typing import List
+from typing import List, Set
 import pygame, random, sys
+import pytmx
+
+from pygame.sprite import Group, Sprite
+from pygame import Rect, Surface
 
 from app.game_structure.Coord import Coord
 
-from app.game_entity.Ressource import RessourceType
+from app.game_entity.Ressource import RessourceOffer, RessourceType
+from app.game_entity.Character import Worker
+from app.Tools import Tools
+from app.game_entity.Building import Building
+from app.game_structure.PygameClasses import SpriteSheet
 
-class Entity :
+class Entity (Sprite) :
     
-    def __init__(self, coords : list, width : int, height : int, life : int, look_in_game : str, ressource_dropped : RessourceType):
-        
+    def __init__(self, coords : Set[Coord], width : int, height : int, life : int, look_in_game : str, ressource_dropped : RessourceType):
+        Sprite.__init__(self)
+
         """
         Construct a new 'Entity' object.
 
@@ -27,31 +36,57 @@ class Entity :
 
         :return: returns nothing
         """
+
+
         self.__active = True
-
+        ''' 
+        The state of activity of the entity
+        '''
         self.__disappear = False
-
+        ''' 
+        The state of disappearness of the entity
+        '''
         self.__coords = coords
-
+        '''
+        The coordinates on which is the entity
+        '''
         self.__width = width
-
+        '''
+        The width of the entity (equivalent to the number of (16x16) tiles in width)
+        '''
         self.__height = height
-        '''  '''
+        ''' 
+        The height of the entity (equivalent to the number of (16x16) tiles in height)
+        '''
         self.__life = life
-
-        self.__target = "none"
-
-        self.__accessible : List[Coord]
-
+        '''
+        The life level of the entity (0 - 100)
+        '''
+        self.__target = None
+        ''' 
+        The target which the entity has to attack
+        '''
+        self.__accessible : Set[Coord] = None
+        '''
+        Coords included in the area attackable
+        '''
         self.__range : int = 1
-
+        ''' 
+        The range of the attack
+        '''
         self.__look_in_game = look_in_game
-
+        '''
+        The path to the look of the entity in the game
+        '''
         self.__ressource_dropped = ressource_dropped
+        '''
+        The ressource that the entity drops when destroyed
+        '''
 
-        pygame.sprite.Sprite.__init__(self)
-
-
+        self.sprites = SpriteSheet(self.__look_in_game)
+        '''
+        SpriteSheet containing sprites representing the entity
+        '''
     
 
     def reduce_life(self, attack : int):
@@ -72,9 +107,17 @@ class Entity :
         """ 
         make entity appear inactive
         """
-        self.set_disappear(True)
-   
+        print("active " + self.__active)
 
+    
+    def define_look_in_game(self, path_to_entity_image):
+        """
+        define the path to follow to get the entity image
+        """
+        print("look_in_game " + self.__look_in_game)
+
+
+    
     def give_area(self):
         """
         return the area of tile occupied by the entity
@@ -83,15 +126,25 @@ class Entity :
         return area
 
     
-    def give_ressources(ressource, amount):
+    def give_ressources(self):
         """
-        give the amount of ressource in parameter to the ressource counter
+        give an amount of ressources
+        :return a ressource offer object
         """
-        dict_of_ressources[ressource] =+ amount  
-        return self.__ressource_dropped
+        print(type(object))
+        if(isinstance(self, Worker)) :
+            return RessourceOffer(RessourceType.WOOD, Tools.give_random_int_between(1,10))
 
-    '''----------setters  AND getters--------- '''
-    
+        elif(isinstance(self, Building)) :
+            return RessourceOffer(RessourceType.STONE, Tools.give_random_int_between(10,50))
+
+
+         
+
+    ################################################################
+    #  Getters and Setters
+    ################################################################
+
     def set_active(self,active):
             self.__active = active
 
@@ -144,3 +197,6 @@ class Entity :
 
     def get_ressource_dropped(self):
         return self.__ressource_dropped
+
+
+

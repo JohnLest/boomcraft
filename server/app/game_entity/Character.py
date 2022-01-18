@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import List
 from app.Tools import Tools
 from app.game_entity.Entity import Entity
 from app.game_entity.Environment import Environment, EnvironmentType
@@ -23,7 +24,7 @@ class CharacterType(Enum):
 
 class Character(Mobile):
 
-    def __init__(self,character_type : CharacterType, name : str, weapon : WeaponType, attack : int, coords : list[Coord], life : int, look_in_game : str, ressource_dropped : RessourceType):
+    def __init__(self,character_type : CharacterType, name : str, weapon : WeaponType, attack : int, coords : List[Coord], life : int, look_in_game : str, ressource_dropped : RessourceType):
         super().__init__(character_type, coords, 2, 2, life, look_in_game, ressource_dropped)
 
         self.__character_type=character_type

@@ -12,7 +12,9 @@ class RessourceType(Enum):
     FOOD = 8
 
 class Ressource :
-    
+    ''' 
+    Represents a ressource in the game
+    '''
     def __init__(self, ressource_type : RessourceType):
         
         self.__ressource_type = ressource_type
@@ -23,3 +25,26 @@ class Ressource :
 
     def get_ressource_type(self) :
         return self.__ressource_type
+
+
+class RessourceOffer :
+    ''' 
+    Represents a ressource offer in the game
+    '''
+    def __init__(self, ressource_type : RessourceType, quantity : int):
+        
+        self.__ressource_type = ressource_type
+        self.__quantity= quantity
+
+
+    def set_ressource_type(self,ressource_type : RessourceType):
+        self.__ressource_type = ressource_type
+
+    def get_ressource_type(self) :
+        return self.__ressource_type
+
+    def set_quantity(self,quantity : int):
+        self.__quantity = quantity
+
+    def get_quantity(self) :
+        return self.__quantity

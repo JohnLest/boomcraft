@@ -93,8 +93,10 @@ def analyse_msg(msg: Dict, key_socket):
         print(f"new connection since facebook : {body}")
         _uuid = body.get("uuid")
         dico_connect.update({body.get("id"): s_n_connect.get(_uuid)})
-        write(key_socket, {101: body})
-        write(dico_connect.get(body.get("id")), {11: body})
+        body.pop("uuid")
+        user = boomcraft_api.connect_with_facebook(json.dumps(body))
+        write(key_socket, {101: user})
+        write(dico_connect.get(body.get("id")), {1: user})
 
 
 

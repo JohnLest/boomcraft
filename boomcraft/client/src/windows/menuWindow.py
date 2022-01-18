@@ -66,7 +66,6 @@ class MenuWindow:
     def __btn_connect_click(self):
         conn_win = ConnectWindow(self.connection)
         conn_win.window.destroy()
-        time.sleep(1)
         del conn_win
         self.btn_connect["state"] = "disabled"
         pseudo = self.connection.user.pseudo

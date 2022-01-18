@@ -16,6 +16,8 @@ class Connection:
         self.sel = selectors.DefaultSelector()
         self.mask = 0
 
+        self.user = None
+
     def __connection(self):
         server_addr = (self.host, self.port)
         print(f'starting connection to {server_addr}')
@@ -69,8 +71,6 @@ class Connection:
             return
         if key == 1:
             self.user = UserModel(**body)
-        elif key == 11:  # TODO Condition tempo
-            print(body)
         elif key == 2:
             print(body)
             self.resources = AllResourcesModel(**body)

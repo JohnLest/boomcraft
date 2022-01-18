@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = "4867fac88b26f7a225178b09cf9ec538"
 
 
-app.config['SERVER_NAME'] = 'localhost:8000'
+app.config['SERVER_NAME'] = 'localhost:8060'
 oauth = OAuth(app)
 serv = Server("127.0.0.1", 8080)
 serv.service()

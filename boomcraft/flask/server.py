@@ -16,7 +16,7 @@ class Server:
 
     def __connection(self):
         server_addr = (self.host, self.port)
-        print(f'starting connection to {server_addr}')
+        print(f'starting connection to server : {server_addr}')
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setblocking(False)
         sock.connect_ex(server_addr)

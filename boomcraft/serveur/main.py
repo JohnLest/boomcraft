@@ -111,6 +111,23 @@ def main():
             else:
                 service_connection(key, mask)
 
+from otherApi import OtherApi
+
+def test_api():
+    print(f"Hello API")
+    uri = "http://dataservice.accuweather.com/currentconditions/v1/"
+    weather_api = OtherApi(uri)
+    weather = weather_api.get_request("27581?apikey=NM6IwoED21vbDTI6Fc7gosRt9A5rqNTu")
+    print(weather)
+    uri2 = "https://nominis.cef.fr/json"
+    saint_api = OtherApi(uri2)
+    saint = saint_api.get_request("saintdujour.php")
+    print(saint)
+
+
+
+
 
 if __name__ == "__main__":
-    main()
+    test_api()
+    # main()

@@ -33,7 +33,9 @@ class Character(Mobile):
 
 
     def attack(self, entity : Entity):
-        print(entity)
+        attack_points = self.get_attack()
+        entity.reduce_life(attack_points)
+        print(self.__name + " a fait " + attack_points + " points de dégat.")
 
 
     def set_character_type(self,character_type):

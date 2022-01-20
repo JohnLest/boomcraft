@@ -3,26 +3,33 @@ from app.game_entity.RessourceCounter import RessourceCounter
 
 class PlayerInfo :
 
-    def __init__(self):
+    def __init__(self, pseudo: str, own_ressources : RessourceCounter, game_ressources : RessourceCounter):
         
-            self.__pseudo = "default"
+            self.__pseudo : str = pseudo
 
-            self.__own_ressources = "type par défaut"
+            self.__own_ressources : RessourceCounter= own_ressources
 
-            self.__game_ressources = "type par défaut"
-
+            self.__game_ressources : RessourceCounter = game_ressources
             #self.__achievements = "type par défaut"
 
     """ 
      get ressources amount from a ressource counter and add it to the own ressources variable
     """
-    def update_own_ressources(self, ressourceCounter):
-        print("update_own_ressources " + self.__own_ressources)
+    def update_own_ressources(self, ressourceCounter : RessourceCounter):
+        print("before update_own_ressources " + self.__own_ressources)
+        self.__own_ressources.add_ressource_amount(ressourceCounter)
+        print("after update_own_ressources " + self.__own_ressources)
+
     """ 
      import amount of ressources from own ressources to game_ressources
     """
-    def import_from_own_ressources(self, listAmountOfEachRessources):
-        print("import_from_own_ressources " + self.__own_ressources)
+    def import_from_own_ressources(self):
+        print("before import_from_own_ressources " + self.__own_ressources)
+
+        self.__game_ressources.add_ressource_amount(self.__own_ressources)
+        print("after import_from_own_ressources " + self.__own_ressources)
+
+
 
 
     def set_pseudo(self,pseudo : str):

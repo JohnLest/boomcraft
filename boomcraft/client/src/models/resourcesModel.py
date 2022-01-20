@@ -8,8 +8,3 @@ class ResourceModel(BaseModel):
     type: str
     resource: str
     quantity: int
-
-
-class AllResourcesModel(BaseModel):
-    pseudo: UserModel
-    resource: List[ResourceModel]

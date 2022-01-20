@@ -68,7 +68,7 @@ class MenuWindow:
         conn_win.window.destroy()
         del conn_win
         self.btn_connect["state"] = "disabled"
-        pseudo = self.connection.user.pseudo
+        pseudo = self.connection.user.user.pseudo
         self.btn_connect["text"] = f"hello {pseudo}"
         self.btn_new_game["state"] = "active"
 

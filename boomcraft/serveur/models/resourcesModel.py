@@ -1,6 +1,4 @@
-from typing import List
 from pydantic import BaseModel
-from src.models.userModel import UserModel
 
 
 class ResourceModel(BaseModel):
@@ -9,7 +7,3 @@ class ResourceModel(BaseModel):
     resource: str
     quantity: int
 
-
-class AllResourcesModel(BaseModel):
-    pseudo: UserModel
-    resource: List[ResourceModel]

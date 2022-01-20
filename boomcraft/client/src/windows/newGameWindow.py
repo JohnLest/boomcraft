@@ -2,13 +2,13 @@ from tkinter import *
 
 
 class NewGameWindow:
-    def __init__(self, connection, user):
-        self.user = user
+    def __init__(self, connection, player_info):
+        self.player_info = player_info
         self.connection = connection
         self.window = Tk()
         self.__set_labels()
         self.__set_buttons()
-        self.__get_db_resource()
+        self.__get_own_resource()
         self.__set_resources()
 
         self.window.title('BoomCraft - New Game')
@@ -54,14 +54,10 @@ class NewGameWindow:
                                font=("Helvetica", 12))
         self.btn_quit.place(x=600, y=680, anchor='center')
 
-    def __get_db_resource(self):
-        self.connection.write({3: self.user.id_user})
-        self.db_wood = 542
-        self.db_stone = 421
-        self.db_food = 325
-        self.db_iron = 150
-        self.db_gold = 41
-        self.db_worker = 2
+    def __get_own_resource(self):
+        self.own_resources_dict = {}
+        for own_resource in self.player_info.own_resources:
+            self.own_resources_dict.update({own_resource.resource: own_resource.quantity})
 
     def __set_resources(self):
         self.resources_total = {}
@@ -107,12 +103,12 @@ class NewGameWindow:
         lbl_header_all.place(x=836, y=420)
         # endregion
 
-        self.__create_table_resource("Wood", self.db_wood, self.wood, 450)
-        self.__create_table_resource("Stone", self.db_stone, self.stone, 480)
-        self.__create_table_resource("Food", self.db_food, self.food, 510)
-        self.__create_table_resource("Iron", self.db_iron, self.iron, 540)
-        self.__create_table_resource("Gold", self.db_gold, self.gold, 570)
-        self.__create_table_resource("Worker", self.db_worker, self.worker, 600)
+        self.__create_table_resource("Wood", self.own_resources_dict.get("wood"), self.wood, 450)
+        self.__create_table_resource("Stone", self.own_resources_dict.get("stone"), self.stone, 480)
+        self.__create_table_resource("Food", self.own_resources_dict.get("food"), self.food, 510)
+        self.__create_table_resource("Iron", self.own_resources_dict.get("iron"), self.iron, 540)
+        self.__create_table_resource("Gold", self.own_resources_dict.get("gold"), self.gold, 570)
+        self.__create_table_resource("Worker", self.own_resources_dict.get("worker"), self.worker, 600)
 
     def __create_table_resource(self, name_resource, resource_own, resource, y):
         lbl_res = Label(self.window,

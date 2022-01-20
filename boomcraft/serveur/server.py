@@ -91,11 +91,11 @@ class Server:
             mail = body.get("mail")
             password = body.get("password")
             user: PlayerInfoModel = self.__new_player(key_socket, connection_type="login", mail=mail, password=password)
-            # self.write(key_socket, {1: user})
+            self.write(key_socket, {1: user.dict()})
         elif key == 2:
             body.update({"connection_type": "new"})
-            self.__new_player(key_socket, **body)
-            # self.write(key_socket, {1: user})
+            user: PlayerInfoModel = self.__new_player(key_socket, **body)
+            self.write(key_socket, {1: user.dict()})
 
         elif key == 100:
             self.s_n_connect.update({body.get("uuid"): key_socket})
@@ -109,7 +109,7 @@ class Server:
 
     def __new_player(self, key_socket, **data):
         user: PlayerInfoModel = self.player_repo.new_player(**data)
-        self.dico_connect[user.get('id_user')] = key_socket
+        self.dico_connect[user.user.id_user] = key_socket
         return user
 
     # endregion

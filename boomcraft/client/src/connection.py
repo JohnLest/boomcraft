@@ -72,3 +72,4 @@ class Connection:
             self.user = PlayerInfoModel(**body)
 
 
+

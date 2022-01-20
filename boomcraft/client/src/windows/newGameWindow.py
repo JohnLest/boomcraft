@@ -2,9 +2,9 @@ from tkinter import *
 
 
 class NewGameWindow:
-    def __init__(self, connection, player_info):
+    def __init__(self, player_info):
         self.player_info = player_info
-        self.connection = connection
+        self.new_game = False
         self.window = Tk()
         self.__set_labels()
         self.__set_buttons()
@@ -43,7 +43,8 @@ class NewGameWindow:
                                 text="Start the game",
                                 fg='blue', width='20',
                                 height='2',
-                                font=("Helvetica", 20))
+                                font=("Helvetica", 20),
+                                command=self.__btn_start_click)
         self.btn_start.place(x=600, y=240, anchor='center')
 
         self.btn_quit = Button(self.window,
@@ -51,7 +52,8 @@ class NewGameWindow:
                                fg='red',
                                width='30',
                                height='2',
-                               font=("Helvetica", 12))
+                               font=("Helvetica", 12),
+                               command=self.__btn_quit_click)
         self.btn_quit.place(x=600, y=680, anchor='center')
 
     def __get_own_resource(self):
@@ -140,4 +142,23 @@ class NewGameWindow:
 
     def __btn_click(self, max_res, import_res):
         import_res.set(max_res)
+
+    def __btn_quit_click(self):
+        self.window.quit()
+
+    def __btn_start_click(self):
+        self.game_resources_dict = {
+            "wood": self.wood.get(),
+            "stone": self.stone.get(),
+            "food": self.food.get(),
+            "iron": self.iron.get(),
+            "gold": self.gold.get(),
+            "worker": self.worker.get()
+        }
+        self.new_game = True
+        self.window.quit()
+
+
+
+
 

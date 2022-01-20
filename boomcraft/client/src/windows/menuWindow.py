@@ -1,4 +1,3 @@
-import time
 from tkinter import *
 from src.windows.connectWindow import ConnectWindow
 from src.windows.newGameWindow import NewGameWindow
@@ -7,9 +6,9 @@ from src.windows.newGameWindow import NewGameWindow
 class MenuWindow:
     def __init__(self, connection):
         self.connection = connection
-        self.pseudo = "John"
         self.bck_img = "../resources/bg-img.png"
         self.logo_img = "../resources/logo_MM.png"
+        self.new_game = False
 
         self.window = Tk()
         self.window.title('BoomCraft - Menu')
@@ -73,8 +72,13 @@ class MenuWindow:
         self.btn_new_game["state"] = "active"
 
     def __btn_new_game_click(self):
-        print(f"New game")
-        NewGameWindow(self.connection, self.connection.user)
+        new_game_win = NewGameWindow(self.connection.user)
+        new_game_win.window.destroy()
+        if new_game_win.new_game:
+            self.new_game = True
+            self.connection.write({3: new_game_win.game_resources_dict})
+        del new_game_win
+        self.window.quit()
 
     def __btn_settings_click(self):
         print(f"Settings")
@@ -82,7 +86,5 @@ class MenuWindow:
     def __btn_quit_click(self):
         self.window.quit()
 
-    def __del__(self):
-        self.window.destroy()
 
 

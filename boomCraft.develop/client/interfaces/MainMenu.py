@@ -1,8 +1,14 @@
 from tkinter import *
 
+import os
+directory_path = os.getcwd()
+print("My current directory is : " + directory_path)
+folder_name = os.path.basename(directory_path)
+print("My directory name is : " + folder_name)
 
-bck_img = "interfaces/resources/bg-img.png"
-logo_img = "interfaces/resources/logo_MM.png"
+
+bck_img = "./boomCraft.develop/client/interfaces/resources/bg-img.png"
+logo_img = "./boomCraft.develop/client/interfaces/resources/logo_MM.png"
 
 
 

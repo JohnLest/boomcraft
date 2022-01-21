@@ -70,6 +70,9 @@ class Connection:
             return
         if key == 1:
             self.user = PlayerInfoModel(**body)
+        elif key == 2:
+            self.user = body
+            pass
 
 
 

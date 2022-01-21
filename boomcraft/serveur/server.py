@@ -97,8 +97,8 @@ class Server:
             user: PlayerInfoModel = self.__new_player(key_socket, **body)
             self.write(key_socket, {1: user.dict()})
         elif key == 3:
-            print(body)
-
+            up_player = self.player_repo.update_resources(get_key(self.dico_connect, key_socket), body)
+            self.write(key_socket, {2: up_player.dict()})
         elif key == 100:
             self.s_n_connect.update({body.get("uuid"): key_socket})
         elif key == 101:

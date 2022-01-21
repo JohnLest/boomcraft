@@ -11,3 +11,10 @@ def deserialize(msg: bytes):
 
 def first_or_default(_iter):
     return next(iter(_iter), None)
+
+
+def get_key(_dict: dict, _value):
+    for key, value in _dict.items():
+        if value == _value:
+            return key
+    return None

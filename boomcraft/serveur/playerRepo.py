@@ -1,13 +1,14 @@
 import json
 import copy
 
+from tool import *
 from models.playerInfoModel import PlayerInfoModel
 from boomcraftApi import BoomcraftApi
 
 
 class PlayerRepo:
     def __init__(self):
-        self.lst_player = []
+        self.lst_player = {}
         self.boomcraft_api = BoomcraftApi()
 
     def __get_user(self, **data):
@@ -35,8 +36,6 @@ class PlayerRepo:
             _resources.update({"quantity": 0})
         return resources
 
-
-
     def new_player(self, **data):
         """
         if ``connection_type`` = "login"\n
@@ -53,5 +52,13 @@ class PlayerRepo:
         p_model = PlayerInfoModel(user=_player,
                                   own_resources=_own_resources.get("resource"),
                                   game_resources=_game_resources)
-        self.lst_player.append(p_model)
+        self.lst_player.update({p_model.user.id_user: p_model})
+        return p_model
+
+    def update_resources(self, id_user, game_resources: dict):
+        p_model: PlayerInfoModel = self.lst_player.get(id_user)
+        for _game_res in p_model.game_resources:
+            _game_res.quantity = game_resources.get(_game_res.resource, 0)
+        for _own_res in p_model.own_resources:
+            _own_res.quantity = _own_res.quantity - game_resources.get(_own_res.resource, 0)
         return p_model

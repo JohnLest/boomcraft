@@ -11,14 +11,10 @@ import os
 class MainWindow(Window):
     """ Class for main window """
     def __init__(self, connection):
-        # Displaying the script path
-        print(__file__)
-
-        # Displaying the parent directory of the script
-        print(os.path.dirname(__file__))
         self.connection = connection
         self.path_resources = "../resources/mainWindows"
         self.__set_game()
+        self.__get_game_resources()
 
         self.main_win = Window.__init__(self, (1200, 900), "Boomcraft")
         self.__gb_menu_button()
@@ -54,25 +50,25 @@ class MainWindow(Window):
         )
         self.resource_position_x = self.gbResourceBanner.data_rect.width / 5
         self.wood = ImageAndText(f"{self.path_resources}/wood.png",
-                                 "wood : 2632",
+                                 f"wood : {self.dict_resources.get('wood')}",
                                  position_midleft=(self.resource_position_x * 0, self.gbResourceBanner.data_rect.midleft[1])
-                                )
+                                 )
         self.food = ImageAndText(f"{self.path_resources}/food.png",
-                                 "food : 2632",
+                                 f"food : {self.dict_resources.get('food')}",
                                  position_midleft=(self.resource_position_x * 1, self.gbResourceBanner.data_rect.midleft[1])
-                                )
+                                 )
         self.iron = ImageAndText(f"{self.path_resources}/iron.png",
-                                 "iron : 2632",
+                                 f"iron : {self.dict_resources.get('iron')}",
                                  position_midleft=(self.resource_position_x * 2, self.gbResourceBanner.data_rect.midleft[1])
-                                )
+                                 )
         self.stone = ImageAndText(f"{self.path_resources}/stone.png",
-                                 "stone : 2632",
-                                 position_midleft=(self.resource_position_x * 3, self.gbResourceBanner.data_rect.midleft[1])
-                                )
+                                  f"stone : {self.dict_resources.get('stone')}",
+                                  position_midleft=(self.resource_position_x * 3, self.gbResourceBanner.data_rect.midleft[1])
+                                  )
         self.gold = ImageAndText(f"{self.path_resources}/gold.png",
-                                 "gold : 2632",
+                                 f"gold : {self.dict_resources.get('gold')}",
                                  position_midleft=(self.resource_position_x * 4, self.gbResourceBanner.data_rect.midleft[1])
-                                )
+                                 )
         self.wood.show_image_and_text(self.gbResourceBanner.surface)
         self.food.show_image_and_text(self.gbResourceBanner.surface)
         self.iron.show_image_and_text(self.gbResourceBanner.surface)
@@ -111,3 +107,9 @@ class MainWindow(Window):
     def __menu_strip_api(self):
         self.menu_stripe_dict = {"twitch": "Twitch", "fcb": "Facebook", "discord": "Discord"}
         self.menu_sprite = MenuStrip(self.btnAPI.btn_rect, self.menu_stripe_dict)
+
+    def __get_game_resources(self):
+        game_resources = self.connection.user.game_resources
+        self.dict_resources = {}
+        for resource in game_resources:
+            self.dict_resources.update({resource.resource: resource.quantity})

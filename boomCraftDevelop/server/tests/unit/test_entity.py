@@ -12,7 +12,7 @@ class TestEntity(unittest.TestCase):
       Test that the results of an incoming attack gives the expected output 
       """
 
-      entityTest = Entity([0,1],1,2,100,"app/resources/down/0.png",RessourceType.FOOD)
+      entityTest = Entity([0,1],1,2,100,"boomCraftDevelop/server/app/resources/down/0.png",RessourceType.FOOD)
 
       entityTest.reduce_life(55)
 
@@ -24,7 +24,7 @@ class TestEntity(unittest.TestCase):
       Test that the boolean disapear is set to true 
       """
 
-      entityTest = Entity([0,1],1,2,100,"app/resources/down/0.png",RessourceType.FOOD)
+      entityTest = Entity([0,1],1,2,100,"boomCraftDevelop/server/app/resources/down/0.png",RessourceType.FOOD)
 
       entityTest.inactive_appeareance()
 
@@ -37,7 +37,7 @@ class TestEntity(unittest.TestCase):
       Test that the returned value is correct
         
       """
-      entityTest = Entity([0,1],5,8,100,"app/resources/down/0.png",RessourceType.WOOD)
+      entityTest = Entity([0,1],5,8,100,"boomCraftDevelop/server/app/resources/down/0.png",RessourceType.WOOD)
 
       self.assertEqual(entityTest.give_area(),40)
 
@@ -48,7 +48,7 @@ class TestEntity(unittest.TestCase):
         
       """
 
-      entityTest = Entity([0,1],5,8,100,"app/resources/down/0.png",RessourceType.WOOD)
+      entityTest = Entity([0,1],5,8,100,"boomCraftDevelop/server/app/resources/down/0.png",RessourceType.WOOD)
 
       self.assertEqual(entityTest.get_width(),5)
 
@@ -58,7 +58,7 @@ class TestEntity(unittest.TestCase):
       Test that the return value is correct
         
       """
-      entityTest = Entity([0,1],5,8,100,"app/resources/down/0.png",RessourceType.WOOD)
+      entityTest = Entity([0,1],5,8,100,"boomCraftDevelop/server/app/resources/down/0.png",RessourceType.WOOD)
       self.assertEqual(entityTest.get_height(),8)
 
    def test_isRessourceTypeExists(self) : 
@@ -67,7 +67,7 @@ class TestEntity(unittest.TestCase):
       Test that the RessourceType entered is not recognized
         
       """
-      entityTest = Entity([0,1],5,8,100,"app/resources/down/0.png","henri")
+      entityTest = Entity([0,1],5,8,100,"boomCraftDevelop/server/app/resources/down/0.png","henri")
       value = entityTest.get_ressource_dropped()
       mustReturnFalse = isinstance(value, RessourceType)
       self.assertEqual(mustReturnFalse,False)

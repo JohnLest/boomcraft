@@ -1,6 +1,6 @@
 from typing import Dict
 
-from app.game_entity.Ressource import RessourceType
+from boomCraftDevelop.server.app.game_entity.Ressource import RessourceType
 
 
 class RessourceCounter :

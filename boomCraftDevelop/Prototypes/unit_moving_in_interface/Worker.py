@@ -10,7 +10,7 @@ CHARACTER_RIGHT = './split/right/0.png'
 class WORKER(Sprite):
     
 
-    def __init__(self, id : int, x : int , y : int, width : int = 16, height : int = 32) :
+    def __init__(self, id : int = 0, x : int =0 , y : int =0, width : int = 16, height : int = 32) :
         Sprite.__init__(self)
         self.id = id
         self.x : int = 0
@@ -39,6 +39,7 @@ class WORKER(Sprite):
 
         """
         self.road_to_destination = [[]]
+
         """ 
         The points on which mobile has to pass to arrive to the destination
         self.x = 9

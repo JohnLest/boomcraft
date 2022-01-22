@@ -2,7 +2,7 @@ import threading
 import time
 
 
-from typing import Dict
+from typing import Dict, List
 from GameEngine import GameEngine
 
 from Worker import WORKER
@@ -13,7 +13,7 @@ class Party(threading.Thread):
         threading.Thread.__init__(self)
         self.thread_id = thread_id
         self.game_engine : GameEngine = game_engine
-        self.teams = 0
+        self.teams : List[WORKER] = None
         self.workers : Dict[int, WORKER] = workers
         self.game_over = False
 
@@ -23,7 +23,8 @@ class Party(threading.Thread):
             print ("Starting ", self.thread_id)
             
             for worker in self.workers : 
-                self.game_engine.move_mobile(self.workers[worker])
+                if(self.workers[worker].destination !=[]) :
+                    self.game_engine.move_mobile(self.workers[worker])
             time.sleep(1)
 
             print ("Exiting ", self.thread_id)

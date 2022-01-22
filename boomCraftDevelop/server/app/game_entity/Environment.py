@@ -1,7 +1,7 @@
 from enum import Enum
-from app.game_entity.Entity import Entity
-from app.game_entity.Ressource import RessourceType
-from app.game_structure.Coord import Coord
+from boomCraftDevelop.server.app.game_entity.Entity import Entity
+from boomCraftDevelop.server.app.game_entity.Ressource import RessourceType
+from boomCraftDevelop.server.app.game_structure.Coord import Coord
 
 
 class EnvironmentType(Enum):

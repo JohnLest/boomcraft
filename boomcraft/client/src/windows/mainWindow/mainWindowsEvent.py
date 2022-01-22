@@ -31,6 +31,10 @@ class MainWindowEvent:
                         self.main_win.menu_sprite.enlarge()
                         self.main_win.menu_sprite.menu_strip_item.draw(self.main_win.window)
                         self.__menu_strip_on_click()
+                    if self.main_win.gbGame.data_rect.collidepoint(pygame.mouse.get_pos()):
+                        print(f"X : {str(event.pos[0])} / Y : {str(event.pos[1])}")
+                        self.main_win.worker.destination = [event.pos[0], event.pos[1]]
+
             pygame.display.update()
         return
 

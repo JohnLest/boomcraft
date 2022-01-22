@@ -11,6 +11,7 @@ class Worker(pygame.sprite.Sprite):
         self.coord: list = [x, y]
         self.width = width
         self.height = height
+        self.destination: list[int] = []
 
         self.img_up = pygame.image.load(CHARACTER_UP).convert_alpha()
         self.img_down = pygame.image.load(CHARACTER_DOWN).convert_alpha()

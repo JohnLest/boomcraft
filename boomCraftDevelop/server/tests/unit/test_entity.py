@@ -2,8 +2,8 @@ import unittest
 import sys
 
 
-from server.app.game_entity.Entity import Entity
-from server.app.game_entity.Ressource import RessourceType
+from app.game_entity.Entity import Entity
+from app.game_entity.Ressource import RessourceType
 
 class TestEntity(unittest.TestCase):
 

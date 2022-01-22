@@ -68,7 +68,7 @@ class GameEngine():
             mobile.road_to_destination[0].pop(0)
 
     def update_gui (self, mobile_id : int, x_move : int, y_move : int, direction : int) : 
-        
+        print("hello")
 
     def find_path (self, mobile : WORKER):
         """ 

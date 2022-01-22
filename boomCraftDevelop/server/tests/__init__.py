@@ -1,4 +1,4 @@
-import sys
+''' import sys
 sys.path.append("..")
-
-from app import *
+from boomCraftDevelop.server.app import * 
+'''

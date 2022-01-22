@@ -2,8 +2,8 @@ import unittest
 import sys
 
 
-from app.game_entity.Entity import Entity
-from app.game_entity.Ressource import RessourceType
+from boomCraftDevelop.server.app.game_entity.Entity import Entity
+from boomCraftDevelop.server.app.game_entity.Ressource import RessourceType
 
 class TestEntity(unittest.TestCase):
 

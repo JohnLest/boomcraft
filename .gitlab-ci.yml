@@ -27,8 +27,12 @@ build-job:       # This job runs in the build stage, which runs first.
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   before_script:
-    - apt-get update -qy
-    - apt-get install -y python-dev python-pip
+    - apt-get -qq update && apt-get -qq install -y python
+    - apt-get -qq update
+    - apt-get -qq install -y python python-virtualenv python-pip
+    - virtualenv venv
+    - . venv/bin/activate
+    - python -V
     - pip install -r requirements.txt
 
   script:

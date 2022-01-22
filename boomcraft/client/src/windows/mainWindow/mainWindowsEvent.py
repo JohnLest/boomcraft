@@ -1,3 +1,5 @@
+import time
+
 import pygame
 """ from widget import MenuStrip
 from mainWindow import MainWindow """
@@ -14,6 +16,10 @@ class MainWindowEvent:
     def __event(self):
         btn = self.main_win.btnAPI
         while True:
+            self.main_win.group.update()
+            self.main_win.group.draw(self.main_win.gbGame.surface)
+            self.main_win.gbGame.show_groupbox(self.main_win.window)
+            self.__handle_input()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
@@ -43,3 +49,16 @@ class MainWindowEvent:
                         self.main_win.menu_sprite.tighten()
                         self.main_win.gbGame.show_groupbox(self.main_win.window)
                         return
+
+    def __handle_input(self):
+        pressed = pygame.key.get_pressed()
+        if pressed[pygame.K_w]:
+            print("up")
+            time.sleep(0.5)
+        if pressed[pygame.K_s]:
+            print("down")
+        if pressed[pygame.K_a]:
+            print("left")
+        if pressed[pygame.K_d]:
+            print("right")
+            self.main_win.worker.move_right()

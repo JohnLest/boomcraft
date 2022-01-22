@@ -1,6 +1,8 @@
 import pygame
 import pyscroll.data
 import pytmx.util_pygame
+
+from src.windows.mainWindow.worker import Worker
 from src.windows.menuWindow import MenuWindow
 from src.windows.mainWindow.window import Window
 from src.windows.mainWindow.widget import *
@@ -22,6 +24,8 @@ class MainWindow(Window):
         self.__gb_game()
         self.__gb_action()
         self.__menu_strip_api()
+
+
 
     def __set_game(self):
         self.connection.service()
@@ -89,9 +93,12 @@ class MainWindow(Window):
         tmx_data = pytmx.util_pygame.load_pygame(f"{self.path_resources}/map/BoomCraft_map.tmx")
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.gbGame.surface.get_size())
-        group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
-        group.draw(self.gbGame.surface)
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
+        self.worker = Worker(100, 150)
+        self.group.add(self.worker)
+        # self.group.update()
 
+        self.group.draw(self.gbGame.surface)
         self.gbGame.show_groupbox(self.window)
         return self
 

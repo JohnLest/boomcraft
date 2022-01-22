@@ -13,7 +13,7 @@ class Party(threading.Thread):
         threading.Thread.__init__(self)
         self.thread_id = thread_id
         self.game_engine : GameEngine = game_engine
-        self.teams 
+        self.teams = 0
         self.workers : Dict[int, WORKER] = workers
         self.game_over = False
 

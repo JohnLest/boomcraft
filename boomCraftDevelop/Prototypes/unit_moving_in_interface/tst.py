@@ -49,7 +49,7 @@ XX = 300
 DEPLACEMENT = 0
 
 all_sprites = pygame.sprite.Group()
-carre = CARRE()
+carre = CARRE(50, 50)
 all_sprites.add(carre)
 
 while 1:

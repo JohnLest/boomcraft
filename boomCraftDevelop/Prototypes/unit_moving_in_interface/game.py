@@ -26,7 +26,7 @@ screen.blit(map, (0,0))
 #create brain
 ge : GameEngine = GameEngine()
 #create a worker
-worker : WORKER = WORKER(0,0)
+worker : WORKER = WORKER(5, 0,0)
 worker_position = worker.img.get_rect(topleft=(worker.x, worker.y))
 
 #create dict of workers

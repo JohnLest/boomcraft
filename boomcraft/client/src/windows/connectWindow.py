@@ -62,7 +62,7 @@ class ConnectWindow:
                                  text="Quit",
                                  fg='red',
                                  font=("Helvetica", 12),
-                                 command=self.__btn_connect_click)
+                                 command=self.__btn_quit_click)
         self.btn_quit.place(x=50, y=190, height=30, width=300)
 
     def __btn_connect_click(self):
@@ -86,7 +86,8 @@ class ConnectWindow:
             time.sleep(0.5)
         self.window.quit()
 
-
+    def __btn_quit_click(self):
+        self.window.quit()
 
     def __connect(self):
         user = {"pseudo": "",

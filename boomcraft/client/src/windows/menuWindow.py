@@ -1,6 +1,7 @@
 from tkinter import *
 from src.windows.connectWindow import ConnectWindow
 from src.windows.newGameWindow import NewGameWindow
+from src.windows.paypal import Paypal
 
 
 class MenuWindow:
@@ -53,6 +54,14 @@ class MenuWindow:
                                    font=("Helvetica", 12),
                                    command=self.__btn_settings_click)
         self.btn_settings.place(x=380, y=360)
+        self.btn_paypal = Button(self.window,
+                                   text="Donate with paypal",
+                                   fg='blue',
+                                   width='30',
+                                   height='2',
+                                   font=("Helvetica", 12),
+                                   command=self.__btn_paypal_click)
+        self.btn_paypal.place(x=380, y=420)
         self.btn_quit = Button(self.window,
                                text="Quit",
                                fg='red',
@@ -60,7 +69,7 @@ class MenuWindow:
                                height='2',
                                font=("Helvetica", 12),
                                command=self.__btn_quit_click)
-        self.btn_quit.place(x=380, y=420)
+        self.btn_quit.place(x=380, y=480)
 
     def __btn_connect_click(self):
         conn_win = ConnectWindow(self.connection)
@@ -82,6 +91,10 @@ class MenuWindow:
 
     def __btn_settings_click(self):
         print(f"Settings")
+
+    def __btn_paypal_click(self):
+        paypal = Paypal()
+        paypal.window.destroy()
 
     def __btn_quit_click(self):
         self.window.quit()

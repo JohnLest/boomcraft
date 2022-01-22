@@ -1,5 +1,3 @@
-from app.game_structure.Coord import Coord
-
 class Coord :
     ''' 
     Represents a coordinate in a table using line and col numbers
@@ -8,11 +6,11 @@ class Coord :
         self.__line = line
         self.__col = col
     
-    def equals(self,c : Coord):
+    def equals(self,c):
 
         return (self.__line == c.get_line() & self.__col == c.get_col())
 
-    def add(self,c : Coord):
+    def add(self,c):
         
         return Coord(self.__line + c.line, self.__col + c.col);
 

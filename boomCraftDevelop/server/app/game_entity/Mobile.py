@@ -58,7 +58,7 @@ class Mobile(Ressource, Entity):
         def get_destination(self):
             return self.__destination
         
-        def set_path_to_follow(self,path_to_follow : LinkedList[Coord]):
+        def set_path_to_follow(self,path_to_follow : LinkedList):
             self.__path_to_follow=path_to_follow
         def get_path_to_follow(self):
             return self.__path_to_follow

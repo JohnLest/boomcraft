@@ -154,7 +154,11 @@ def get_start_location(players):
 		y = random.randrange(0,H)
 		for player in players:
 			p = players[player]
+
 			dis = math.sqrt((x - p["x"])**2 + (y-p["y"])**2)
+
+			print("[DISCONNECT] dis:", dis, ", p.name :", p["name"])
+
 			if dis <= START_RADIUS + p["score"]:
 				stop = False
 				break

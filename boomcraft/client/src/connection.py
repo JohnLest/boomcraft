@@ -4,8 +4,7 @@ import time
 import types
 import threading
 from typing import Dict
-from src.models.userModel import UserModel
-from src.models.resourcesModel import AllResourcesModel
+from models.playerInfoModel import PlayerInfoModel
 from tool import *
 
 
@@ -70,10 +69,10 @@ class Connection:
         if msg is None:
             return
         if key == 1:
-            self.user = UserModel(**body)
+            self.user = PlayerInfoModel(**body)
         elif key == 2:
-            print(body)
-            self.resources = AllResourcesModel(**body)
-            print("stop")
+            self.user = PlayerInfoModel(**body)
+            pass
+
 
 

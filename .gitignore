@@ -1,6 +1,6 @@
 # IDEs folders
 /.vs/*
-/.vscode/*
+.vscode/*
 /.idea/*
 boomcraft/client/.idea/*
 boomcraft/serveur/.idea/*

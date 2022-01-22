@@ -1,15 +1,15 @@
-import time
 from tkinter import *
 from src.windows.connectWindow import ConnectWindow
 from src.windows.newGameWindow import NewGameWindow
+from src.windows.paypal import Paypal
 
 
 class MenuWindow:
     def __init__(self, connection):
         self.connection = connection
-        self.pseudo = "John"
         self.bck_img = "../resources/bg-img.png"
         self.logo_img = "../resources/logo_MM.png"
+        self.new_game = False
 
         self.window = Tk()
         self.window.title('BoomCraft - Menu')
@@ -54,6 +54,14 @@ class MenuWindow:
                                    font=("Helvetica", 12),
                                    command=self.__btn_settings_click)
         self.btn_settings.place(x=380, y=360)
+        self.btn_paypal = Button(self.window,
+                                   text="Donate with paypal",
+                                   fg='blue',
+                                   width='30',
+                                   height='2',
+                                   font=("Helvetica", 12),
+                                   command=self.__btn_paypal_click)
+        self.btn_paypal.place(x=380, y=420)
         self.btn_quit = Button(self.window,
                                text="Quit",
                                fg='red',
@@ -61,28 +69,36 @@ class MenuWindow:
                                height='2',
                                font=("Helvetica", 12),
                                command=self.__btn_quit_click)
-        self.btn_quit.place(x=380, y=420)
+        self.btn_quit.place(x=380, y=480)
 
     def __btn_connect_click(self):
         conn_win = ConnectWindow(self.connection)
         conn_win.window.destroy()
         del conn_win
         self.btn_connect["state"] = "disabled"
-        pseudo = self.connection.user.pseudo
+        pseudo = self.connection.user.user.pseudo
         self.btn_connect["text"] = f"hello {pseudo}"
         self.btn_new_game["state"] = "active"
 
     def __btn_new_game_click(self):
-        print(f"New game")
-        NewGameWindow(self.connection, self.connection.user)
+        new_game_win = NewGameWindow(self.connection.user)
+        new_game_win.window.destroy()
+        if new_game_win.new_game:
+            self.new_game = True
+            self.connection.write({3: new_game_win.game_resources_dict})
+        del new_game_win
+        self.window.quit()
 
     def __btn_settings_click(self):
         print(f"Settings")
 
+    def __btn_paypal_click(self):
+        paypal = Paypal()
+        paypal.window.destroy()
+        del paypal
+
     def __btn_quit_click(self):
         self.window.quit()
 
-    def __del__(self):
-        self.window.destroy()
 
 

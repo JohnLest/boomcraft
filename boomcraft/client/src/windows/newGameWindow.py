@@ -2,13 +2,13 @@ from tkinter import *
 
 
 class NewGameWindow:
-    def __init__(self, connection, user):
-        self.user = user
-        self.connection = connection
+    def __init__(self, player_info):
+        self.player_info = player_info
+        self.new_game = False
         self.window = Tk()
         self.__set_labels()
         self.__set_buttons()
-        self.__get_db_resource()
+        self.__get_own_resource()
         self.__set_resources()
 
         self.window.title('BoomCraft - New Game')
@@ -43,7 +43,8 @@ class NewGameWindow:
                                 text="Start the game",
                                 fg='blue', width='20',
                                 height='2',
-                                font=("Helvetica", 20))
+                                font=("Helvetica", 20),
+                                command=self.__btn_start_click)
         self.btn_start.place(x=600, y=240, anchor='center')
 
         self.btn_quit = Button(self.window,
@@ -51,17 +52,14 @@ class NewGameWindow:
                                fg='red',
                                width='30',
                                height='2',
-                               font=("Helvetica", 12))
+                               font=("Helvetica", 12),
+                               command=self.__btn_quit_click)
         self.btn_quit.place(x=600, y=680, anchor='center')
 
-    def __get_db_resource(self):
-        self.connection.write({3: self.user.id_user})
-        self.db_wood = 542
-        self.db_stone = 421
-        self.db_food = 325
-        self.db_iron = 150
-        self.db_gold = 41
-        self.db_worker = 2
+    def __get_own_resource(self):
+        self.own_resources_dict = {}
+        for own_resource in self.player_info.own_resources:
+            self.own_resources_dict.update({own_resource.resource: own_resource.quantity})
 
     def __set_resources(self):
         self.resources_total = {}
@@ -107,12 +105,12 @@ class NewGameWindow:
         lbl_header_all.place(x=836, y=420)
         # endregion
 
-        self.__create_table_resource("Wood", self.db_wood, self.wood, 450)
-        self.__create_table_resource("Stone", self.db_stone, self.stone, 480)
-        self.__create_table_resource("Food", self.db_food, self.food, 510)
-        self.__create_table_resource("Iron", self.db_iron, self.iron, 540)
-        self.__create_table_resource("Gold", self.db_gold, self.gold, 570)
-        self.__create_table_resource("Worker", self.db_worker, self.worker, 600)
+        self.__create_table_resource("Wood", self.own_resources_dict.get("wood"), self.wood, 450)
+        self.__create_table_resource("Stone", self.own_resources_dict.get("stone"), self.stone, 480)
+        self.__create_table_resource("Food", self.own_resources_dict.get("food"), self.food, 510)
+        self.__create_table_resource("Iron", self.own_resources_dict.get("iron"), self.iron, 540)
+        self.__create_table_resource("Gold", self.own_resources_dict.get("gold"), self.gold, 570)
+        self.__create_table_resource("Worker", self.own_resources_dict.get("worker"), self.worker, 600)
 
     def __create_table_resource(self, name_resource, resource_own, resource, y):
         lbl_res = Label(self.window,
@@ -144,4 +142,23 @@ class NewGameWindow:
 
     def __btn_click(self, max_res, import_res):
         import_res.set(max_res)
+
+    def __btn_quit_click(self):
+        self.window.quit()
+
+    def __btn_start_click(self):
+        self.game_resources_dict = {
+            "wood": self.wood.get(),
+            "stone": self.stone.get(),
+            "food": self.food.get(),
+            "iron": self.iron.get(),
+            "gold": self.gold.get(),
+            "worker": self.worker.get()
+        }
+        self.new_game = True
+        self.window.quit()
+
+
+
+
 

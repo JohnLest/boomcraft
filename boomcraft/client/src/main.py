@@ -1,15 +1,18 @@
-from windows.mainWindow import MainWindow
+import pygame
+from windows.mainWindow.mainWindow import MainWindow
+from windows.mainWindow.mainWindowsEvent import MainWindowEvent
 from connection import Connection
-import webbrowser
 
 
 # region main
 
 def main():
     print(f"Hello Client")
-    new_connection = Connection("127.0.0.1", 8080)
-    MainWindow(new_connection)
-
+    new_connection = Connection("192.168.0.100", 8080)
+    pygame.init()
+    main_win = MainWindow(new_connection)
+    MainWindowEvent(main_win)
+    pygame.quit()
 # endregion
 
 

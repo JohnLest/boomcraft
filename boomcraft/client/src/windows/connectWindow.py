@@ -62,7 +62,7 @@ class ConnectWindow:
                                  text="Quit",
                                  fg='red',
                                  font=("Helvetica", 12),
-                                 command=self.__btn_connect_click)
+                                 command=self.__btn_quit_click)
         self.btn_quit.place(x=50, y=190, height=30, width=300)
 
     def __btn_connect_click(self):
@@ -78,7 +78,7 @@ class ConnectWindow:
     def __btn_facebook_click(self):
         _uuid = uuid.uuid4()
         self.connection.write({100: {"uuid": str(_uuid)}})
-        url = f"http://localhost:8060/facebook/{_uuid}"
+        url = f"http://localhost:8000/facebook/{_uuid}"
         webbrowser.open(url)
         while True:
             if self.connection.user is not None:
@@ -86,12 +86,16 @@ class ConnectWindow:
             time.sleep(0.5)
         self.window.quit()
 
-
+    def __btn_quit_click(self):
+        self.window.quit()
 
     def __connect(self):
-        user = {"pseudo": self.txt_pseudo.get(),
-                "mail": self.txt_mail.get(),
-                "password": self.txt_password.get()}
+        user = {"pseudo": "",
+                "mail": "johnlest@boomcraft.be",
+                "password": "123_psswrd"}
+        # user = {"pseudo": self.txt_pseudo.get(),
+        #        "mail": self.txt_mail.get(),
+        #        "password": self.txt_password.get()}
         self.connection.write({self.head: user})
         while True:
             if self.connection.user is not None:

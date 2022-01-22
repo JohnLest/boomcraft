@@ -7,16 +7,16 @@ from pygame import Rect, Surface
 
 from app.game_structure.Coord import Coord
 
-from app.game_entity.Ressource import RessourceOffer, RessourceType
-from app.game_entity.Character import Worker
 from app.Tools import Tools
-from app.game_entity.Building import Building
 from app.game_structure.PygameClasses import SpriteSheet
 
 class Entity (Sprite) :
     
-    def __init__(self, coords : Set[Coord], width : int, height : int, life : int, look_in_game : str, ressource_dropped : RessourceType):
+    def __init__(self, coords : Set[Coord], width : int, height : int, life : int, look_in_game : str, ressource_dropped ):
         Sprite.__init__(self)
+        from app.game_entity.Ressource import RessourceOffer, RessourceType
+        from app.game_entity.Character import Worker
+        from app.game_entity.Building import Building
 
         """
         Construct a new 'Entity' object.
@@ -78,7 +78,7 @@ class Entity (Sprite) :
         '''
         The path to the look of the entity in the game
         '''
-        self.__ressource_dropped = ressource_dropped
+        self.__ressource_dropped : RessourceType = ressource_dropped
         '''
         The ressource that the entity drops when destroyed
         '''
@@ -107,14 +107,15 @@ class Entity (Sprite) :
         """ 
         make entity appear inactive
         """
-        print("active " + self.__active)
+        print("active ", self.__disappear)
+        self.__disappear=True
 
     
     def define_look_in_game(self, path_to_entity_image):
         """
         define the path to follow to get the entity image
         """
-        print("look_in_game " + self.__look_in_game)
+        print("look_in_game ", self.__look_in_game)
 
 
     

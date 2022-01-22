@@ -70,8 +70,8 @@ class Forum(Building, implements(TrainerInterface)):
         create a unity of character_type and return it 
         '''
         if character_type == CharacterType.WORKER:
-            
-            return Worker(name, weapon, self.appear_next_to())
+            print("hello worker")
+            #return Worker(name, weapon, self.appear_next_to())
             
 
         '''         elif character_type == CharacterType.WARRIOR:
@@ -85,11 +85,14 @@ class Forum(Building, implements(TrainerInterface)):
         '''
 
 
-    def appear_next_to(self,character_type : CharacterType):
+    def appear_next_to(self,character_type):
         ''' 
         return a coord on the left or the right of the building 
+        :param : CharacterType
         '''
-        self.__coords
+        #self.__coords
+        print("hello worker")
+
 
 
  

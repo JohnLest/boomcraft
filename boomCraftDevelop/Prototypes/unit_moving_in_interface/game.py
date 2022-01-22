@@ -1,5 +1,10 @@
+from typing import Dict
 import pygame
 from pygame.locals import *
+from Worker import WORKER
+from Party import Party
+
+from GameEngine import GameEngine
 
 pygame.init()
 
@@ -18,49 +23,67 @@ screen = pygame.display.set_mode(SCREEN_SIZE)
 map = pygame.image.load(map_file)
 screen.blit(map, (0,0))
 
+#create brain
+ge : GameEngine = GameEngine()
+#create a worker
+worker : WORKER = WORKER(0,0)
+worker_position = worker.img.get_rect(topleft=(worker.x, worker.y))
+
+#create dict of workers
+workers : Dict[int, WORKER] = {}
+surfaces : Dict[int, Rect] = {}
+
+#add one to the dict
+workers[0] = worker
+surfaces[0] = worker_position
+
+#create a party with workers
+party : Party = Party(1, ge,workers)
+party.start()
 #load the character
-character = pygame.image.load(character_file).convert_alpha()
+#character = pygame.image.load(character_file).convert_alpha()
 
-character_position = character.get_rect()
-screen.blit(character, character_position)
-
-
-''' def pxToCase (self, x, y) : 
-
-    x%16
-    y% 
-'''
-
+screen.blit(worker.img, worker_position)
 
 pygame.display.flip()
+
+def receive (self, mobile_id : int, x_move : int, y_move : int, direction : int) :
+        workers[mobile_id].x += x_move 
+        workers[mobile_id].y += y_move
+        surfaces[mobile_id].move(x_move,y_move) 
+
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            party.game_over=True
             pygame.quit()
 
+        '''        
         if event.type == KEYDOWN:
             if event.key == K_UP:
-                character_position = character_position.move(0,-5)
+                worker_position = worker_position.move(0,-5)
 
-        if event.type == KEYDOWN:
             if event.key == K_DOWN:
-                character_position = character_position.move(0,5)
+                worker_position = worker_position.move(0,5)
 
-        if event.type == KEYDOWN:
             if event.key == K_LEFT:
-                character_position = character_position.move(-5,0)
+                worker_position = worker_position.move(-5,0)
 
-        if event.type == KEYDOWN:
             if event.key == K_RIGHT:
-                character_position = character_position.move(5,0)
+                worker_position = worker_position.move(5,0) 
+        '''
 
-        if event.type == MOUSEBUTTONDOWN and event.button == 1 :
-    	    print("X : " + str(event.pos[0]) +" / Y : " + str(event.pos[1]))
-
-
+        if (event.type == MOUSEBUTTONDOWN and event.button == 1) :
+            print("X : " + str(event.pos[0]) +" / Y : " + str(event.pos[1]))
+            worker.destination=[event.pos[0],event.pos[1]]
+            ge.update_road_to_destination(worker)
 
     screen.blit(map, (0,0))	
-    screen.blit(character, character_position)
+    screen.blit(worker.img, worker_position)
     #refresh
     pygame.display.flip()
+
+
+
+    

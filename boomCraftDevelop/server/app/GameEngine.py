@@ -1,7 +1,6 @@
 from typing import Dict
-from app.game_entity.Character import Character
-from app.GameServer import GameServer
-from app.PlayerInGame import PlayerInGame
+from app import GameServer
+from app import PlayerInGame
 from app.Party import Party
 
 

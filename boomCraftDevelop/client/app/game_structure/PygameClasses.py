@@ -10,10 +10,10 @@ from pygame import Rect, Surface
 import pygame, random, sys
 
 class Level(object):
-    def __init__(self, fileName):
+    def __init__(self, file_name):
 
          #Create map object from PyTMX
-        self.mapObject = pytmx.load_pygame(fileName)
+        self.mapObject = pytmx.load_pygame(file_name)
         
         # Create list of layers for map
         self.layers : List[Layer] = [] 
@@ -77,8 +77,8 @@ class SpriteSheet(object):
     ''' 
     Sprite sheet class to load sprites from player spritesheet 
     '''
-    def __init__(self, fileName):
-        self.sheet = pygame.image.load(fileName)
+    def __init__(self, file_name):
+        self.sheet = pygame.image.load(file_name)
 
     def image_at(self, rectangle):
         rect = Rect(rectangle)

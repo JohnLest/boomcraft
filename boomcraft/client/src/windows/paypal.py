@@ -1,6 +1,7 @@
 import json
 from tkinter import *
 import requests
+import webbrowser
 
 class Paypal:
     def __init__(self):
@@ -63,31 +64,10 @@ class Paypal:
         self.entry_msg.place(x=300, y=100)
 
     def __btn_donate_click(self):
-        data: dict = {
-            "transactions": [
-                {
-                    "item_list": {
-                        "items": [
-                            {
-                                "name": self.entry_name.get(),
-                                "sku": "item",
-                                "price": self.rb_value.get(),
-                                "currency": "EUR",
-                                "quantity": 1
-                            }
-                        ]
-                    },
-                    "amount": {
-                        "total": self.rb_value.get(),
-                        "currency": "EUR"
-                    },
-                    "description": self.entry_msg.get()
-                }
-            ]
-        }
-        req = requests.post(f"http://localhost:8000/paypal/", json=json.dumps(data))
-        print(req)
-
+        parm = f"paypal?amount={self.rb_value.get()}&name={self.entry_name.get()}&msg={self.entry_msg.get()}"
+        uri = f"http://localhost:8000/"
+        webbrowser.open(f"{uri}{parm}")
+        self.window.quit()
 
 
     def __btn_quit_click(self):

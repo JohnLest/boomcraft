@@ -128,10 +128,11 @@ def facebook_auth():
 
 # region Paypal
 
-@app.route('/paypal/', methods=["POST"])
+@app.route('/paypal')
 def paypal_init():
-    req = request.get_json()
-    print(req)
+    amount = request.args.get("amount")
+    name = request.args.get("name")
+    msg = request.args.get("msg")
     paypal_data: dict = secret.get("paypal")
     paypal.configure({
         "mode": "sandbox",  # sandbox or live
@@ -166,26 +167,31 @@ def paypal_Return():
 
 @app.route('/paypal_payment', methods=['GET'])
 def paypal_payment():
+    amount = str(request.args.get("amount"))
+    name = request.args.get("name")
+    msg = request.args.get("msg")
+
     payment = paypal.Payment({
         "intent": "sale",
         "payer": {
             "payment_method": "paypal"},
         "redirect_urls": {
-            "return_url": "http://127.0.0.1:5000/paypal_Return?success=true",
-            "cancel_url": "http://127.0.0.1:5000/paypal_Return?cancel=true"},
+            "return_url": "http://localhost:8000/paypal_Return?success=true",
+            "cancel_url": "http://localhost:8000/paypal_Return?cancel=true"},
         "transactions": [{
             "item_list": {
                 "items": [{
-                    "name": "item",
+                    "name": name,
                     "sku": "item",
-                    "price": "60.00",
-                    "currency": "USD",
+                    "price": amount,
+                    "currency": "EUR",
                     "quantity": 1}]},
             "amount": {
-                "total": "60.0",
-                "currency": "USD"},
-            "description": "test 123 This is the payment transaction description."}]})
+                "total": amount,
+                "currency": "EUR"},
+            "description": msg}]})
 
+    # payment = paypal.Payment()
     if payment.create():
         print("Payment[%s] created successfully" % (payment.id))
         for link in payment.links:

@@ -16,7 +16,7 @@
             <p>PayPal SANDBOX Demo</p>
         </div>
         <h2>Check out with PayPal</h2>
-          <a href="/paypal_payment">
+          <a href="/paypal_payment?amount={{amount}}&name={{name}}&msg={{msg}}">
               <img class="img-responsive" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" />
           </a>
         <h2>PayPal Credit</h2>
@@ -42,6 +42,7 @@
                     <th>Payment_ID</th>
                     <th>Sale_ID</th>
                     <th>Amount</th>
+                    <th>Message</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,6 +51,7 @@
                         <td>{{ history.payment_id }}</td>
                         <td>{{ history.sale_id }}</td>
                         <td>{{ history.amount }}</td>
+                       <td>{{msg}}</td>
                     </tr>
                {% endfor%}
             </tbody>

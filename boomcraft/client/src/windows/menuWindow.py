@@ -95,6 +95,7 @@ class MenuWindow:
     def __btn_paypal_click(self):
         paypal = Paypal()
         paypal.window.destroy()
+        del paypal
 
     def __btn_quit_click(self):
         self.window.quit()

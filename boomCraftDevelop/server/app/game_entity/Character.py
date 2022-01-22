@@ -1,11 +1,11 @@
 from enum import Enum
 from typing import List
-from app.Tools import Tools
-from app.game_entity.Entity import Entity
-from app.game_entity.Environment import Environment, EnvironmentType
-from app.game_entity.Mobile import Mobile
-from app.game_entity.Ressource import RessourceType
-from app.game_structure.Coord import Coord
+from boomCraftDevelop.server.app.Tools import Tools
+from boomCraftDevelop.server.app.game_entity.Entity import Entity
+from boomCraftDevelop.server.app.game_entity.Environment import Environment, EnvironmentType
+from boomCraftDevelop.server.app.game_entity.Mobile import Mobile
+from boomCraftDevelop.server.app.game_entity.Ressource import RessourceType
+from boomCraftDevelop.server.app.game_structure.Coord import Coord
 
 class WeaponType(Enum):
     LANCE = 1

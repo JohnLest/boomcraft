@@ -1,8 +1,8 @@
 from typing import List, Set
-from app.game_entity.Entity import Entity
-from app.game_entity.Ressource import Ressource, RessourceType
-from app.game_structure.Coord import Coord
-from app.game_entity.LinkedList import LinkedList
+from boomCraftDevelop.server.app.game_entity.Entity import Entity
+from boomCraftDevelop.server.app.game_entity.Ressource import Ressource, RessourceType
+from boomCraftDevelop.server.app.game_structure.Coord import Coord
+from boomCraftDevelop.server.app.game_entity.LinkedList import LinkedList
 
 
 class Mobile(Ressource, Entity):

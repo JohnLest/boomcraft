@@ -2,14 +2,14 @@
 from typing import Dict
 from app.PlayerInGame import PlayerInGame
 from app.game_structure.PlayArea import PlayArea
-from app.GameEngine import GameEngine
 
 
 class Party():
 
 
-    def __init__(self, id_uniq: str = '0', ge: GameEngine = None, party_nb : int = -1) :
+    def __init__(self, id_uniq: str = '0', ge = None, party_nb : int = -1) :
 
+        from app import GameEngine
 
         self.__id_uniq: str = id_uniq
         """ The id of the party """
@@ -54,7 +54,7 @@ class Party():
 
 
 
-    def set__ge(self, ge : GameEngine):
+    def set__ge(self, ge):
         self.__ge = ge
     def get__ge(self) :
         return self.__ge    

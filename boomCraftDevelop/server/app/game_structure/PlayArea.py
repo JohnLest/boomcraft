@@ -1,5 +1,4 @@
-from ast import List
-from typing import Dict
+from typing import Dict,List
 from app.Settings import MAX_HEIGTH_SIZE, MAX_WIDTH_SIZE
 
 

@@ -1,8 +1,6 @@
 from typing import ByteString, Dict
-from app.game_entity.Character import Character
-from app.GameEngine import GameEngine
 from app.game_structure.PlayArea import PlayArea
-
+from app import GameEngine
 
 class GameServer():
     """
@@ -10,7 +8,8 @@ class GameServer():
     
     Here we receive and send all the messages from and to the clients
     """
-    def __init__(self, game_engine : GameEngine, width: int, height: int, number_of_player_in_a_game : int = 2, number_of_port : int = 55555):
+    def __init__(self, game_engine , width: int, height: int, number_of_player_in_a_game : int = 2, number_of_port : int = 55555):
+
 
         self.__width=width
         """ The play board width """
@@ -21,7 +20,7 @@ class GameServer():
         self.__party_nb=0
         """ The next number available to assign to a new party """
 
-        self.__game_engine = game_engine
+        self.__game_engine : GameEngine = game_engine
         """ the brain of the game """
 
         self.__game_engine.set__game_server(self) # set the game_server in game engine

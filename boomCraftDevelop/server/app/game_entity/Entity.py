@@ -5,18 +5,18 @@ import pytmx
 from pygame.sprite import Group, Sprite
 from pygame import Rect, Surface
 
-from app.game_structure.Coord import Coord
 
-from app.Tools import Tools
-from app.game_structure.PygameClasses import SpriteSheet
+from boomCraftDevelop.server.app.Tools import Tools
+from boomCraftDevelop.server.app.game_structure.PygameClasses import SpriteSheet
+from boomCraftDevelop.server.app.game_structure.Coord import Coord
 
 class Entity (Sprite) :
     
     def __init__(self, coords : Set[Coord], width : int, height : int, life : int, look_in_game : str, ressource_dropped ):
         Sprite.__init__(self)
-        from app.game_entity.Ressource import RessourceOffer, RessourceType
-        from app.game_entity.Character import Worker
-        from app.game_entity.Building import Building
+        from boomCraftDevelop.server.app.game_entity.Ressource import RessourceOffer, RessourceType
+        from boomCraftDevelop.server.app.game_entity.Character import Worker
+        from boomCraftDevelop.server.app.game_entity.Building import Building
 
         """
         Construct a new 'Entity' object.

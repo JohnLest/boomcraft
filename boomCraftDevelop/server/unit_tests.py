@@ -1,5 +1,5 @@
 import sys
-from server.tests.unit.test_entity import TestEntity
+from boomCraftDevelop.server.tests.unit.test_entity import TestEntity
 import unittest
 
 print(f"Work with {sys.version}")

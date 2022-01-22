@@ -1,14 +1,14 @@
 from enum import Enum
 from interface import implements
-from app.Tools import Tools
+from boomCraftDevelop.server.app.Tools import Tools
 
-from app.game_entity.Entity import Entity
-from app.game_entity.Ressource import Ressource
-from app.game_entity.Ressource import RessourceType
-from app.game_entity.TrainerInterface import TrainerInterface
-from app.game_entity.Character import Character, Worker
-from app.game_entity.Character import CharacterType
-from app.game_structure.Coord import Coord
+from boomCraftDevelop.server.app.game_entity.Entity import Entity
+from boomCraftDevelop.server.app.game_entity.Ressource import Ressource
+from boomCraftDevelop.server.app.game_entity.Ressource import RessourceType
+from boomCraftDevelop.server.app.game_entity.TrainerInterface import TrainerInterface
+from boomCraftDevelop.server.app.game_entity.Character import Character, Worker
+from boomCraftDevelop.server.app.game_entity.Character import CharacterType
+from boomCraftDevelop.server.app.game_structure.Coord import Coord
 
 class BuildingType(Enum):
     FARM = 1

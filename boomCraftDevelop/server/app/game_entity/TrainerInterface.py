@@ -1,4 +1,4 @@
-from app.game_entity.Character import *
+from boomCraftDevelop.server.app.game_entity.Character import *
 
 from interface import implements, Interface
 

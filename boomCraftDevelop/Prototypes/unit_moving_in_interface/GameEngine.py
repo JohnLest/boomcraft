@@ -37,15 +37,6 @@ class GameEngine():
         self.__parties : Dict[int,Party] = None 
         """ The existing parties  """
 
-    def run(self):
-        print ("Starting " + self.thread_id)
-
-        for worker in self.workers : 
-            print ("prrrt")
-            self.move_mobile(worker)
-        
-        print ("Exiting " + self.thread_id)
-
     def update_road_to_destination(self,mobile : WORKER) :
         ''' 
         update the road to follow the shorter path
@@ -53,19 +44,54 @@ class GameEngine():
         mobile.current_step=[mobile.x,mobile.y]
 
         if(mobile.destination !=[]) :
-            while ( mobile.destination != mobile.current_step) :
+            while ( mobile.destination != mobile.current_step and mobile.destination !=[]) :
                 self.find_path(mobile)
                 time.sleep(1)
 
     def move_mobile(self,mobile : WORKER) :
-        ''' 
+        '''
         make mobile entity move of one step 
         '''
+
+        print("before check road_to_destination")
+        print(mobile.road_to_destination)
+
         if(mobile.road_to_destination != [[]]) :
+            
+            print("road_to_destination")
+            self.print_list(mobile.road_to_destination)
+            print(" avant mobile.x", mobile.x,"mobile.y", mobile.y)
+
             mobile.x += mobile.road_to_destination[0][0] 
             mobile.y += mobile.road_to_destination[0][1]
-            self.update_gui(mobile.id,mobile.road_to_destination[0], mobile.road_to_destination[1])
-            mobile.road_to_destination[0].pop(0)
+
+            print("après mobile.x", mobile.x,"mobile.y", mobile.y)
+
+            direction : int = 0
+            if(mobile.road_to_destination[0] == [0,1]) :
+                direction = 1
+            elif(mobile.road_to_destination[0] == [0,-1]) :
+                direction = 2
+            elif(mobile.road_to_destination[0] == [1,0]) :
+                direction = 3
+            elif(mobile.road_to_destination[0] == [-1,0]) :
+                direction = 4
+            elif(mobile.road_to_destination[0] == [1,1]) :
+                direction = 5
+            elif(mobile.road_to_destination[0] == [-1,-1]) :
+                direction = 6
+            elif(mobile.road_to_destination[0] == [-1,1]) :
+                direction = 7
+            elif(mobile.road_to_destination[0] == [1,-1]) :
+                direction = 8
+
+            self.update_gui(mobile.id,mobile.road_to_destination[0][0], mobile.road_to_destination[0][1],direction)
+
+
+            mobile.road_to_destination.pop(0)
+
+            if([mobile.x,mobile.y]==mobile.destination) :
+                mobile.destination=[]
 
     def update_gui (self, mobile_id : int, x_move : int, y_move : int, direction : int) : 
         print("hello")
@@ -88,39 +114,59 @@ class GameEngine():
         This is known as the "Manhattan Distance" formula.
         """
         possibility = [[]]
+        offsets = [[]]
+
         departure = [mobile.x,mobile.y]
 
+        offsets = [e for e in offsets if e]
 
+            
         if (mobile.x > 0) :
-            possibility.append([departure[0]-1,departure[1],0]) 
+            print("left")
+            possibility.append([departure[0]-1,departure[1]]) 
+            offsets.append([-1,0]) 
             # as long as mobile.x is greater than 0, it can move to the left (-1,0)
 
         if(mobile.y+mobile.height < MAX_HEIGTH_SIZE) :
+            print("bottom")
             possibility.append([departure[0],departure[1]+1])
+            offsets.append([0,1]) 
             # as long as mobile.y+mobile.height is smaller than MAX_HEIGTH_SIZE, it can move to the bottom (0,+1)
 
         if(mobile.y+mobile.height < MAX_HEIGTH_SIZE & mobile.x > 0) :
+            print("bottom left")            
             possibility.append([departure[0]-1,departure[1]+1])
+            offsets.append([-1,1])
             # as long as mobile.y+mobile.height is greater than MAX_HEIGTH_SIZE and mobile.x is greater than 0, it can move to the bottom left (-1,+1)
 
         if (mobile.y > 0) :
+            print("top")
             possibility.append([departure[0],departure[1]-1])
+            offsets.append([0,-1])
             # as long as mobile.y is greater than 0, it can move to the top (0,-1)
         if(mobile.x+mobile.width < MAX_WIDTH_SIZE) :
+            print("right")
             possibility.append([departure[0]+1,departure[1]])
+            offsets.append([1,0])
             # as long as mobile.x+mobile.width is smaller than MAX_WIDTH_SIZE, it can move to the right (+1,0)
 
         if(mobile.x+mobile.width < MAX_WIDTH_SIZE & mobile.y > 0) :
             possibility.append([departure[0]+1,departure[1]-1])
+            print("top right")
+            offsets.append([1,-1])
             # as long as mobile.x+mobile.width is smaller than MAX_WIDTH_SIZE and mobile.y is greater than 0, it can move to the top right (+1,-1)
 
         if (mobile.y > 0 & mobile.x > 0) :
             possibility.append([departure[0]-1,departure[1]-1])
+            print("top left")
+            offsets.append([-1,-1])
             # as long as mobile.x is greater than 0 and mobile.y is greater than 0, it can move to the top left (-1,-1)
 
         if (mobile.x+mobile.width < MAX_WIDTH_SIZE & mobile.y+mobile.height < MAX_HEIGTH_SIZE) :
             # as long as mobile.x+mobile.width is smaller than MAX_WIDTH_SIZE and mobile.y+mobile.height is smaller than MAX_HEIGTH_SIZE , it can move to the bottom right (+1,0)
+            print("bottom right")
             possibility.append([departure[0]+1,departure[1]+1])
+            offsets.append([1,1])
 
         print("possibility")
         self.print_list (possibility)
@@ -128,33 +174,43 @@ class GameEngine():
 
         f=0
         shortest = []
-
+        chosen_move = []
         possibility = [e for e in possibility if e]
+
         print("allo possibility")
         self.print_list (possibility)
-        
 
+        counter : int = -1
         for position in possibility:
+
+            counter+=1
+            print("counter???", counter)
+
             print("departure")
 
             self.print_list (departure)
             print("position")
             self.print_list (position)
            
-            g = abs(departure[0] - position[0]) + abs(departure[1] - position[1])
-            h = abs(position[0] - mobile.destination[0]) + abs(position[1] - mobile.destination[1])
-            fbis=g+h
+            """ g = abs(departure[0] - position[0]) + abs(departure[1] - position[1])
+            h = abs(position[0] - mobile.destination[0]) + abs(position[1] - mobile.destination[1]) 
+            """
+            
+            fbis=self.calculate_f_value(departure, position, mobile.destination)
 
-            print("g???", g)
-            print("h???", h)
+
             print("fbis???", fbis)
 
             if(f == 0 or f>fbis) :
+                
                 f=fbis
                 ''' 
                  we keep the lowest f value
                 '''
+                self.print_list (offsets)
 
+                print(" offsets[counter]", offsets[counter])
+                chosen_move= offsets[counter]
                 shortest=position
                 '''
                 then assign case with lowest f to shortest list ([x,y])
@@ -163,21 +219,44 @@ class GameEngine():
         print("avant", mobile.current_step[0], mobile.current_step[1])
             
         print("shortest")
-        self.print_list (shortest)
+        self.print_list (chosen_move)
+        
+        print("current_step")
+        print(mobile.current_step)
 
-        mobile.current_step[0]+=shortest[0]
-        mobile.current_step[1]+=shortest[1]
+        mobile.current_step[0]+=chosen_move[0]
+        mobile.current_step[1]+=chosen_move[1]
 
 
         print("après",mobile.current_step[0], mobile.current_step[1])
+        print("mobile.destination",mobile.destination)
 
-        mobile.road_to_destination.append(shortest)
+
+        print("avant 02 mobile.road_to_destination")
+        self.print_list(mobile.road_to_destination)
+
+        mobile.road_to_destination = [e for e in mobile.road_to_destination if e]
+
+        print("après 02 mobile.road_to_destination")
+        self.print_list (mobile.road_to_destination)   
+        mobile.road_to_destination.append(chosen_move)
+        self.print_list (mobile.road_to_destination)   
+
         ''' 
         once it's added we do the same from the next point (and at the end, we will have the complete road to reach the destination )
         '''
 
 
+    def calculate_f_value (self,departure, position, destination) :
 
+        if(departure!=[] or position!=[] or destination!=[]) :
+            g = abs(departure[0] - position[0]) + abs(departure[1] - position[1])
+            h = abs(position[0] - destination[0]) + abs(position[1] - destination[1])
+
+            print("g???", g)
+            print("h???", h)
+
+            return g+h
 
     ################################################################
     #  Getters and Setters

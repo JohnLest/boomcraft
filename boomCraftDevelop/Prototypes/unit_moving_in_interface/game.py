@@ -24,9 +24,9 @@ map = pygame.image.load(map_file)
 screen.blit(map, (0,0))
 
 #create brain
-ge : GameEngine = GameEngine()
+ge : GameEngine = GameEngine(MAX_WIDTH_SIZE,MAX_HEIGTH_SIZE)
 #create a worker
-worker : WORKER = WORKER(0,0)
+worker : WORKER = WORKER(0,0,0)
 worker_position = worker.img.get_rect(topleft=(worker.x, worker.y))
 
 #create dict of workers
@@ -51,8 +51,7 @@ def receive (self, mobile_id : int, x_move : int, y_move : int, direction : int)
         workers[mobile_id].x += x_move 
         workers[mobile_id].y += y_move
         surfaces[mobile_id].move(x_move,y_move) 
-
-
+        
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -75,7 +74,9 @@ while True:
         '''
 
         if (event.type == MOUSEBUTTONDOWN and event.button == 1) :
+            print("++++++++++++++++++++++++++++++++++++++++++++")
             print("X : " + str(event.pos[0]) +" / Y : " + str(event.pos[1]))
+            print("++++++++++++++++++++++++++++++++++++++++++++")
             worker.destination=[event.pos[0],event.pos[1]]
             ge.update_road_to_destination(worker)
 
@@ -83,7 +84,3 @@ while True:
     screen.blit(worker.img, worker_position)
     #refresh
     pygame.display.flip()
-
-
-
-    

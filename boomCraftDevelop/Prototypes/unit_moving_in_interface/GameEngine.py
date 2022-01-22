@@ -53,19 +53,16 @@ class GameEngine():
         make mobile entity move of one step 
         '''
 
-        print("before check road_to_destination")
-        print(mobile.road_to_destination)
-
         if(mobile.road_to_destination != [[]]) :
             
             print("road_to_destination")
             self.print_list(mobile.road_to_destination)
-            print(" avant mobile.x", mobile.x,"mobile.y", mobile.y)
+            print(" avant déplacement --> mobile.x", mobile.x,"mobile.y", mobile.y)
 
             mobile.x += mobile.road_to_destination[0][0] 
             mobile.y += mobile.road_to_destination[0][1]
 
-            print("après mobile.x", mobile.x,"mobile.y", mobile.y)
+            print("après déplacement --> mobile.x", mobile.x,"mobile.y", mobile.y)
 
             direction : int = 0
             if(mobile.road_to_destination[0] == [0,1]) :
@@ -168,38 +165,21 @@ class GameEngine():
             possibility.append([departure[0]+1,departure[1]+1])
             offsets.append([1,1])
 
-        print("possibility")
-        self.print_list (possibility)
-
 
         f=0
         shortest = []
         chosen_move = []
         possibility = [e for e in possibility if e]
 
-        print("allo possibility")
+        print("possibilit(y)ies list")
         self.print_list (possibility)
 
         counter : int = -1
         for position in possibility:
 
             counter+=1
-            print("counter???", counter)
-
-            print("departure")
-
-            self.print_list (departure)
-            print("position")
-            self.print_list (position)
-           
-            """ g = abs(departure[0] - position[0]) + abs(departure[1] - position[1])
-            h = abs(position[0] - mobile.destination[0]) + abs(position[1] - mobile.destination[1]) 
-            """
-            
+        
             fbis=self.calculate_f_value(departure, position, mobile.destination)
-
-
-            print("fbis???", fbis)
 
             if(f == 0 or f>fbis) :
                 
@@ -208,8 +188,6 @@ class GameEngine():
                  we keep the lowest f value
                 '''
                 self.print_list (offsets)
-
-                print(" offsets[counter]", offsets[counter])
                 chosen_move= offsets[counter]
                 shortest=position
                 '''
@@ -218,29 +196,17 @@ class GameEngine():
         
         print("avant", mobile.current_step[0], mobile.current_step[1])
             
-        print("shortest")
-        self.print_list (chosen_move)
-        
-        print("current_step")
-        print(mobile.current_step)
 
         mobile.current_step[0]+=chosen_move[0]
         mobile.current_step[1]+=chosen_move[1]
 
 
         print("après",mobile.current_step[0], mobile.current_step[1])
-        print("mobile.destination",mobile.destination)
-
-
-        print("avant 02 mobile.road_to_destination")
-        self.print_list(mobile.road_to_destination)
+        print("destination target",mobile.destination)
 
         mobile.road_to_destination = [e for e in mobile.road_to_destination if e]
 
-        print("après 02 mobile.road_to_destination")
-        self.print_list (mobile.road_to_destination)   
         mobile.road_to_destination.append(chosen_move)
-        self.print_list (mobile.road_to_destination)   
 
         ''' 
         once it's added we do the same from the next point (and at the end, we will have the complete road to reach the destination )
@@ -252,9 +218,6 @@ class GameEngine():
         if(departure!=[] or position!=[] or destination!=[]) :
             g = abs(departure[0] - position[0]) + abs(departure[1] - position[1])
             h = abs(position[0] - destination[0]) + abs(position[1] - destination[1])
-
-            print("g???", g)
-            print("h???", h)
 
             return g+h
 

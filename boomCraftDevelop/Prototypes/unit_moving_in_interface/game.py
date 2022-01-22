@@ -78,7 +78,8 @@ while True:
             print("X : " + str(event.pos[0]) +" / Y : " + str(event.pos[1]))
             print("++++++++++++++++++++++++++++++++++++++++++++")
             worker.destination=[event.pos[0],event.pos[1]]
-            ge.update_road_to_destination(worker)
+            if(party.game_over!=True) :
+                ge.update_road_to_destination(worker)
 
     screen.blit(map, (0,0))	
     screen.blit(worker.img, worker_position)

@@ -91,12 +91,9 @@ class ConnectWindow:
         self.window.quit()
 
     def __connect(self):
-        user = {"pseudo": "",
-                "mail": "johnlest@boomcraft.be",
-                "password": "123_psswrd"}
-        # user = {"pseudo": self.txt_pseudo.get(),
-        #        "mail": self.txt_mail.get(),
-        #        "password": self.txt_password.get()}
+        user = {"pseudo": self.txt_pseudo.get(),
+                "mail": self.txt_mail.get(),
+                "password": self.txt_password.get()}
         self.connection.write({self.head: user})
         while True:
             if self.main_windows.user is not None:

@@ -15,7 +15,7 @@ app.secret_key = secret.get("app")
 
 app.config['SERVER_NAME'] = 'localhost:8000'
 oauth = OAuth(app)
-serv = Server("192.168.0.100", 8080)
+serv = Server("localhost", 8080)
 serv.service()
 uuid_ = None
 

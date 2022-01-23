@@ -22,6 +22,8 @@ class MainWindow(Window):
         self.connection = connection
         self.user = None
         self.id_game = None
+        self.saint = None
+        self.meteo = None
         self.path_resources = "../resources/mainWindows"
         self.__set_game()
         self.__get_game_resources()
@@ -128,6 +130,19 @@ class MainWindow(Window):
             (self.winX, self.winYPercent * 15),
             (0, 0, 0)
         )
+        self.connection.write({201: {"weather": True}})
+        time.sleep(0.1)
+        self.connection.write({202: {"saint": True}})
+        while True:
+            if self.meteo is not None and self.saint is not None:
+                break
+        font = pygame.font.SysFont("Arial", 18)
+        text_render = font.render(f"{self.saint} - {self.meteo}", True, (255, 255, 255))
+        rect_text = text_render.get_rect()
+        rect_text.x = rect_text.x + 5
+        pygame.draw.rect(self.gbAction.surface, (0, 0, 0), rect_text, 1)
+        self.gbAction.surface.blit(text_render, (250, 50))
+        self.gbAction.show_groupbox(self.window)
         return self
 
     def __menu_strip_api(self):
@@ -178,6 +193,20 @@ class MainWindow(Window):
         elif key == 3:
             self.id_game = body.get("id_game")
 
+        elif key == 201:
+            body = first_or_default(body)
+            w_text = body.get("WeatherText")
+            temp = body.get("Temperature").get("Metric").get("Value")
+            unit = body.get("Temperature").get("Metric").get("Unit")
+
+            self.meteo = f"Brussels meteo : {w_text} - {temp}.{unit}"
+        elif key == 202:
+            day = body.get("response").get("saintdujour").get("jour")
+            mounth = body.get("response").get("saintdujour").get("mois")
+            years = body.get("response").get("saintdujour").get("annee")
+            name = body.get("response").get("saintdujour").get("nom")
+            self.saint = f"{day}/{mounth}/{years} : {name}"
+
         elif key == 500:
             print(body)
             self.worker.x = body.get("new_coord")[0]
@@ -188,7 +217,6 @@ class MainWindow(Window):
             pygame.display.update()
         elif key == 501:
             self.group.remove(self.forum)
-            #del self.forum
             self.group.update()
             self.group.draw(self.gbGame.surface)
             self.gbGame.show_groupbox(self.window)

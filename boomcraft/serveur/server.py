@@ -6,6 +6,7 @@ import types
 from typing import List, Dict
 from boomcraftApi import BoomcraftApi
 from forum import Forum
+from otherApi import OtherApi
 from playerRepo import PlayerRepo
 from gameEngine import GameEngine
 from models.playerInfoModel import PlayerInfoModel
@@ -123,9 +124,29 @@ class Server:
         elif key == 101:
             _uuid = body.pop("uuid")
             body.update({"connection_type": "facebook"})
-            self.__new_player(self.s_n_connect.get(_uuid), **body)
-            # self.write(key_socket, {101: user})
-            # self.write(self.dico_connect.get(body.get("id")), {1: user})
+            user: PlayerInfoModel = self.__new_player(self.s_n_connect.get(_uuid), **body)
+            msg = user.dict()
+            msg.pop("key_socket")
+            self.write(user.key_socket, {1: msg})
+            # self.write(self.dico_connect.get(body.get("id")), {1: msg})
+        elif key == 201:
+            uri = "http://dataservice.accuweather.com/currentconditions/v1/"
+            weather_api = OtherApi(uri)
+            weather = weather_api.get_request("27581?apikey=NM6IwoED21vbDTI6Fc7gosRt9A5rqNTu")
+            self.write(key_socket, {201: weather})
+        elif key == 202:
+            uri2 = "https://nominis.cef.fr/json"
+            saint_api = OtherApi(uri2)
+            saint = saint_api.get_request("saintdujour.php")
+            light_saint = saint.get("response").get("saintdujour")
+            light_saint.pop("contenu")
+            light_saint.pop("lien")
+            light_saint.update(saint.get("response").get("query"))
+
+            print(saint)
+            test = serialize(saint)
+            val = len(test)
+            self.write(key_socket, {202: saint})
 
     def __new_player(self, key_socket, **data):
         user: PlayerInfoModel = self.player_repo.new_player(key_socket, **data)

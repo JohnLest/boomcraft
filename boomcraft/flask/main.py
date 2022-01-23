@@ -179,8 +179,8 @@ def paypal_payment():
         "payer": {
             "payment_method": "paypal"},
         "redirect_urls": {
-            "return_url": "http://localhost:8000/paypal_Return?success=true",
-            "cancel_url": "http://localhost:8000/paypal_Return?cancel=true"},
+            "return_url": "https://localhost:8000/paypal_Return?success=true",
+            "cancel_url": "https://localhost:8000/paypal_Return?cancel=true"},
         "transactions": [{
             "item_list": {
                 "items": [{

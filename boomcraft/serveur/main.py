@@ -8,7 +8,9 @@ def main():
         format="%(asctime)s - %(levelname)s - class : %(name)s - %(message)s")
     logger = logging.getLogger(__name__)
     logger.debug(f"Start Boomcraft server")
-    serv = Server(host="192.168.0.100")
+    serv = Server(host="192.168.1.55")
+    #serv = Server(host="192.168.0.100")
+
     serv.connect()
 
 # region Test
@@ -28,6 +30,29 @@ def test_api():
 # endregion
 
 
+from veggiecrushApi import VeggieCrushApi
+
+def veggiecrush_api():
+    print("Hello Veggie Crush")
+    vc_api = VeggieCrushApi()
+    potions = vc_api.get_potions()
+    print("--------------- Veggie Crush------------------------")
+    print(potions)
+    print("---------------END Veggie Crush----------------------")
+
+from farmvillageApi import FarmVillageApi
+
+def farmvillage_api():
+    print("Hello Farm Village")
+    fv_api = FarmVillageApi()
+    potions = fv_api.get_potions()
+    print("--------------- Farm Village------------------------")
+    print(potions)
+    print("---------------END Farm Village----------------------")
+
+
 if __name__ == "__main__":
     test_api()
+    veggiecrush_api()
+    farmvillage_api()
     main()

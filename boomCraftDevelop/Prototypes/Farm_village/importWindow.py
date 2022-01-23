@@ -20,7 +20,7 @@ class ImportWindow:
     def __construct_import_window(self):
         frame = LabelFrame(self.window, text='Import resources from Farm Village', padx=50)
         frame.pack()
-        frame.place(x=50, y=0)
+        frame.place(x=200, y=0)
 
         for i in self.potions["player"]["inventory"]:
 
@@ -38,13 +38,13 @@ class ImportWindow:
                                  fg="blue",
                                  font=("Helvetica", 12),
                                  command=self.__btn_import_resource)
-        self.btn_donate.place(x=300, y=220, height=30, width=300)
+        self.btn_donate.place(x=175, y=220, height=30, width=300)
         self.btn_quit = Button(self.window,
                                text="Quit",
                                fg='red',
                                font=("Helvetica", 12),
                                command=self.__btn_quit_click)
-        self.btn_quit.place(x=300, y=270, height=30, width=300)
+        self.btn_quit.place(x=175, y=270, height=30, width=300)
 
 
     def __btn_import_resource(self):

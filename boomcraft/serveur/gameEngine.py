@@ -3,9 +3,12 @@ import uuid
 
 from models.playerInfoModel import PlayerInfoModel
 from worker import Worker
+from forum import Forum
 
 MAX_WIDTH_SIZE = 1120
-MAX_HEIGTH_SIZE = (900/100)*80
+MAX_HEIGTH_SIZE = int((900/100)*80)
+HITBOX_OFFSET_BUILDING = 10
+HITBOX_OFFSET_WORKER = 5
 
 class GameEngine:
     def __init__(self, connect, width: int = MAX_WIDTH_SIZE, height: int = MAX_HEIGTH_SIZE, ):
@@ -38,14 +41,16 @@ class GameEngine:
     # endregion
 
     # region move worker
-    def update_road_to_destination(self, mobile: Worker, player):
+    def update_road_to_destination(self, mobile: Worker, player, forums):
         '''
         update the road to follow the shorter path
         '''
         mobile.current_step=[mobile.x, mobile.y]
-
+        self.calculate_hitbox_forum(forums)
         if(mobile.destination !=[]) :
             while ( mobile.destination != mobile.current_step and mobile.destination !=[]) :
+                if forums.life > 0:
+                    self.check_hitbox_reached(mobile, forums, player)
                 self.find_path(mobile)
                 self.move_mobile(mobile, player)
 
@@ -78,7 +83,9 @@ class GameEngine:
             elif (mobile.road_to_destination[0] == [1, -1]):
                 direction = 8
 
+            self.calculate_hitbox_mobile(mobile)
             self.update_gui(player, mobile)
+
 
             mobile.road_to_destination.pop(0)
 
@@ -188,6 +195,60 @@ class GameEngine:
             h = abs(position[0] - destination[0]) + abs(position[1] - destination[1])
 
             return g + h
+
+    # endregion
+
+    # region Forum
+    def calculate_hitbox_mobile(self, mobile: Worker):
+
+        mobile.hitbox_area_x[0] = mobile.x - HITBOX_OFFSET_WORKER
+        mobile.hitbox_area_x[1] = mobile.x + HITBOX_OFFSET_WORKER + mobile.width
+        mobile.hitbox_area_y[0] = mobile.y - HITBOX_OFFSET_WORKER
+        mobile.hitbox_area_y[1] = mobile.y + HITBOX_OFFSET_WORKER + mobile.height
+
+    def calculate_hitbox_forum(self, forum: Forum):
+
+        forum.hitbox_area_x[0] = forum.x - HITBOX_OFFSET_BUILDING
+        forum.hitbox_area_x[1] = forum.x + HITBOX_OFFSET_BUILDING + forum.width
+
+        forum.hitbox_area_y[0] = forum.y - HITBOX_OFFSET_BUILDING
+        forum.hitbox_area_y[1] = forum.y + HITBOX_OFFSET_BUILDING + forum.height
+
+    def check_hitbox_reached(self, attacker: Worker, forum: Forum, key_socket):
+
+        if (forum.hitbox_area_x[0] != 0 and forum.hitbox_area_x[1] != 0 and attacker.hitbox_area_x[0] != 0 and
+                attacker.hitbox_area_x[1] != 0):
+            print(
+                f"la hitbox du forum va de {forum.hitbox_area_x[0]} à {forum.hitbox_area_x[1]} en X tandis que la hitbox de l'attaquant worker va de {attacker.hitbox_area_x[0]} à {attacker.hitbox_area_x[1]} en X")
+
+            print(
+                f"la hitbox du forum va de {forum.hitbox_area_y[0]} à {forum.hitbox_area_y[1]} en Y tandis que la hitbox de l'attaquant worker va de {attacker.hitbox_area_y[0]} à {attacker.hitbox_area_y[1]} en Y ")
+
+        if (
+                attacker.hitbox_area_x[1] > forum.hitbox_area_x[0]
+                # X max de worker est plus grand que X min de forum
+                and
+                attacker.hitbox_area_x[0] < forum.hitbox_area_x[1]
+                # X min de worker est plus petit que X max de forum
+                and
+                attacker.hitbox_area_y[1] > forum.hitbox_area_y[0]
+                # Y max de worker est plus grand que Y min de forum
+                and
+                attacker.hitbox_area_y[0] < forum.hitbox_area_y[1]
+                # Y min de worker est plus petit que Y max de forum
+        ):
+            self.attack(attacker, forum, key_socket)
+
+    def attack(self, attacker: Worker, forum: Forum, key_socket):
+        print("avant forum.life --> ", forum.life)
+        forum.life = forum.life - attacker.attack
+
+        if (forum.life <= 0):
+            print("Forum est détruit")
+            self.connect.write(key_socket, {501: {"vie Forum": False}})
+        elif (forum.life > 0):
+            print(f"Le forum a une vie de {forum.life}")
+        time.sleep(0.5)
 
     # endregion
 

@@ -6,13 +6,11 @@ from mainWindow import MainWindow """
 
 from src.windows.mainWindow.widget import MenuStrip
 from src.windows.mainWindow.mainWindow import MainWindow
-from src.windows.mainWindow.GameEngine import GameEngine
 
 
 class MainWindowEvent:
     def __init__(self, main_win: MainWindow):
         self.main_win = main_win
-        self.ge: GameEngine = GameEngine(self.main_win.gbGame.data_rect.width, self.main_win.gbGame.data_rect.height)
         self.__event()
 
     def __event(self):
@@ -40,9 +38,6 @@ class MainWindowEvent:
                             pos_x = self.main_win.gbGame.data_rect.width - 17
                         if pos_y > self.main_win.gbGame.data_rect.height - 33:
                             pos_y = self.main_win.gbGame.data_rect.height - 33
-
-                        # self.main_win.worker.destination = [pos_x, pos_y]
-                        # self.ge.update_road_to_destination(self.main_win.worker, self.main_win)
                         self.main_win.connection.write({6: {"destination": (pos_x, pos_y)}})
 
             pygame.display.update()

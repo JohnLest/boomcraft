@@ -5,6 +5,7 @@ import logging
 import types
 from typing import List, Dict
 from boomcraftApi import BoomcraftApi
+from forum import Forum
 from playerRepo import PlayerRepo
 from gameEngine import GameEngine
 from models.playerInfoModel import PlayerInfoModel
@@ -110,10 +111,12 @@ class Server:
             id_game = self.game_engine.add_player_in_game(self.player_repo.lst_player.get(body.get("id_user")))
             self.write(key_socket, {3: {"id_game": id_game}})
         elif key == 5:
-            self.worker = Worker(x=body.get("worker_coord")[0], y=body.get("worker_coord")[0])
+            self.worker = Worker(x=body.get("worker_coord")[0], y=body.get("worker_coord")[1])
+            self.forum = Forum(x=body.get("forum_coord")[0], y=body.get("forum_coord")[1])
+            logging.info(f"forum x = {body.get('forum_coord')[0]} - forum y = {body.get('forum_coord')[1]}")
         elif key == 6:
             self.worker.destination = [body.get("destination")[0], body.get("destination")[1]]
-            self.game_engine.update_road_to_destination(self.worker, key_socket)
+            self.game_engine.update_road_to_destination(self.worker, key_socket, self.forum)
 
         elif key == 100:
             self.s_n_connect.update({body.get("uuid"): key_socket})

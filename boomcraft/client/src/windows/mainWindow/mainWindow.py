@@ -6,6 +6,7 @@ import selectors
 import threading
 
 from src.models.playerInfoModel import PlayerInfoModel
+from src.windows.mainWindow.forum import Forum
 from tool import *
 from src.windows.mainWindow.worker import Worker
 from src.windows.menuWindow import MenuWindow
@@ -31,7 +32,9 @@ class MainWindow(Window):
         self.__gb_game()
         self.__gb_action()
         self.__menu_strip_api()
-        self.connection.write({5: {"worker_coord": (self.worker.x, self.worker.y)}})
+        self.connection.write({5: {"worker_coord": (self.worker.x, self.worker.y),
+                                   "forum_coord": (self.forum.x, self.forum.y)}
+                               })
 
 
     # region Set Game
@@ -109,7 +112,9 @@ class MainWindow(Window):
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.gbGame.surface.get_size())
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
         self.worker = Worker(100, 150)
+        self.forum = Forum(600, 600)
         self.group.add(self.worker)
+        self.group.add(self.forum)
         # self.group.update()
 
         self.group.draw(self.gbGame.surface)
@@ -181,4 +186,12 @@ class MainWindow(Window):
             self.group.draw(self.gbGame.surface)
             self.gbGame.show_groupbox(self.window)
             pygame.display.update()
+        elif key == 501:
+            self.group.remove(self.forum)
+            #del self.forum
+            self.group.update()
+            self.group.draw(self.gbGame.surface)
+            self.gbGame.show_groupbox(self.window)
+            pygame.display.update()
+            print("forum detruit")
     # endregion

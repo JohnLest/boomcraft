@@ -8,8 +8,8 @@ def main():
         format="%(asctime)s - %(levelname)s - class : %(name)s - %(message)s")
     logger = logging.getLogger(__name__)
     logger.debug(f"Start Boomcraft server")
-    serv = Server(host="192.168.1.55")
-    #serv = Server(host="192.168.0.100")
+    # serv = Server(host="192.168.1.55")
+    serv = Server(host="192.168.0.100")
 
     serv.connect()
 
@@ -27,7 +27,6 @@ def test_api():
     saint = saint_api.get_request("saintdujour.php")
     print(saint)
 
-# endregion
 
 
 from veggiecrushApi import VeggieCrushApi
@@ -49,10 +48,10 @@ def farmvillage_api():
     print("--------------- Farm Village------------------------")
     print(potions)
     print("---------------END Farm Village----------------------")
-
+# endregion
 
 if __name__ == "__main__":
-    test_api()
-    veggiecrush_api()
-    farmvillage_api()
+    # test_api()
+    # veggiecrush_api()
+    # farmvillage_api()
     main()

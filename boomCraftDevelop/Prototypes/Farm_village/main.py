@@ -1,6 +1,6 @@
 import logging
 
-import pygame
+# import pygame
 from importWindow import ImportWindow
 
 from farmvillageApi import FarmVillageApi
@@ -9,11 +9,11 @@ def main() :
 
     potions = farmvillage_api()
 
-    pygame.init()
+    # pygame.init()
 
     importWin = ImportWindow(potions)
 
-    pygame.quit()
+    # pygame.quit()
     
 def farmvillage_api():
     print("Hello Farm Village")

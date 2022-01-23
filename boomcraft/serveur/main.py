@@ -8,8 +8,8 @@ def main():
         format="%(asctime)s - %(levelname)s - class : %(name)s - %(message)s")
     logger = logging.getLogger(__name__)
     logger.debug(f"Start Boomcraft server")
-    serv = Server(host="192.168.1.55")
-    #serv = Server(host="192.168.0.100")
+    # serv = Server(host="192.168.1.55")
+    serv = Server(host="192.168.0.100")
 
     serv.connect()
 

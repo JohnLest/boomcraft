@@ -8,4 +8,4 @@ class PlayerInfoModel(BaseModel):
     user: UserModel
     own_resources: List[ResourceModel]
     game_resources: List[ResourceModel]
-
+    key_socket: object

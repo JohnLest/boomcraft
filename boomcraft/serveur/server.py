@@ -5,14 +5,17 @@ import logging
 import types
 from typing import List, Dict
 from boomcraftApi import BoomcraftApi
+from forum import Forum
+from otherApi import OtherApi
 from playerRepo import PlayerRepo
-from gameEngineRepo import GameEngineRepo
+from gameEngine import GameEngine
 from models.playerInfoModel import PlayerInfoModel
 from tool import *
+from worker import Worker
 
 
 class Server:
-    def __init__(self, host="0.0.0.0", port=8080):
+    def __init__(self, host="localhost", port=8080):
         self.logger = logging.getLogger(__name__)
         self.host = host
         self.port = port
@@ -21,7 +24,7 @@ class Server:
         self.s_n_connect = {}
         self.boomcraft_api = BoomcraftApi()
         self.player_repo = PlayerRepo()
-        self.game_repo = GameEngineRepo()
+        self.game_engine = GameEngine(self)
 
     # region communication
     def __connection(self):
@@ -91,27 +94,66 @@ class Server:
             mail = body.get("mail")
             password = body.get("password")
             user: PlayerInfoModel = self.__new_player(key_socket, connection_type="login", mail=mail, password=password)
-            self.write(key_socket, {1: user.dict()})
+            msg = user.dict()
+            msg.pop("key_socket")
+            self.write(key_socket, {1: msg})
         elif key == 2:
             body.update({"connection_type": "new"})
             user: PlayerInfoModel = self.__new_player(key_socket, **body)
-            self.write(key_socket, {1: user.dict()})
+            msg = user.dict()
+            msg.pop("key_socket")
+            self.write(key_socket, {1: msg})
         elif key == 3:
             up_player = self.player_repo.update_resources(get_key(self.dico_connect, key_socket), body)
-            self.write(key_socket, {2: up_player.dict()})
+            msg = up_player.dict()
+            msg.pop("key_socket")
+            self.write(key_socket, {2: msg})
+        elif key == 4:
+            id_game = self.game_engine.add_player_in_game(self.player_repo.lst_player.get(body.get("id_user")))
+            self.write(key_socket, {3: {"id_game": id_game}})
+        elif key == 5:
+            self.worker = Worker(x=body.get("worker_coord")[0], y=body.get("worker_coord")[1])
+            self.forum = Forum(x=body.get("forum_coord")[0], y=body.get("forum_coord")[1])
+            logging.info(f"forum x = {body.get('forum_coord')[0]} - forum y = {body.get('forum_coord')[1]}")
+        elif key == 6:
+            self.worker.destination = [body.get("destination")[0], body.get("destination")[1]]
+            self.game_engine.update_road_to_destination(self.worker, key_socket, self.forum)
+
         elif key == 100:
             self.s_n_connect.update({body.get("uuid"): key_socket})
         elif key == 101:
             _uuid = body.pop("uuid")
             body.update({"connection_type": "facebook"})
-            self.__new_player(self.s_n_connect.get(_uuid), **body)
-            # self.write(key_socket, {101: user})
-            # self.write(self.dico_connect.get(body.get("id")), {1: user})
+            user: PlayerInfoModel = self.__new_player(self.s_n_connect.get(_uuid), **body)
+            msg = user.dict()
+            msg.pop("key_socket")
+            self.write(user.key_socket, {1: msg})
+            # self.write(self.dico_connect.get(body.get("id")), {1: msg})
+        elif key == 201:
+            uri = "http://dataservice.accuweather.com/currentconditions/v1/"
+            weather_api = OtherApi(uri)
+            weather = weather_api.get_request("27581?apikey=NM6IwoED21vbDTI6Fc7gosRt9A5rqNTu")
+            self.write(key_socket, {201: weather})
+        elif key == 202:
+            uri2 = "https://nominis.cef.fr/json"
+            saint_api = OtherApi(uri2)
+            saint = saint_api.get_request("saintdujour.php")
+            light_saint = saint.get("response").get("saintdujour")
+            light_saint.pop("contenu")
+            light_saint.pop("lien")
+            light_saint.update(saint.get("response").get("query"))
 
+            print(saint)
+            test = serialize(saint)
+            val = len(test)
+            self.write(key_socket, {202: saint})
 
     def __new_player(self, key_socket, **data):
-        user: PlayerInfoModel = self.player_repo.new_player(**data)
+        user: PlayerInfoModel = self.player_repo.new_player(key_socket, **data)
         self.dico_connect[user.user.id_user] = key_socket
         return user
+
+    def __add_game(self, id_player):
+        return self.game_engine.add_player_in_game(self.player_repo.lst_player.get(id_player))
 
     # endregion

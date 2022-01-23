@@ -32,8 +32,13 @@ class MainWindowEvent:
                         self.main_win.menu_sprite.menu_strip_item.draw(self.main_win.window)
                         self.__menu_strip_on_click()
                     if self.main_win.gbGame.data_rect.collidepoint(pygame.mouse.get_pos()):
-                        print(f"X : {str(event.pos[0])} / Y : {str(event.pos[1])}")
-                        self.main_win.worker.destination = [event.pos[0], event.pos[1]]
+                        pos_x = event.pos[0] - self.main_win.gbGame.data_rect.x
+                        pos_y = event.pos[1] - self.main_win.gbGame.data_rect.y
+                        if pos_x > self.main_win.gbGame.data_rect.width - 17:
+                            pos_x = self.main_win.gbGame.data_rect.width - 17
+                        if pos_y > self.main_win.gbGame.data_rect.height - 33:
+                            pos_y = self.main_win.gbGame.data_rect.height - 33
+                        self.main_win.connection.write({6: {"destination": (pos_x, pos_y)}})
 
             pygame.display.update()
         return

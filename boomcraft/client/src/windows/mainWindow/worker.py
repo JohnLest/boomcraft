@@ -9,9 +9,13 @@ class Worker(pygame.sprite.Sprite):
     def __init__(self, x: int = 0, y: int = 0, width: int = 16, height: int = 32):
         super().__init__()
         self.coord: list = [x, y]
+        self.x: int = x
+        self.y: int = y
         self.width = width
         self.height = height
         self.destination: list[int] = []
+        self.road_to_destination = [[]]
+        self.current_step: list[int] = []
 
         self.img_up = pygame.image.load(CHARACTER_UP).convert_alpha()
         self.img_down = pygame.image.load(CHARACTER_DOWN).convert_alpha()
@@ -23,9 +27,5 @@ class Worker(pygame.sprite.Sprite):
         # self.image.blit(self.img_down, (0, 0), (self.x, self.y, self.width, self.height))
         # self.rect = self.image.get_rect()
 
-    def move_right(self):
-        self.coord[0] += 3
-
     def update(self):
-        self.rect.topleft = self.coord
-
+        self.rect.topleft = [self.x, self.y]

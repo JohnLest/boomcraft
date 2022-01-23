@@ -36,7 +36,7 @@ class PlayerRepo:
             _resources.update({"quantity": 0})
         return resources
 
-    def new_player(self, **data):
+    def new_player(self,key_socket, **data):
         """
         if ``connection_type`` = "login"\n
         use ``mail`` and ``password``\n
@@ -51,7 +51,8 @@ class PlayerRepo:
         _game_resources = self.__set_game_resources(_own_resources.get("resource"))
         p_model = PlayerInfoModel(user=_player,
                                   own_resources=_own_resources.get("resource"),
-                                  game_resources=_game_resources)
+                                  game_resources=_game_resources,
+                                  key_socket=key_socket)
         self.lst_player.update({p_model.user.id_user: p_model})
         return p_model
 

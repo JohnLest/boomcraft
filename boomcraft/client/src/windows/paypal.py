@@ -65,7 +65,7 @@ class Paypal:
 
     def __btn_donate_click(self):
         parm = f"paypal?amount={self.rb_value.get()}&name={self.entry_name.get()}&msg={self.entry_msg.get()}"
-        uri = f"http://localhost:8000/"
+        uri = f"https://localhost:8000/"
         webbrowser.open(f"{uri}{parm}")
         self.window.quit()
 

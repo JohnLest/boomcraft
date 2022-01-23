@@ -15,8 +15,8 @@ app.secret_key = secret.get("app")
 
 app.config['SERVER_NAME'] = 'localhost:8000'
 oauth = OAuth(app)
-# serv = Server("192.168.0.100", 8080)
-# serv.service()
+serv = Server("localhost", 8080)
+serv.service()
 uuid_ = None
 
 
@@ -38,8 +38,8 @@ def google():
     # Google Oauth Config
     # Get client_id and client_secret from environment variables
     # For developement purpose you can directly put it here inside double quotes
-    GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
-    GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+    GOOGLE_CLIENT_ID = "51021424438-a4l0cshnqgodomj2cjbcqd1okrcm1uk7.apps.googleusercontent.com"
+    GOOGLE_CLIENT_SECRET = "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"
     CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
     oauth.register(
         name='google',
@@ -84,6 +84,7 @@ def facebook():
     )
     redirect_uri = url_for('facebook_auth', _external=True)
     print(f"redirection : {redirect_uri}")
+    print(oauth.facebook.authorize_redirect(redirect_uri))
     return oauth.facebook.authorize_redirect(redirect_uri)
 
 
@@ -94,8 +95,9 @@ def facebook_(_uuid):
     uuid_ = _uuid
     print(f"1 : {_uuid}")
     print(f"2 : {uuid_}")
-    FACEBOOK_CLIENT_ID = "697143707944336"
-    FACEBOOK_CLIENT_SECRET = "4867fac88b26f7a225178b09cf9ec538"
+    facebook_data: dict = secret.get("facebook")
+    FACEBOOK_CLIENT_ID = facebook_data.get("client_id")
+    FACEBOOK_CLIENT_SECRET = facebook_data.get("client_secret")
     oauth.register(
         name='facebook',
         client_id=FACEBOOK_CLIENT_ID,
@@ -108,6 +110,7 @@ def facebook_(_uuid):
         client_kwargs={'scope': 'email'},
     )
     redirect_uri = url_for('facebook_auth', _external=True)
+
     return oauth.facebook.authorize_redirect(redirect_uri)
 
 
@@ -120,7 +123,7 @@ def facebook_auth():
     profile = resp.json()
     print("Facebook User ", profile)
     profile.update({"uuid": uuid_})
-    # serv.write({101: profile})
+    serv.write({101: profile})
     print("end")
     return redirect('/')
 
@@ -176,8 +179,8 @@ def paypal_payment():
         "payer": {
             "payment_method": "paypal"},
         "redirect_urls": {
-            "return_url": "http://localhost:8000/paypal_Return?success=true",
-            "cancel_url": "http://localhost:8000/paypal_Return?cancel=true"},
+            "return_url": "https://localhost:8000/paypal_Return?success=true",
+            "cancel_url": "https://localhost:8000/paypal_Return?cancel=true"},
         "transactions": [{
             "item_list": {
                 "items": [{
@@ -308,5 +311,5 @@ def refund_payment():
 # endregion
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, ssl_context='adhoc')
 

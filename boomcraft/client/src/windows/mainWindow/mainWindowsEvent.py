@@ -41,9 +41,9 @@ class MainWindowEvent:
                         if pos_y > self.main_win.gbGame.data_rect.height - 33:
                             pos_y = self.main_win.gbGame.data_rect.height - 33
 
-                        self.main_win.worker.destination = [pos_x, pos_y]
-                        self.ge.update_road_to_destination(self.main_win.worker,
-                                                           self.main_win)
+                        # self.main_win.worker.destination = [pos_x, pos_y]
+                        # self.ge.update_road_to_destination(self.main_win.worker, self.main_win)
+                        self.main_win.connection.write({6: {"destination": (pos_x, pos_y)}})
 
             pygame.display.update()
         return

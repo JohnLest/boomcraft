@@ -27,8 +27,5 @@ class Worker(pygame.sprite.Sprite):
         # self.image.blit(self.img_down, (0, 0), (self.x, self.y, self.width, self.height))
         # self.rect = self.image.get_rect()
 
-    def move_right(self):
-        self.coord[0] += 3
-
     def update(self):
         self.rect.topleft = [self.x, self.y]

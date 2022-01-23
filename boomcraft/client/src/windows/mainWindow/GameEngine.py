@@ -1,15 +1,6 @@
-
-
-import time
-from typing import Dict, List, TYPE_CHECKING
-
-from pygame.sprite import Sprite as Spr
 import pygame
 from src.windows.mainWindow.mainWindow import MainWindow
 from src.windows.mainWindow.worker import Worker
-
-# if TYPE_CHECKING:
-#    from Party import Party
 
 COULEUR_BLEUE = 0, 0, 255
 

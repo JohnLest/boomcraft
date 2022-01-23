@@ -1,7 +1,12 @@
+import time
 import pygame
 import pyscroll.data
 import pytmx.util_pygame
+import selectors
+import threading
 
+from src.models.playerInfoModel import PlayerInfoModel
+from tool import *
 from src.windows.mainWindow.worker import Worker
 from src.windows.menuWindow import MenuWindow
 from src.windows.mainWindow.window import Window
@@ -14,6 +19,8 @@ class MainWindow(Window):
     """ Class for main window """
     def __init__(self, connection):
         self.connection = connection
+        self.user = None
+        self.id_game = None
         self.path_resources = "../resources/mainWindows"
         self.__set_game()
         self.__get_game_resources()
@@ -24,15 +31,22 @@ class MainWindow(Window):
         self.__gb_game()
         self.__gb_action()
         self.__menu_strip_api()
+        self.connection.write({5: {"worker_coord": (self.worker.x, self.worker.y)}})
 
 
+    # region Set Game
 
     def __set_game(self):
-        self.connection.service()
-        self.menuWin = MenuWindow(self.connection)
+        self.connection.connection()
+        thread = threading.Thread(target=self.__thread_read)
+        thread.start()
+        time.sleep(0.5)
+        self.menuWin = MenuWindow(self.connection, self)
         if self.menuWin.new_game:
-            print("Start Game")
-            print(self.connection.user)
+            self.connection.write({4: {"id_user": self.user.user.id_user}})
+            while True:
+                if self.id_game is not None:
+                    break
         self.menuWin.window.destroy()
 
     def __gb_menu_button(self):
@@ -116,7 +130,55 @@ class MainWindow(Window):
         self.menu_sprite = MenuStrip(self.btnAPI.btn_rect, self.menu_stripe_dict)
 
     def __get_game_resources(self):
-        game_resources = self.connection.user.game_resources
+        game_resources = self.user.game_resources
         self.dict_resources = {}
         for resource in game_resources:
             self.dict_resources.update({resource.resource: resource.quantity})
+
+    # endregion
+
+    # region Comunicate
+    def __thread_read(self):
+        while True:
+            events = self.connection.sel.select(timeout=None)
+            if first_or_default(events) is not None:
+                self.connection.key, self.connection.mask = first_or_default(events)
+                self.__read()
+
+    def __read(self):
+        sock = self.connection.key.fileobj
+        data = self.connection.key.data
+        if self.connection.mask & selectors.EVENT_READ:
+            recv_data = sock.recv(1024)
+            if recv_data:
+                data.outb += recv_data
+            else:
+                print('closing connection to', data.addr)
+                self.connection.sel.unregister(sock)
+                sock.close()
+            self.__analyse_msg(deserialize(data.outb))
+            data.outb = b''
+
+    def __analyse_msg(self, msg: dict):
+        key = first_or_default(msg)
+        if key is None:
+            return
+        body: dict = msg.get(key, None)
+        if msg is None:
+            return
+        if key == 1:
+            self.user = PlayerInfoModel(**body)
+        elif key == 2:
+            self.user = PlayerInfoModel(**body)
+        elif key == 3:
+            self.id_game = body.get("id_game")
+
+        elif key == 500:
+            print(body)
+            self.worker.x = body.get("new_coord")[0]
+            self.worker.y = body.get("new_coord")[1]
+            self.group.update()
+            self.group.draw(self.gbGame.surface)
+            self.gbGame.show_groupbox(self.window)
+            pygame.display.update()
+    # endregion

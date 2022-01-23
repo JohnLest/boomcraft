@@ -5,8 +5,9 @@ from src.windows.paypal import Paypal
 
 
 class MenuWindow:
-    def __init__(self, connection):
+    def __init__(self, connection, main_win):
         self.connection = connection
+        self.main_windows = main_win
         self.bck_img = "../resources/bg-img.png"
         self.logo_img = "../resources/logo_MM.png"
         self.new_game = False
@@ -72,16 +73,16 @@ class MenuWindow:
         self.btn_quit.place(x=380, y=480)
 
     def __btn_connect_click(self):
-        conn_win = ConnectWindow(self.connection)
+        conn_win = ConnectWindow(self.connection, self.main_windows)
         conn_win.window.destroy()
         del conn_win
         self.btn_connect["state"] = "disabled"
-        pseudo = self.connection.user.user.pseudo
+        pseudo = self.main_windows.user.user.pseudo
         self.btn_connect["text"] = f"hello {pseudo}"
         self.btn_new_game["state"] = "active"
 
     def __btn_new_game_click(self):
-        new_game_win = NewGameWindow(self.connection.user)
+        new_game_win = NewGameWindow(self.main_windows.user)
         new_game_win.window.destroy()
         if new_game_win.new_game:
             self.new_game = True

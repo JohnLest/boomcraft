@@ -6,9 +6,10 @@ import types
 from typing import List, Dict
 from boomcraftApi import BoomcraftApi
 from playerRepo import PlayerRepo
-from gameEngineRepo import GameEngineRepo
+from gameEngine import GameEngine
 from models.playerInfoModel import PlayerInfoModel
 from tool import *
+from worker import Worker
 
 
 class Server:
@@ -21,7 +22,7 @@ class Server:
         self.s_n_connect = {}
         self.boomcraft_api = BoomcraftApi()
         self.player_repo = PlayerRepo()
-        self.game_repo = GameEngineRepo()
+        self.game_engine = GameEngine(self)
 
     # region communication
     def __connection(self):
@@ -91,14 +92,29 @@ class Server:
             mail = body.get("mail")
             password = body.get("password")
             user: PlayerInfoModel = self.__new_player(key_socket, connection_type="login", mail=mail, password=password)
-            self.write(key_socket, {1: user.dict()})
+            msg = user.dict()
+            msg.pop("key_socket")
+            self.write(key_socket, {1: msg})
         elif key == 2:
             body.update({"connection_type": "new"})
             user: PlayerInfoModel = self.__new_player(key_socket, **body)
-            self.write(key_socket, {1: user.dict()})
+            msg = user.dict()
+            msg.pop("key_socket")
+            self.write(key_socket, {1: msg})
         elif key == 3:
             up_player = self.player_repo.update_resources(get_key(self.dico_connect, key_socket), body)
-            self.write(key_socket, {2: up_player.dict()})
+            msg = up_player.dict()
+            msg.pop("key_socket")
+            self.write(key_socket, {2: msg})
+        elif key == 4:
+            id_game = self.game_engine.add_player_in_game(self.player_repo.lst_player.get(body.get("id_user")))
+            self.write(key_socket, {3: {"id_game": id_game}})
+        elif key == 5:
+            self.worker = Worker(x=body.get("worker_coord")[0], y=body.get("worker_coord")[0])
+        elif key == 6:
+            self.worker.destination = [body.get("destination")[0], body.get("destination")[1]]
+            self.game_engine.update_road_to_destination(self.worker, key_socket)
+
         elif key == 100:
             self.s_n_connect.update({body.get("uuid"): key_socket})
         elif key == 101:
@@ -108,10 +124,12 @@ class Server:
             # self.write(key_socket, {101: user})
             # self.write(self.dico_connect.get(body.get("id")), {1: user})
 
-
     def __new_player(self, key_socket, **data):
-        user: PlayerInfoModel = self.player_repo.new_player(**data)
+        user: PlayerInfoModel = self.player_repo.new_player(key_socket, **data)
         self.dico_connect[user.user.id_user] = key_socket
         return user
+
+    def __add_game(self, id_player):
+        return self.game_engine.add_player_in_game(self.player_repo.lst_player.get(id_player))
 
     # endregion

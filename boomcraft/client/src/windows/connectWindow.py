@@ -5,8 +5,9 @@ import uuid
 
 
 class ConnectWindow:
-    def __init__(self, connection):
+    def __init__(self, connection, main_win):
         self.connection = connection
+        self.main_windows = main_win
         self.head = 0
         self.window = Tk()
         self.window.title('BoomCraft - Menu')
@@ -81,7 +82,7 @@ class ConnectWindow:
         url = f"http://localhost:8000/facebook/{_uuid}"
         webbrowser.open(url)
         while True:
-            if self.connection.user is not None:
+            if self.main_windows.user is not None:
                 break
             time.sleep(0.5)
         self.window.quit()
@@ -98,6 +99,5 @@ class ConnectWindow:
         #        "password": self.txt_password.get()}
         self.connection.write({self.head: user})
         while True:
-            if self.connection.user is not None:
+            if self.main_windows.user is not None:
                 break
-            time.sleep(0.5)

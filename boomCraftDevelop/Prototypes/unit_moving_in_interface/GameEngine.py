@@ -6,6 +6,7 @@ from typing import Dict, List, TYPE_CHECKING
 from pygame.sprite import Sprite as Spr
 
 from Worker import WORKER
+from Forum import Forum
 
 if TYPE_CHECKING:
     from Party import Party
@@ -15,7 +16,8 @@ COULEUR_BLEUE = 0, 0, 255
 
 MAX_WIDTH_SIZE = 840
 MAX_HEIGTH_SIZE = 540
-
+HITBOX_OFFSET_BUILDING = 10
+HITBOX_OFFSET_WORKER = 5
 # ----------------
 #
 # class GameEngine
@@ -84,11 +86,17 @@ class GameEngine():
 
             self.update_gui(mobile.id,mobile.road_to_destination[0][0], mobile.road_to_destination[0][1],direction)
 
+            self.calculate_hitbox_mobile(mobile)
+
 
             mobile.road_to_destination.pop(0)
 
             if([mobile.x,mobile.y]==mobile.destination) :
                 mobile.destination=[]
+                #########     NEW      #########
+
+
+                
 
     def update_gui (self, mobile_id : int, x_move : int, y_move : int, direction : int) : 
         print("hello")
@@ -220,6 +228,62 @@ class GameEngine():
             h = abs(position[0] - destination[0]) + abs(position[1] - destination[1])
 
             return g+h
+
+    ################################################################
+    #### hitbox methods
+    ################################################################
+
+    def calculate_hitbox_mobile(self,mobile : WORKER) :
+
+        mobile.hitbox_area_x[0] = mobile.x - HITBOX_OFFSET_WORKER
+        mobile.hitbox_area_x[1] = mobile.x + HITBOX_OFFSET_WORKER + mobile.width
+        mobile.hitbox_area_y[0] = mobile.y - HITBOX_OFFSET_WORKER
+        mobile.hitbox_area_y[1] = mobile.y + HITBOX_OFFSET_WORKER + mobile.height
+
+
+    def calculate_hitbox_forum(self,forum : Forum) :
+
+
+        forum.hitbox_area_x[0] = forum.x - HITBOX_OFFSET_BUILDING
+        forum.hitbox_area_x[1] = forum.x + HITBOX_OFFSET_BUILDING + forum.width
+
+        forum.hitbox_area_y[0] = forum.y - HITBOX_OFFSET_BUILDING
+        forum.hitbox_area_y[1] = forum.y + HITBOX_OFFSET_BUILDING + forum.height
+
+
+    def check_hitbox_reached(self,attacker : WORKER, forum : Forum) :
+    
+       
+        if(forum.hitbox_area_x[0]!=0 and forum.hitbox_area_x[1]!=0 and attacker.hitbox_area_x[0]!=0 and attacker.hitbox_area_x[1]!=0) :
+            print(f"la hitbox du forum va de {forum.hitbox_area_x[0]} à {forum.hitbox_area_x[1]} en X tandis que la hitbox de l'attaquant worker va de {attacker.hitbox_area_x[0]} à {attacker.hitbox_area_x[1]} en X")
+
+            print(f"la hitbox du forum va de {forum.hitbox_area_y[0]} à {forum.hitbox_area_y[1]} en Y tandis que la hitbox de l'attaquant worker va de {attacker.hitbox_area_y[0]} à {attacker.hitbox_area_y[1]} en Y ")
+
+
+        if(
+        attacker.hitbox_area_x[1] > forum.hitbox_area_x[0]
+        # X max de worker est plus grand que X min de forum
+        and
+        attacker.hitbox_area_x[0] < forum.hitbox_area_x[1] 
+        # X min de worker est plus petit que X max de forum
+        and
+        attacker.hitbox_area_y[1] > forum.hitbox_area_y[0]
+        # Y max de worker est plus grand que Y min de forum
+        and
+        attacker.hitbox_area_y[0] < forum.hitbox_area_y[1]
+        # Y min de worker est plus petit que Y max de forum
+        ) :
+            self.attack(attacker,forum)
+
+
+    def attack(self,attacker : WORKER, forum : Forum) :
+        print("avant forum.life --> ", forum.life)
+        forum.life = forum.life - attacker.attack
+
+        if (forum.life<=0) :
+            print("Forum est détruit")
+        elif (forum.life>0) :
+            print(f"Le forum a une vie de {forum.life}")
 
     ################################################################
     #  Getters and Setters

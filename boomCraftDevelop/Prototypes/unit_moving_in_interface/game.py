@@ -5,6 +5,7 @@ from Worker import WORKER
 from Party import Party
 
 from GameEngine import GameEngine
+from Forum import Forum
 
 pygame.init()
 
@@ -29,28 +30,42 @@ ge : GameEngine = GameEngine(MAX_WIDTH_SIZE,MAX_HEIGTH_SIZE)
 worker : WORKER = WORKER(0,0,0)
 worker_position = worker.img.get_rect(topleft=(worker.x, worker.y))
 
+
+#########     NEW      #########
+forum : Forum = Forum(1,50,10)
+forum_position = forum.img.get_rect(topleft=(forum.x, forum.y))
+#########     END  NEW     #########
+
 #create dict of workers
 workers : Dict[int, WORKER] = {}
+forums : Dict[int, Forum] = {}
+
 surfaces : Dict[int, Rect] = {}
 
 #add one to the dict
 workers[0] = worker
+forums[0] = forum
+
 surfaces[0] = worker_position
+surfaces[1] = forum_position
 
 #create a party with workers
-party : Party = Party(1, ge,workers)
+party : Party = Party(1, ge, workers, forums)
 party.start()
 #load the character
 #character = pygame.image.load(character_file).convert_alpha()
 
 screen.blit(worker.img, worker_position)
+screen.blit(forum.img, forum_position)
 
 pygame.display.flip()
-
+''' 
 def receive (self, mobile_id : int, x_move : int, y_move : int, direction : int) :
         workers[mobile_id].x += x_move 
         workers[mobile_id].y += y_move
-        surfaces[mobile_id].move(x_move,y_move) 
+        surfaces[mobile_id].move(x_move,y_move)  
+        
+'''
         
 while True:
     for event in pygame.event.get():
@@ -78,10 +93,15 @@ while True:
             print("X : " + str(event.pos[0]) +" / Y : " + str(event.pos[1]))
             print("++++++++++++++++++++++++++++++++++++++++++++")
             worker.destination=[event.pos[0],event.pos[1]]
+
+            
+
             if(party.game_over!=True) :
+                
                 ge.update_road_to_destination(worker)
 
     screen.blit(map, (0,0))	
     screen.blit(worker.img, worker_position)
+    screen.blit(forum.img, forum_position)
     #refresh
     pygame.display.flip()

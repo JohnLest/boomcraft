@@ -33,8 +33,6 @@ class ImportWindow:
         frame.place(x=200, y=0)
 
         for i in self.potions["player"]["inventory"]:
-
-            print ("i",i)
             Radiobutton(frame,
                         text=i["label"]+" : "+str(i["quantity"]),
                         variable=self.rb_value,

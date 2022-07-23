@@ -63,8 +63,6 @@ class GameEngine:
             mobile.x += mobile.road_to_destination[0][0]
             mobile.y += mobile.road_to_destination[0][1]
 
-            print("après déplacement --> mobile.x", mobile.x, "mobile.y", mobile.y)
-
             direction: int = 0
             if (mobile.road_to_destination[0] == [0, 1]):
                 direction = 1
@@ -215,15 +213,6 @@ class GameEngine:
         forum.hitbox_area_y[1] = forum.y + HITBOX_OFFSET_BUILDING + forum.height
 
     def check_hitbox_reached(self, attacker: Worker, forum: Forum, key_socket):
-
-        if (forum.hitbox_area_x[0] != 0 and forum.hitbox_area_x[1] != 0 and attacker.hitbox_area_x[0] != 0 and
-                attacker.hitbox_area_x[1] != 0):
-            print(
-                f"la hitbox du forum va de {forum.hitbox_area_x[0]} à {forum.hitbox_area_x[1]} en X tandis que la hitbox de l'attaquant worker va de {attacker.hitbox_area_x[0]} à {attacker.hitbox_area_x[1]} en X")
-
-            print(
-                f"la hitbox du forum va de {forum.hitbox_area_y[0]} à {forum.hitbox_area_y[1]} en Y tandis que la hitbox de l'attaquant worker va de {attacker.hitbox_area_y[0]} à {attacker.hitbox_area_y[1]} en Y ")
-
         if (
                 attacker.hitbox_area_x[1] > forum.hitbox_area_x[0]
                 # X max de worker est plus grand que X min de forum

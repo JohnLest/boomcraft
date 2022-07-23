@@ -7,7 +7,6 @@ from connection import Connection
 # region main
 
 def main():
-    print(f"Hello Client")
     new_connection = Connection("localhost", 8080)
     pygame.init()
     main_win = MainWindow(new_connection)

@@ -2,7 +2,7 @@ import requests
 
 class BoomcraftApi:
     def __init__(self):
-        self.uri = "http://192.168.0.101:8070"
+        self.uri = "http://192.168.0.101:8000"
 
     def connect(self, mail, password):
         req = requests.get(f"{self.uri}/user/connect?mail_user={mail}&password={password}")

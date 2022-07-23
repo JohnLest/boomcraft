@@ -25,6 +25,9 @@ class MainWindow(Window):
         self.saint = None
         self.meteo = None
         self.path_resources = "../resources/mainWindows"
+        self.hitbox_trees = []
+        self.hitbox_stone = []
+        self.hitbox_ore = []
         self.__set_game()
         self.__get_game_resources()
 
@@ -113,7 +116,15 @@ class MainWindow(Window):
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.gbGame.surface.get_size())
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
-        self.worker = Worker(100, 150)
+        for hit_res in tmx_data.objects:
+            if hit_res.type == "trees":
+                self.hitbox_trees.append(pygame.Rect(hit_res.x, hit_res.y, hit_res.width, hit_res.height))
+            elif hit_res.type == "stone":
+                self.hitbox_stone.append(pygame.Rect(hit_res.x, hit_res.y, hit_res.width, hit_res.height))
+            elif hit_res.type == "ore":
+                self.hitbox_ore.append(pygame.Rect(hit_res.x, hit_res.y, hit_res.width, hit_res.height))
+
+        self.worker = Worker(self.connection, 100, 150)
         self.forum = Forum(600, 600)
         self.group.add(self.worker)
         self.group.add(self.forum)
@@ -208,7 +219,6 @@ class MainWindow(Window):
             self.saint = f"{day}/{mounth}/{years} : {name}"
 
         elif key == 500:
-            print(body)
             self.worker.x = body.get("new_coord")[0]
             self.worker.y = body.get("new_coord")[1]
             self.group.update()

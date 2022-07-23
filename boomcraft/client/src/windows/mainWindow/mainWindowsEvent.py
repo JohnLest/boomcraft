@@ -1,6 +1,6 @@
 import time
-
 import pygame
+
 """ from widget import MenuStrip
 from mainWindow import MainWindow """
 
@@ -15,10 +15,12 @@ class MainWindowEvent:
 
     def __event(self):
         btn = self.main_win.btnAPI
+        hit = False
         while True:
             self.main_win.group.update()
             self.main_win.group.draw(self.main_win.gbGame.surface)
             self.main_win.gbGame.show_groupbox(self.main_win.window)
+            hit = self.__hit_resources(hit)
             self.__handle_input()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -43,16 +45,41 @@ class MainWindowEvent:
             pygame.display.update()
         return
 
+    def __test(self):
+        time.sleep(2)
+        print("resources")
+
+    def __hit_resources(self, hit):
+        if not hit and self.main_win.worker.rect.collidelist(self.main_win.hitbox_trees) > -1:
+            hit = True
+            self.main_win.worker.farm_resources("trees", hit)
+        elif not hit and self.main_win.worker.rect.collidelist(self.main_win.hitbox_stone) > -1:
+            hit = True
+            self.main_win.worker.farm_resources("stone", hit)
+        elif not hit and self.main_win.worker.rect.collidelist(self.main_win.hitbox_ore) > -1:
+            hit = True
+            self.main_win.worker.farm_resources("ore", hit)
+        elif (hit and self.main_win.worker.rect.collidelist(self.main_win.hitbox_trees) == -1 and
+              self.main_win.worker.rect.collidelist(self.main_win.hitbox_stone) == -1 and
+              self.main_win.worker.rect.collidelist(self.main_win.hitbox_ore) == -1):
+            hit = False
+            print("stop")
+            self.main_win.worker.farm_resources(None, hit)
+        return hit
+
     def __menu_strip_on_click(self):
         while True:
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.main_win.menu_sprite.menu_strip_item_dict.get("twitch").rect.collidepoint(pygame.mouse.get_pos()):
+                    if self.main_win.menu_sprite.menu_strip_item_dict.get("twitch").rect.collidepoint(
+                            pygame.mouse.get_pos()):
                         print("Un")
-                    elif self.main_win.menu_sprite.menu_strip_item_dict.get("fcb").rect.collidepoint(pygame.mouse.get_pos()):
+                    elif self.main_win.menu_sprite.menu_strip_item_dict.get("fcb").rect.collidepoint(
+                            pygame.mouse.get_pos()):
                         print("Deux")
-                    elif self.main_win.menu_sprite.menu_strip_item_dict.get("discord").rect.collidepoint(pygame.mouse.get_pos()):
+                    elif self.main_win.menu_sprite.menu_strip_item_dict.get("discord").rect.collidepoint(
+                            pygame.mouse.get_pos()):
                         print("Long")
                     else:
                         self.main_win.menu_sprite.tighten()

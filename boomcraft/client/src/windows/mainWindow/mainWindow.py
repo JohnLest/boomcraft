@@ -6,14 +6,12 @@ import selectors
 import threading
 
 from src.models.playerInfoModel import PlayerInfoModel
-from src.windows.mainWindow.forum import Forum
+from src.windows.mainWindow.gameObject.forum import Forum
 from tool import *
-from src.windows.mainWindow.worker import Worker
+from src.windows.mainWindow.gameObject.worker import Worker
 from src.windows.menuWindow import MenuWindow
 from src.windows.mainWindow.window import Window
 from src.windows.mainWindow.widget import *
-
-import os
 
 
 class MainWindow(Window):

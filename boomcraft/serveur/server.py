@@ -1,17 +1,16 @@
-import json
 import socket
 import selectors
 import logging
 import types
-from typing import List, Dict
-from boomcraftApi import BoomcraftApi
-from forum import Forum
-from otherApi import OtherApi
+from typing import Dict
+from apis.boomcraftApi import BoomcraftApi
+from gameObjects.forum import Forum
+from gameObjects.otherApi import OtherApi
 from playerRepo import PlayerRepo
 from gameEngine import GameEngine
 from models.playerInfoModel import PlayerInfoModel
 from tool import *
-from worker import Worker
+from gameObjects.worker import Worker
 
 
 class Server:

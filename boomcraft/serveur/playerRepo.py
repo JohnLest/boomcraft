@@ -1,9 +1,8 @@
 import json
 import copy
 
-from tool import *
 from models.playerInfoModel import PlayerInfoModel
-from boomcraftApi import BoomcraftApi
+from apis.boomcraftApi import BoomcraftApi
 
 
 class PlayerRepo:

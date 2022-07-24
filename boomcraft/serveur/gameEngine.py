@@ -1,9 +1,8 @@
 import time
 import uuid
 
-from models.playerInfoModel import PlayerInfoModel
-from worker import Worker
-from forum import Forum
+from gameObjects.worker import Worker
+from gameObjects.forum import Forum
 
 MAX_WIDTH_SIZE = 1120
 MAX_HEIGTH_SIZE = int((900/100)*80)

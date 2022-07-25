@@ -62,3 +62,9 @@ class PlayerRepo:
         for _own_res in p_model.own_resources:
             _own_res.quantity = _own_res.quantity - game_resources.get(_own_res.resource, 0)
         return p_model
+
+    def farm_resources(self, id_user, farm_resources: dict):
+        p_model: PlayerInfoModel = self.lst_player.get(id_user)
+        for _game_res in p_model.game_resources:
+            _game_res.quantity = _game_res.quantity + farm_resources.get(_game_res.resource, 0)
+        return p_model

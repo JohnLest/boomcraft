@@ -26,8 +26,9 @@ class MainWindow(Window):
         self.hitbox_trees = []
         self.hitbox_stone = []
         self.hitbox_ore = []
+        self.dict_resources = {}
         self.__set_game()
-        self.__get_game_resources()
+        self.get_game_resources()
 
         self.main_win = Window.__init__(self, (1200, 900), "Boomcraft")
         self.__gb_menu_button()
@@ -93,12 +94,7 @@ class MainWindow(Window):
                                  f"gold : {self.dict_resources.get('gold')}",
                                  position_midleft=(self.resource_position_x * 4, self.gbResourceBanner.data_rect.midleft[1])
                                  )
-        self.wood.show_image_and_text(self.gbResourceBanner.surface)
-        self.food.show_image_and_text(self.gbResourceBanner.surface)
-        self.iron.show_image_and_text(self.gbResourceBanner.surface)
-        self.stone.show_image_and_text(self.gbResourceBanner.surface)
-        self.gold.show_image_and_text(self.gbResourceBanner.surface)
-        self.gbResourceBanner.show_groupbox(self.window)
+        self.update_gb_banner_resources()
         return self
 
     def __gb_game(self):
@@ -158,11 +154,25 @@ class MainWindow(Window):
         self.menu_stripe_dict = {"twitch": "Twitch", "fcb": "Facebook", "discord": "Discord"}
         self.menu_sprite = MenuStrip(self.btnAPI.btn_rect, self.menu_stripe_dict)
 
-    def __get_game_resources(self):
+    def get_game_resources(self):
         game_resources = self.user.game_resources
-        self.dict_resources = {}
         for resource in game_resources:
             self.dict_resources.update({resource.resource: resource.quantity})
+
+    def update_gb_banner_resources(self):
+        self.get_game_resources()
+        self.wood.update_text(f"wood : {self.dict_resources.get('wood')}")
+        self.food.update_text(f"food : {self.dict_resources.get('food')}")
+        self.stone.update_text(f"stone : {self.dict_resources.get('stone')}")
+        self.iron.update_text(f"iron : {self.dict_resources.get('iron')}")
+        self.gold.update_text(f"gold : {self.dict_resources.get('gold')}")
+        self.gbResourceBanner.surface.fill((0, 0, 0))
+        self.wood.show_image_and_text(self.gbResourceBanner.surface)
+        self.food.show_image_and_text(self.gbResourceBanner.surface)
+        self.iron.show_image_and_text(self.gbResourceBanner.surface)
+        self.stone.show_image_and_text(self.gbResourceBanner.surface)
+        self.gold.show_image_and_text(self.gbResourceBanner.surface)
+        self.gbResourceBanner.show_groupbox(self.window)
 
     # endregion
 

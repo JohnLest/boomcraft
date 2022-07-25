@@ -136,7 +136,10 @@ class ImageAndText:
         self.rect_text.x = self.rect_text.x + 5
 
 
+    def update_text(self, text):
 
+        font = pygame.font.SysFont("Arial", 18)
+        self.text_render = font.render(text, True, (255, 255, 255))
 
     def show_image_and_text(self, surface):
         pygame.draw.rect(surface, (0, 0, 0), self.data_rect, 1)

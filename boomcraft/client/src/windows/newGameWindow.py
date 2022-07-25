@@ -1,5 +1,4 @@
 from tkinter import *
-from src.windows.importWindow import ImportWindow
 
 class NewGameWindow:
     def __init__(self, player_info):
@@ -46,14 +45,6 @@ class NewGameWindow:
                                 font=("Helvetica", 20),
                                 command=self.__btn_start_click)
         self.btn_start.place(x=600, y=240, anchor='center')
-
-        self.btn_import = Button(self.window,
-                                text="Import",
-                                fg='blue', width='10',
-                                height='2',
-                                font=("Helvetica", 20),
-                                command=self.__btn_import_click)
-        self.btn_import.place(x=900, y=240, anchor='center')
 
         self.btn_quit = Button(self.window,
                                text="Quit",
@@ -150,24 +141,6 @@ class NewGameWindow:
 
     def __btn_click(self, max_res, import_res):
         import_res.set(max_res)
-
-    def __btn_import_click(self):
-        _import = ImportWindow()
-        tab_import = _import.value.split(" ")
-        key = tab_import[0].lower()
-        value = int(tab_import[1])
-        if key == "wood":
-            self.wood.set(value)
-        elif key == "stone":
-            self.stone.set(value)
-        elif key == "iron":
-            self.iron.set(value)
-        elif key == "food":
-            self.food.set(value)
-        elif key == "gold":
-            self.gold.set(value)
-        _import.window.destroy()
-        del _import
 
     def __btn_quit_click(self):
         self.window.quit()

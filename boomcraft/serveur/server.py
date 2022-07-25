@@ -118,9 +118,10 @@ class Server:
             self.worker.destination = [body.get("destination")[0], body.get("destination")[1]]
             self.game_engine.update_road_to_destination(self.worker, key_socket, self.forum)
         elif key == 7:
-            logging.info(f"add {body.get('wood')} to wood")
-            # TODO
-            pass
+            farm_player = self.player_repo.farm_resources(get_key(self.dico_connect, key_socket), body)
+            msg = farm_player.dict()
+            msg.pop("key_socket")
+            self.write(key_socket, {2: msg})
 
         elif key == 100:
             self.s_n_connect.update({body.get("uuid"): key_socket})

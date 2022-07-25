@@ -43,13 +43,9 @@ class MainWindowEvent:
                         self.main_win.connection.write({6: {"destination": (pos_x, pos_y)}})
 
             pygame.display.update()
-        return
-
-    def __test(self):
-        time.sleep(2)
-        print("resources")
 
     def __hit_resources(self, hit):
+        self.main_win.update_gb_banner_resources()
         if not hit and self.main_win.worker.rect.collidelist(self.main_win.hitbox_trees) > -1:
             hit = True
             self.main_win.worker.farm_resources("trees", hit)

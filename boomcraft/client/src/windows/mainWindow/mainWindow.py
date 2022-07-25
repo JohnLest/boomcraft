@@ -28,7 +28,8 @@ class MainWindow(Window):
         self.hitbox_ore = []
         self.dict_resources = {}
         self.__set_game()
-        self.get_game_resources()
+        if not self.menuWin.new_game:
+            return
 
         self.main_win = Window.__init__(self, (1200, 900), "Boomcraft")
         self.__gb_menu_button()
@@ -45,7 +46,7 @@ class MainWindow(Window):
 
     def __set_game(self):
         self.connection.connection()
-        thread = threading.Thread(target=self.__thread_read)
+        thread = threading.Thread(target=self.__thread_read, daemon=True)
         thread.start()
         time.sleep(0.5)
         self.menuWin = MenuWindow(self.connection, self)
@@ -54,7 +55,9 @@ class MainWindow(Window):
             while True:
                 if self.id_game is not None:
                     break
-        self.menuWin.window.destroy()
+            self.get_game_resources()
+        if len(self.menuWin.window.children) is not 0:
+            self.menuWin.window.destroy()
 
     def __gb_menu_button(self):
         """ GroupBox for Menu Button """

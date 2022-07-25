@@ -10,8 +10,10 @@ def main():
     new_connection = Connection("localhost", 8080)
     pygame.init()
     main_win = MainWindow(new_connection)
-    MainWindowEvent(main_win)
+    if main_win.menuWin.new_game:
+        MainWindowEvent(main_win)
     pygame.quit()
+    print("quit")
 # endregion
 
 

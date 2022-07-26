@@ -30,6 +30,7 @@ class MainWindow(Window):
         self.path_resources = "../resources/mainWindows"
         self.dict_resources = {}
         self.worker = None
+        self.all_worker = []
         self.__set_game()
         if not self.menuWin.new_game:
             self.disconnection = True
@@ -172,11 +173,12 @@ class MainWindow(Window):
         self.gbResourceBanner.show_groupbox(self.window)
 
     def create_worker(self):
-        self.connection.write({5: "new worker"})
+        self.connection.write({5: self.id_game})
         while True:
             if self.worker is not None:
                 break
         self.group.add(self.worker)
+        self.all_worker.append(self.worker)
 
     # endregion
 
@@ -220,7 +222,7 @@ class MainWindow(Window):
         elif key == 3:
             self.id_game = body.get("id_game")
         elif key == 4:
-            self.worker = Worker(self.connection, x=body.get("x"), y=body.get("y"))
+            self.worker = Worker(self.connection, body.get("id_worker"), x=body.get("x"), y=body.get("y"))
 
         elif key == 201:
             body = first_or_default(body)

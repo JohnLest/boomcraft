@@ -8,9 +8,10 @@ CHARACTER_LEFT = "../resources/mainWindows/left/0.png"
 CHARACTER_RIGHT = "../resources/mainWindows/right/0.png"
 
 class Worker(pygame.sprite.Sprite):
-    def __init__(self, connection, x: int = 0, y: int = 0, width: int = 16, height: int = 32):
+    def __init__(self, connection, id_worker, x: int = 0, y: int = 0, width: int = 16, height: int = 32):
         super().__init__()
         self.coord: list = [x, y]
+        self.id_worker = id_worker
         self.x: int = x
         self.y: int = y
         self.width = width

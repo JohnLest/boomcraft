@@ -28,10 +28,8 @@ class MainWindow(Window):
         self.saint = None
         self.meteo = None
         self.path_resources = "../resources/mainWindows"
-        self.hitbox_trees = []
-        self.hitbox_stone = []
-        self.hitbox_ore = []
         self.dict_resources = {}
+        self.worker = None
         self.__set_game()
         if not self.menuWin.new_game:
             self.disconnection = True
@@ -44,9 +42,9 @@ class MainWindow(Window):
         self.__gb_game()
         self.__gb_action()
         self.__menu_strip_api()
-        self.connection.write({5: {"worker_coord": (self.worker.x, self.worker.y),
-                                   "forum_coord": (self.forum.x, self.forum.y)}
-                               })
+        # self.connection.write({5: {"worker_coord": (self.worker.x, self.worker.y),
+        #                            "forum_coord": (self.forum.x, self.forum.y)}
+        #                        })
 
 
     # region Set Game
@@ -117,17 +115,9 @@ class MainWindow(Window):
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.gbGame.surface.get_size())
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
-        for hit_res in tmx_data.objects:
-            if hit_res.type == "trees":
-                self.hitbox_trees.append(pygame.Rect(hit_res.x, hit_res.y, hit_res.width, hit_res.height))
-            elif hit_res.type == "stone":
-                self.hitbox_stone.append(pygame.Rect(hit_res.x, hit_res.y, hit_res.width, hit_res.height))
-            elif hit_res.type == "ore":
-                self.hitbox_ore.append(pygame.Rect(hit_res.x, hit_res.y, hit_res.width, hit_res.height))
 
-        self.worker = Worker(self.connection, 100, 150)
+        self.create_worker()
         self.forum = Forum(600, 600)
-        self.group.add(self.worker)
         self.group.add(self.forum)
         # self.group.update()
 
@@ -181,6 +171,13 @@ class MainWindow(Window):
         self.gold.show_image_and_text(self.gbResourceBanner.surface)
         self.gbResourceBanner.show_groupbox(self.window)
 
+    def create_worker(self):
+        self.connection.write({5: "new worker"})
+        while True:
+            if self.worker is not None:
+                break
+        self.group.add(self.worker)
+
     # endregion
 
     # region Comunicate
@@ -222,6 +219,8 @@ class MainWindow(Window):
             self.user = PlayerInfoModel(**body)
         elif key == 3:
             self.id_game = body.get("id_game")
+        elif key == 4:
+            self.worker = Worker(self.connection, x=body.get("x"), y=body.get("y"))
 
         elif key == 201:
             body = first_or_default(body)

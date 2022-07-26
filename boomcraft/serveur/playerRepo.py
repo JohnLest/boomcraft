@@ -3,6 +3,8 @@ import copy
 
 from models.playerInfoModel import PlayerInfoModel
 from apis.boomcraftApi import BoomcraftApi
+from gameObjects.player import Player
+from gameObjects.worker import Worker
 
 
 class PlayerRepo:
@@ -35,7 +37,7 @@ class PlayerRepo:
             _resources.update({"quantity": 0})
         return resources
 
-    def new_player(self,key_socket, **data):
+    def new_player(self, key_socket, **data):
         """
         if ``connection_type`` = "login"\n
         use ``mail`` and ``password``\n
@@ -52,11 +54,13 @@ class PlayerRepo:
                                   own_resources=_own_resources.get("resource"),
                                   game_resources=_game_resources,
                                   key_socket=key_socket)
-        self.lst_player.update({p_model.user.id_user: p_model})
+        player = Player(p_model)
+        self.lst_player.update({p_model.user.id_user: player})
         return p_model
 
     def update_resources(self, id_user, game_resources: dict):
-        p_model: PlayerInfoModel = self.lst_player.get(id_user)
+        player: Player = self.lst_player.get(id_user)
+        p_model: PlayerInfoModel = player.model_player
         for _game_res in p_model.game_resources:
             _game_res.quantity = game_resources.get(_game_res.resource, 0)
         for _own_res in p_model.own_resources:
@@ -64,7 +68,15 @@ class PlayerRepo:
         return p_model
 
     def farm_resources(self, id_user, farm_resources: dict):
-        p_model: PlayerInfoModel = self.lst_player.get(id_user)
+        player: Player = self.lst_player.get(id_user)
+        p_model: PlayerInfoModel = player.model_player
         for _game_res in p_model.game_resources:
             _game_res.quantity = _game_res.quantity + farm_resources.get(_game_res.resource, 0)
         return p_model
+
+    def create_worker(self, id_user, x_work, y_work):
+        player: Player = self.lst_player.get(id_user)
+        new_worker = Worker(x=x_work, y=y_work)
+        player.workers.append(new_worker)
+        return new_worker
+

@@ -14,7 +14,7 @@ from gameObjects.worker import Worker
 
 
 class Server:
-    def __init__(self, host="localhost", port=8080):
+    def __init__(self, host="0.0.0.0", port=8080):
         self.logger = logging.getLogger(__name__)
         self.host = host
         self.port = port
@@ -89,6 +89,7 @@ class Server:
         body: Dict = msg.get(key, None)
         if msg is None:
             return
+        id_user = get_key(self.dico_connect, key_socket)
         if key == 1:
             mail = body.get("mail")
             password = body.get("password")
@@ -103,7 +104,7 @@ class Server:
             msg.pop("key_socket")
             self.write(key_socket, {1: msg})
         elif key == 3:
-            up_player = self.player_repo.update_resources(get_key(self.dico_connect, key_socket), body)
+            up_player = self.player_repo.update_resources(id_user, body)
             msg = up_player.dict()
             msg.pop("key_socket")
             self.write(key_socket, {2: msg})
@@ -111,12 +112,15 @@ class Server:
             id_game = self.game_engine.add_player_in_game(self.player_repo.lst_player.get(body.get("id_user")))
             self.write(key_socket, {3: {"id_game": id_game}})
         elif key == 5:
-            self.worker = Worker(x=body.get("worker_coord")[0], y=body.get("worker_coord")[1])
-            self.forum = Forum(x=body.get("forum_coord")[0], y=body.get("forum_coord")[1])
-            logging.info(f"forum x = {body.get('forum_coord')[0]} - forum y = {body.get('forum_coord')[1]}")
+            new_worker = self.player_repo.create_worker(id_user, 100, 100)
+            self.write(key_socket, {4: {"x": new_worker.x, "y": new_worker.y}})
+            # TODO to remove :
+            self.forum = Forum(600, 600)
         elif key == 6:
-            self.worker.destination = [body.get("destination")[0], body.get("destination")[1]]
-            self.game_engine.update_road_to_destination(self.worker, key_socket, self.forum)
+            _player = self.player_repo.lst_player.get(id_user)
+            worker: Worker = self.player_repo.lst_player.get(id_user).workers[0]
+            worker.destination = [body.get("destination")[0], body.get("destination")[1]]
+            self.game_engine.update_road_to_destination(worker, key_socket, self.forum)
         elif key == 7:
             farm_player = self.player_repo.farm_resources(get_key(self.dico_connect, key_socket), body)
             msg = farm_player.dict()

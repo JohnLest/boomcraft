@@ -7,7 +7,7 @@ from connection import Connection
 # region main
 
 def main():
-    new_connection = Connection("localhost", 8080)
+    new_connection = Connection("192.168.0.100", 8080)
     pygame.init()
     main_win = MainWindow(new_connection)
     if main_win.menuWin.new_game:

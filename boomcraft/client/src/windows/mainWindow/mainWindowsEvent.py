@@ -15,12 +15,12 @@ class MainWindowEvent:
 
     def __event(self):
         btn = self.main_win.btnAPI
-        hit = False
+        # hit = False
         while True:
             self.main_win.group.update()
             self.main_win.group.draw(self.main_win.gbGame.surface)
             self.main_win.gbGame.show_groupbox(self.main_win.window)
-            hit = self.__hit_resources(hit)
+            # hit = self.__hit_resources(hit)
             self.__handle_input()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -43,7 +43,7 @@ class MainWindowEvent:
                         self.main_win.connection.write({6: {"destination": (pos_x, pos_y)}})
 
             pygame.display.update()
-
+    """
     def __hit_resources(self, hit):
         self.main_win.update_gb_banner_resources()
         if not hit and self.main_win.worker.rect.collidelist(self.main_win.hitbox_trees) > -1:
@@ -62,6 +62,7 @@ class MainWindowEvent:
             print("stop")
             self.main_win.worker.farm_resources(None, hit)
         return hit
+    """
 
     def __menu_strip_on_click(self):
         while True:

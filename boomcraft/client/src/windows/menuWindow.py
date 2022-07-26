@@ -74,7 +74,8 @@ class MenuWindow:
 
     def __btn_connect_click(self):
         conn_win = ConnectWindow(self.connection, self.main_windows)
-        conn_win.window.destroy()
+        if len(conn_win.window.children) != 0:
+            conn_win.window.destroy()
         del conn_win
         self.btn_connect["state"] = "disabled"
         pseudo = self.main_windows.user.user.pseudo
@@ -83,7 +84,8 @@ class MenuWindow:
 
     def __btn_new_game_click(self):
         new_game_win = NewGameWindow(self.main_windows.user)
-        new_game_win.window.destroy()
+        if len(new_game_win.window.children) != 0:
+            new_game_win.window.destroy()
         if new_game_win.new_game:
             self.new_game = True
             self.connection.write({3: new_game_win.game_resources_dict})
@@ -95,7 +97,8 @@ class MenuWindow:
 
     def __btn_paypal_click(self):
         paypal = Paypal()
-        paypal.window.destroy()
+        if len(paypal.window.children) != 0:
+            paypal.window.destroy()
         del paypal
 
     def __btn_quit_click(self):

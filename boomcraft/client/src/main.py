@@ -13,7 +13,6 @@ def main():
     if main_win.menuWin.new_game:
         MainWindowEvent(main_win)
     pygame.quit()
-    print("quit")
 # endregion
 
 

@@ -51,11 +51,11 @@ class Server:
             recv_data = sock.recv(1024)  # Should be ready to read
             if recv_data:
                 data.outb += recv_data
+                self.__analyse_msg(deserialize(data.outb), key)
             else:
-                self.logger.info(f'closing connection to{data.addr}', )
+                self.logger.info(f'client closing connection to{data.addr}', )
                 self.sel.unregister(sock)
                 sock.close()
-            self.__analyse_msg(deserialize(data.outb), key)
             data.outb = b''
 
     def connect(self):

@@ -18,6 +18,11 @@ class MainWindow(Window):
     """ Class for main window """
     def __init__(self, connection):
         self.connection = connection
+        self.disconnection = False
+        self.connection.connection()
+        thread = threading.Thread(target=self.__thread_read, daemon=True)
+        thread.start()
+
         self.user = None
         self.id_game = None
         self.saint = None
@@ -29,6 +34,8 @@ class MainWindow(Window):
         self.dict_resources = {}
         self.__set_game()
         if not self.menuWin.new_game:
+            self.disconnection = True
+            thread.join()
             return
 
         self.main_win = Window.__init__(self, (1200, 900), "Boomcraft")
@@ -45,9 +52,6 @@ class MainWindow(Window):
     # region Set Game
 
     def __set_game(self):
-        self.connection.connection()
-        thread = threading.Thread(target=self.__thread_read, daemon=True)
-        thread.start()
         time.sleep(0.5)
         self.menuWin = MenuWindow(self.connection, self)
         if self.menuWin.new_game:
@@ -56,7 +60,7 @@ class MainWindow(Window):
                 if self.id_game is not None:
                     break
             self.get_game_resources()
-        if len(self.menuWin.window.children) is not 0:
+        if len(self.menuWin.window.children) != 0:
             self.menuWin.window.destroy()
 
     def __gb_menu_button(self):
@@ -183,6 +187,8 @@ class MainWindow(Window):
     def __thread_read(self):
         while True:
             events = self.connection.sel.select(timeout=None)
+            if self.disconnection:
+                break
             if first_or_default(events) is not None:
                 self.connection.key, self.connection.mask = first_or_default(events)
                 self.__read()
@@ -195,11 +201,13 @@ class MainWindow(Window):
             if recv_data:
                 data.outb += recv_data
             else:
-                print('closing connection to', data.addr)
+                print('closing connection')
                 self.connection.sel.unregister(sock)
                 sock.close()
             self.__analyse_msg(deserialize(data.outb))
             data.outb = b''
+
+
 
     def __analyse_msg(self, msg: dict):
         key = first_or_default(msg)

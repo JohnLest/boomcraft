@@ -1,6 +1,0 @@
-
-
-MAX_WIDTH_SIZE = 840
-MAX_HEIGTH_SIZE = 540
-
-        

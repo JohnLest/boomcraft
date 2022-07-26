@@ -1,6 +1,0 @@
-cd C:\Users\Quentin Lebrun\Documents\Gitlab\inteapplidistri
-boomCraftEnvi1\Scripts\activate
-cd boomcraft
-cd prototypes
-cd unit_moving_in_interface
-code .

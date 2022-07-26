@@ -3,6 +3,7 @@ import uuid
 
 from gameObjects.worker import Worker
 from gameObjects.forum import Forum
+from playerRepo import PlayerRepo
 
 MAX_WIDTH_SIZE = 1120
 MAX_HEIGTH_SIZE = int((900/100)*80)
@@ -15,6 +16,7 @@ class GameEngine:
         self.__height = height
         self.__party_nb = 0
         self.game_lst: dict = {}
+        self.player_repo = PlayerRepo()
         self.connect = connect
 
     # region New Game
@@ -81,7 +83,7 @@ class GameEngine:
                 direction = 8
 
             self.calculate_hitbox_mobile(mobile)
-            self.update_gui(player, mobile)
+            # self.update_gui(player, mobile)
 
 
             mobile.road_to_destination.pop(0)
@@ -240,9 +242,12 @@ class GameEngine:
 
     # endregion
 
-    def update_gui(self, key_socket, mobile: Worker):
-        self.connect.write(key_socket, {500: {"new_coord": (mobile.x, mobile.y)}})
-        time.sleep(0.001)
+    def update_gui(self, id_game):
+        all_worker = {}
+        for player in self.game_lst.get(id_game):
+            for worker in player.workers:
+                all_worker.update({worker.id_worker: {"x": worker.x, "y": worker.y}})
+        self.connect.send_all({500: all_worker})
 
     # region Getters and Setters
     def set__width(self, width: int):

@@ -29,8 +29,7 @@ class MainWindow(Window):
         self.meteo = None
         self.path_resources = "../resources/mainWindows"
         self.dict_resources = {}
-        self.worker = None
-        self.all_worker = []
+        self.all_worker = {}
         self.__set_game()
         if not self.menuWin.new_game:
             self.disconnection = True
@@ -117,7 +116,7 @@ class MainWindow(Window):
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.gbGame.surface.get_size())
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
 
-        self.create_worker()
+        self.connection.write({5: self.id_game})
         self.forum = Forum(600, 600)
         self.group.add(self.forum)
         # self.group.update()
@@ -172,14 +171,6 @@ class MainWindow(Window):
         self.gold.show_image_and_text(self.gbResourceBanner.surface)
         self.gbResourceBanner.show_groupbox(self.window)
 
-    def create_worker(self):
-        self.connection.write({5: self.id_game})
-        while True:
-            if self.worker is not None:
-                break
-        self.group.add(self.worker)
-        self.all_worker.append(self.worker)
-
     # endregion
 
     # region Comunicate
@@ -206,8 +197,6 @@ class MainWindow(Window):
             self.__analyse_msg(deserialize(data.outb))
             data.outb = b''
 
-
-
     def __analyse_msg(self, msg: dict):
         key = first_or_default(msg)
         if key is None:
@@ -221,8 +210,6 @@ class MainWindow(Window):
             self.user = PlayerInfoModel(**body)
         elif key == 3:
             self.id_game = body.get("id_game")
-        elif key == 4:
-            self.worker = Worker(self.connection, body.get("id_worker"), x=body.get("x"), y=body.get("y"))
 
         elif key == 201:
             body = first_or_default(body)
@@ -239,8 +226,15 @@ class MainWindow(Window):
             self.saint = f"{day}/{mounth}/{years} : {name}"
 
         elif key == 500:
-            self.worker.x = body.get("new_coord")[0]
-            self.worker.y = body.get("new_coord")[1]
+            for id_worker, worker_coord in body.items():
+                _worker = self.all_worker.get(id_worker)
+                if _worker is None:
+                    new_worker = Worker(id_worker, x=worker_coord.get("x"), y=worker_coord.get("y"))
+                    self.group.add(new_worker)
+                    self.all_worker.update({new_worker.id_worker: new_worker})
+                else:
+                    _worker.x = worker_coord.get("x")
+                    _worker.y = worker_coord.get("y")
             self.group.update()
             self.group.draw(self.gbGame.surface)
             self.gbGame.show_groupbox(self.window)

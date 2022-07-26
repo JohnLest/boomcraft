@@ -8,7 +8,7 @@ CHARACTER_LEFT = "../resources/mainWindows/left/0.png"
 CHARACTER_RIGHT = "../resources/mainWindows/right/0.png"
 
 class Worker(pygame.sprite.Sprite):
-    def __init__(self, connection, id_worker, x: int = 0, y: int = 0, width: int = 16, height: int = 32):
+    def __init__(self, id_worker, x: int = 0, y: int = 0, width: int = 16, height: int = 32):
         super().__init__()
         self.coord: list = [x, y]
         self.id_worker = id_worker
@@ -19,7 +19,7 @@ class Worker(pygame.sprite.Sprite):
         self.destination: list[int] = []
         self.road_to_destination = [[]]
         self.current_step: list[int] = []
-        self.connection = connection
+        # self.connection = connection
         self.farm_resource_thread = threading.Thread()
         self.stop_farm = True
 
@@ -33,6 +33,7 @@ class Worker(pygame.sprite.Sprite):
         # self.image.blit(self.img_down, (0, 0), (self.x, self.y, self.width, self.height))
         # self.rect = self.image.get_rect()
 
+    """"
     def __thread_farm(self, resource):
         count = 0
         while True:
@@ -54,10 +55,11 @@ class Worker(pygame.sprite.Sprite):
                 self.connection.write({7: {"iron": 10}})
             if self.stop_farm: return
             count += 1
-
+    """
     def update(self):
         self.rect.topleft = [self.x, self.y]
 
+    """
     def farm_resources(self, resource, is_farming):
         if is_farming:
             self.stop_farm = False
@@ -68,3 +70,4 @@ class Worker(pygame.sprite.Sprite):
             self.stop_farm = True
             self.farm_resource_thread.join()
         print("test")
+        """

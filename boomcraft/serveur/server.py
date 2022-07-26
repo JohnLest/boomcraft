@@ -113,14 +113,13 @@ class Server:
             self.write(key_socket, {3: {"id_game": id_game}})
         elif key == 5:
             new_worker = None
-            ge = self.game_engine;
-            test = self.game_engine.game_lst.get(body)[0].model_player.user.id_user
-            if self.game_engine.game_lst.get(body)[0].model_player.user.id_user == id_user:
+            id_game = body
+            if self.game_engine.game_lst.get(id_game)[0].model_player.user.id_user == id_user:
                 new_worker = self.player_repo.create_worker(id_user, 100, 100)
-            elif self.game_engine.game_lst.get(body)[1].model_player.user.id_user == id_user:
+            elif self.game_engine.game_lst.get(id_game)[1].model_player.user.id_user == id_user:
                 new_worker = self.player_repo.create_worker(id_user, 300, 300)
-            # if new_worker is not None:
-            self.write(key_socket, {4: {"id_worker": new_worker.id_worker, "x": new_worker.x, "y": new_worker.y}})
+            if new_worker is not None:
+                self.game_engine.update_gui(id_game)
             # TODO to remove :
             self.forum = Forum(600, 600)
         elif key == 6:

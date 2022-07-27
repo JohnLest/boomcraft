@@ -8,3 +8,4 @@ class Player:
         self.workers: List[Worker] = []
         self.forum = None
         self.model_player = model_player
+        self.id_game = None

@@ -1,8 +1,10 @@
 import socket
 import selectors
 import logging
+import time
 import types
 from typing import Dict
+import threading
 from apis.boomcraftApi import BoomcraftApi
 from gameObjects.forum import Forum
 from gameObjects.otherApi import OtherApi
@@ -22,7 +24,6 @@ class Server:
         self.dico_connect = {}
         self.s_n_connect = {}
         self.boomcraft_api = BoomcraftApi()
-        self.player_repo = PlayerRepo()
         self.game_engine = GameEngine(self)
 
     # region communication
@@ -51,7 +52,9 @@ class Server:
             recv_data = sock.recv(1024)  # Should be ready to read
             if recv_data:
                 data.outb += recv_data
-                self.__analyse_msg(deserialize(data.outb), key)
+                new_message = threading.Thread(target=self.__analyse_msg, args=(deserialize(data.outb), key, ), daemon=True)
+                new_message.start()
+                # self.__analyse_msg(deserialize(data.outb), key)
             else:
                 self.logger.info(f'client closing connection to{data.addr}', )
                 self.sel.unregister(sock)
@@ -104,31 +107,32 @@ class Server:
             msg.pop("key_socket")
             self.write(key_socket, {1: msg})
         elif key == 3:
-            up_player = self.player_repo.update_resources(id_user, body)
+            up_player = self.game_engine.player_repo.update_resources(id_user, body)
             msg = up_player.dict()
             msg.pop("key_socket")
             self.write(key_socket, {2: msg})
         elif key == 4:
-            id_game = self.game_engine.add_player_in_game(self.player_repo.lst_player.get(body.get("id_user")))
+            id_game = self.game_engine.add_player_in_game(self.game_engine.player_repo.lst_player.get(body.get("id_user")))
             self.write(key_socket, {3: {"id_game": id_game}})
         elif key == 5:
             new_worker = None
             id_game = body
             if self.game_engine.game_lst.get(id_game)[0].model_player.user.id_user == id_user:
-                new_worker = self.player_repo.create_worker(id_user, 100, 100)
+                new_worker = self.game_engine.player_repo.create_worker(id_user, 100, 100)
             elif self.game_engine.game_lst.get(id_game)[1].model_player.user.id_user == id_user:
-                new_worker = self.player_repo.create_worker(id_user, 300, 300)
+                new_worker = self.game_engine.player_repo.create_worker(id_user, 300, 300)
             if new_worker is not None:
                 self.game_engine.update_gui(id_game)
             # TODO to remove :
             self.forum = Forum(600, 600)
         elif key == 6:
-            _player = self.player_repo.lst_player.get(id_user)
-            worker: Worker = self.player_repo.lst_player.get(id_user).workers[0]
-            worker.destination = [body.get("destination")[0], body.get("destination")[1]]
-            self.game_engine.update_road_to_destination(worker, key_socket, self.forum)
+            for worker in self.game_engine.player_repo.lst_player.get(id_user).workers:
+                if worker.id_worker == first_or_default(body):
+                    worker.destination = [body.get(worker.id_worker)[0], body.get(worker.id_worker)[1]]
+                    self.game_engine.update_road_to_destination(worker, self.forum)
+                    break
         elif key == 7:
-            farm_player = self.player_repo.farm_resources(get_key(self.dico_connect, key_socket), body)
+            farm_player = self.game_engine.player_repo.farm_resources(get_key(self.dico_connect, key_socket), body)
             msg = farm_player.dict()
             msg.pop("key_socket")
             self.write(key_socket, {2: msg})
@@ -144,10 +148,11 @@ class Server:
             self.write(user.key_socket, {1: msg})
             # self.write(self.dico_connect.get(body.get("id")), {1: msg})
         elif key == 201:
-            uri = "http://dataservice.accuweather.com/currentconditions/v1/"
-            weather_api = OtherApi(uri)
-            weather = weather_api.get_request("27581?apikey=NM6IwoED21vbDTI6Fc7gosRt9A5rqNTu")
-            self.write(key_socket, {201: weather})
+            pass
+            # uri = "http://dataservice.accuweather.com/currentconditions/v1/"
+            # weather_api = OtherApi(uri)
+            # weather = weather_api.get_request("27581?apikey=NM6IwoED21vbDTI6Fc7gosRt9A5rqNTu")
+            # self.write(key_socket, {201: weather})
         elif key == 202:
             uri2 = "https://nominis.cef.fr/json"
             saint_api = OtherApi(uri2)
@@ -163,11 +168,11 @@ class Server:
             self.write(key_socket, {202: saint})
 
     def __new_player(self, key_socket, **data):
-        user: PlayerInfoModel = self.player_repo.new_player(key_socket, **data)
+        user: PlayerInfoModel = self.game_engine.player_repo.new_player(key_socket, **data)
         self.dico_connect[user.user.id_user] = key_socket
         return user
 
     def __add_game(self, id_player):
-        return self.game_engine.add_player_in_game(self.player_repo.lst_player.get(id_player))
+        return self.game_engine.add_player_in_game(self.game_engine.player_repo.lst_player.get(id_player))
 
     # endregion

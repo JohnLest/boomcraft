@@ -76,7 +76,7 @@ class PlayerRepo:
 
     def create_worker(self, id_user, x_work, y_work):
         player: Player = self.lst_player.get(id_user)
-        new_worker = Worker(x=x_work, y=y_work)
+        new_worker = Worker(id_user, x=x_work, y=y_work)
         player.workers.append(new_worker)
         return new_worker
 

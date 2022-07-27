@@ -36,7 +36,7 @@ class MainWindow(Window):
             thread.join()
             return
 
-        self.main_win = Window.__init__(self, (1200, 900), "Boomcraft")
+        self.main_win = Window.__init__(self, (1200, 900), f"Boomcraft - {self.user.user.pseudo}")
         self.__gb_menu_button()
         self.__gb_resource_banner()
         self.__gb_game()
@@ -135,15 +135,15 @@ class MainWindow(Window):
         self.connection.write({201: {"weather": True}})
         time.sleep(0.1)
         self.connection.write({202: {"saint": True}})
-        while True:
-            if self.meteo is not None and self.saint is not None:
-                break
-        font = pygame.font.SysFont("Arial", 18)
-        text_render = font.render(f"{self.saint} - {self.meteo}", True, (255, 255, 255))
-        rect_text = text_render.get_rect()
-        rect_text.x = rect_text.x + 5
-        pygame.draw.rect(self.gbAction.surface, (0, 0, 0), rect_text, 1)
-        self.gbAction.surface.blit(text_render, (250, 50))
+        # while True:
+        #     if self.meteo is not None and self.saint is not None:
+        #         break
+        # font = pygame.font.SysFont("Arial", 18)
+        # text_render = font.render(f"{self.saint} - {self.meteo}", True, (255, 255, 255))
+        # rect_text = text_render.get_rect()
+        # rect_text.x = rect_text.x + 5
+        # pygame.draw.rect(self.gbAction.surface, (0, 0, 0), rect_text, 1)
+        # self.gbAction.surface.blit(text_render, (250, 50))
         self.gbAction.show_groupbox(self.window)
         return self
 
@@ -226,15 +226,15 @@ class MainWindow(Window):
             self.saint = f"{day}/{mounth}/{years} : {name}"
 
         elif key == 500:
-            for id_worker, worker_coord in body.items():
+            for id_worker, worker_data in body.items():
                 _worker = self.all_worker.get(id_worker)
                 if _worker is None:
-                    new_worker = Worker(id_worker, x=worker_coord.get("x"), y=worker_coord.get("y"))
+                    new_worker = Worker(id_worker, worker_data.get("owner"), x=worker_data.get("x"), y=worker_data.get("y"))
                     self.group.add(new_worker)
                     self.all_worker.update({new_worker.id_worker: new_worker})
                 else:
-                    _worker.x = worker_coord.get("x")
-                    _worker.y = worker_coord.get("y")
+                    _worker.x = worker_data.get("x")
+                    _worker.y = worker_data.get("y")
             self.group.update()
             self.group.draw(self.gbGame.surface)
             self.gbGame.show_groupbox(self.window)

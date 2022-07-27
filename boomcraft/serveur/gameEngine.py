@@ -6,9 +6,10 @@ from gameObjects.forum import Forum
 from playerRepo import PlayerRepo
 
 MAX_WIDTH_SIZE = 1120
-MAX_HEIGTH_SIZE = int((900/100)*80)
+MAX_HEIGTH_SIZE = int((900 / 100) * 80)
 HITBOX_OFFSET_BUILDING = 10
 HITBOX_OFFSET_WORKER = 5
+
 
 class GameEngine:
     def __init__(self, connect, width: int = MAX_WIDTH_SIZE, height: int = MAX_HEIGTH_SIZE, ):
@@ -36,26 +37,28 @@ class GameEngine:
         id_game = self.__game_is_available()
         if id_game is None:
             id_game = self.__new_game()
+        player.id_game = id_game
         self.game_lst.get(id_game).append(player)
         return id_game
 
     # endregion
 
     # region move worker
-    def update_road_to_destination(self, mobile: Worker, player, forums):
+    def update_road_to_destination(self, mobile: Worker, forums):
         '''
         update the road to follow the shorter path
         '''
-        mobile.current_step=[mobile.x, mobile.y]
+        mobile.current_step = [mobile.x, mobile.y]
         self.calculate_hitbox_forum(forums)
-        if(mobile.destination !=[]) :
-            while ( mobile.destination != mobile.current_step and mobile.destination !=[]) :
-                if forums.life > 0:
-                    self.check_hitbox_reached(mobile, forums, player)
+        if mobile.destination:
+            while mobile.destination != mobile.current_step and mobile.destination != []:
+                # if forums.life > 0:
+                #    self.check_hitbox_reached(mobile, forums, player)
                 self.find_path(mobile)
-                self.move_mobile(mobile, player)
+                self.move_mobile(mobile)
+                time.sleep(0.001)
 
-    def move_mobile(self, mobile: Worker, player):
+    def move_mobile(self, mobile: Worker):
         '''
         make mobile entity move of one step
         '''
@@ -83,8 +86,10 @@ class GameEngine:
                 direction = 8
 
             self.calculate_hitbox_mobile(mobile)
-            # self.update_gui(player, mobile)
-
+            for id_player, player in self.player_repo.lst_player.items():
+                if id_player == mobile.id_owner:
+                    self.update_gui(player.id_game)
+                    break
 
             mobile.road_to_destination.pop(0)
 
@@ -246,8 +251,9 @@ class GameEngine:
         all_worker = {}
         for player in self.game_lst.get(id_game):
             for worker in player.workers:
-                all_worker.update({worker.id_worker: {"x": worker.x, "y": worker.y}})
+                all_worker.update({worker.id_worker: {"owner": worker.id_owner, "x": worker.x, "y": worker.y}})
         self.connect.send_all({500: all_worker})
+
 
     # region Getters and Setters
     def set__width(self, width: int):

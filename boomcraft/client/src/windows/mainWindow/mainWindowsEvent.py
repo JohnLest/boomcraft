@@ -40,7 +40,10 @@ class MainWindowEvent:
                             pos_x = self.main_win.gbGame.data_rect.width - 17
                         if pos_y > self.main_win.gbGame.data_rect.height - 33:
                             pos_y = self.main_win.gbGame.data_rect.height - 33
-                        self.main_win.connection.write({6: {"destination": (pos_x, pos_y)}})
+
+                        for worker in self.main_win.all_worker.values():
+                            if worker.id_owner == self.main_win.user.user.id_user:
+                                self.main_win.connection.write({6: {worker.id_worker: (pos_x, pos_y)}})
 
             pygame.display.update()
     """

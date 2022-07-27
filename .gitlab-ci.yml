@@ -35,8 +35,8 @@ unit-test-job:   # This job runs in the test stage.
 
   script:
     - echo "Running unit tests... "
-    - python -m unittest boomCraftDevelop/client/tests/unit/test_exemple.py
-    - python -m unittest boomCraftDevelop/server/unit_tests.py
+  #  - python -m unittest boomCraftDevelop/client/tests/unit/test_exemple.py
+  #  - python -m unittest boomCraftDevelop/server/unit_tests.py
     - echo "Code test is done (OK or KO)"
 
 lint-test-job:   # This job also runs in the test stage.

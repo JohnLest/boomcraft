@@ -1,9 +1,11 @@
+import threading
 import time
 import uuid
 
 from gameObjects.worker import Worker
 from gameObjects.forum import Forum
 from playerRepo import PlayerRepo
+from gameObjects.map import Map
 
 MAX_WIDTH_SIZE = 1120
 MAX_HEIGTH_SIZE = int((900 / 100) * 80)
@@ -31,6 +33,8 @@ class GameEngine:
     def __new_game(self):
         id_game = str(uuid.uuid4())
         self.game_lst.update({id_game: []})
+        thread_game_event = threading.Thread(target=self.__game_event, args=(id_game, ), daemon=True)
+        thread_game_event.start()
         return id_game
 
     def add_player_in_game(self, player):
@@ -49,7 +53,7 @@ class GameEngine:
         update the road to follow the shorter path
         '''
         mobile.current_step = [mobile.x, mobile.y]
-        self.calculate_hitbox_forum(forums)
+        # self.calculate_hitbox_forum(forums)
         if mobile.destination:
             while mobile.destination != mobile.current_step and mobile.destination != []:
                 # if forums.life > 0:
@@ -85,7 +89,8 @@ class GameEngine:
             elif (mobile.road_to_destination[0] == [1, -1]):
                 direction = 8
 
-            self.calculate_hitbox_mobile(mobile)
+            # self.calculate_hitbox_mobile(mobile)
+            mobile.set_hitbox()
             for id_player, player in self.player_repo.lst_player.items():
                 if id_player == mobile.id_owner:
                     self.update_gui(player.id_game)
@@ -203,6 +208,7 @@ class GameEngine:
     # endregion
 
     # region Forum
+    """"
     def calculate_hitbox_mobile(self, mobile: Worker):
 
         mobile.hitbox_area_x[0] = mobile.x - HITBOX_OFFSET_WORKER
@@ -217,7 +223,9 @@ class GameEngine:
 
         forum.hitbox_area_y[0] = forum.y - HITBOX_OFFSET_BUILDING
         forum.hitbox_area_y[1] = forum.y + HITBOX_OFFSET_BUILDING + forum.height
+    """
 
+    """"
     def check_hitbox_reached(self, attacker: Worker, forum: Forum, key_socket):
         if (
                 attacker.hitbox_area_x[1] > forum.hitbox_area_x[0]
@@ -233,6 +241,7 @@ class GameEngine:
                 # Y min de worker est plus petit que Y max de forum
         ):
             self.attack(attacker, forum, key_socket)
+        """
 
     def attack(self, attacker: Worker, forum: Forum, key_socket):
         print("avant forum.life --> ", forum.life)
@@ -254,24 +263,42 @@ class GameEngine:
                 all_worker.update({worker.id_worker: {"owner": worker.id_owner, "x": worker.x, "y": worker.y}})
         self.connect.send_all({500: all_worker})
 
+    def __game_event(self, id_game):
+        map = Map()
+        while True:
+            self.__check_worker_collision(id_game, map)
+
+    def __check_worker_collision(self, id_game, map):
+        for player in self.game_lst.get(id_game):
+            for worker in player.workers:
+                pass
+                # self.__worker_farm_resources(worker, map)
+
+    def __worker_farm_resources(self, worker, map):
+        for _hitbox_tree in map.lst_trees:
+            if worker.collision(_hitbox_tree):
+                if not worker.is_farming:
+                    worker.is_farming = True
+                    worker.farm_resources("trees")
+                return
+        for _hitbox_stone in map.lst_stone:
+            if worker.collision(_hitbox_stone):
+                if not worker.is_farming:
+                    worker.is_farming = True
+                    worker.farm_resources("stone")
+                return
+        for _hitbox_ore in map.lst_ore:
+            if worker.collision(_hitbox_ore):
+                if not worker.is_farming:
+                    worker.is_farming = True
+                    worker.farm_resources("ore")
+                return
+        worker.is_farming = False
+        worker.farm_resources(None)
+
 
     # region Getters and Setters
-    def set__width(self, width: int):
-        self.__width = width
 
-    def get__width(self):
-        return self.__width
 
-    def set__height(self, height: int):
-        self.__height = height
-
-    def get__height(self):
-        return self.__height
-
-    def set__party_nb(self, party_nb: int):
-        self.__party_nb = party_nb
-
-    def get__party_nb(self):
-        return self.__party_nb
 
     # endregion

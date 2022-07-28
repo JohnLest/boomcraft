@@ -1,19 +1,16 @@
 import socket
 import selectors
 import logging
-import time
 import types
 from typing import Dict
 import threading
+
 from apis.boomcraftApi import BoomcraftApi
 from gameObjects.forum import Forum
 from gameObjects.otherApi import OtherApi
-from playerRepo import PlayerRepo
 from gameEngine import GameEngine
 from models.playerInfoModel import PlayerInfoModel
 from tool import *
-from gameObjects.worker import Worker
-
 
 class Server:
     def __init__(self, host="0.0.0.0", port=8080):
@@ -54,7 +51,6 @@ class Server:
                 data.outb += recv_data
                 new_message = threading.Thread(target=self.__analyse_msg, args=(deserialize(data.outb), key, ), daemon=True)
                 new_message.start()
-                # self.__analyse_msg(deserialize(data.outb), key)
             else:
                 self.logger.info(f'client closing connection to{data.addr}', )
                 self.sel.unregister(sock)
@@ -118,9 +114,9 @@ class Server:
             new_worker = None
             id_game = body
             if self.game_engine.game_lst.get(id_game)[0].model_player.user.id_user == id_user:
-                new_worker = self.game_engine.player_repo.create_worker(id_user, 100, 100)
+                new_worker = self.game_engine.player_repo.create_worker(id_user, key_socket, 100, 100)
             elif self.game_engine.game_lst.get(id_game)[1].model_player.user.id_user == id_user:
-                new_worker = self.game_engine.player_repo.create_worker(id_user, 300, 300)
+                new_worker = self.game_engine.player_repo.create_worker(id_user, key_socket, 300, 300)
             if new_worker is not None:
                 self.game_engine.update_gui(id_game)
             # TODO to remove :

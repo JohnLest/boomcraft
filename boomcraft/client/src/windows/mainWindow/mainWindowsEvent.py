@@ -1,10 +1,6 @@
 import time
 import pygame
 
-""" from widget import MenuStrip
-from mainWindow import MainWindow """
-
-from src.windows.mainWindow.widget import MenuStrip
 from src.windows.mainWindow.mainWindow import MainWindow
 
 
@@ -15,12 +11,10 @@ class MainWindowEvent:
 
     def __event(self):
         btn = self.main_win.btnAPI
-        # hit = False
         while True:
             self.main_win.group.update()
             self.main_win.group.draw(self.main_win.gbGame.surface)
             self.main_win.gbGame.show_groupbox(self.main_win.window)
-            # hit = self.__hit_resources(hit)
             self.__handle_input()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -46,26 +40,6 @@ class MainWindowEvent:
                                 self.main_win.connection.write({6: {worker.id_worker: (pos_x, pos_y)}})
 
             pygame.display.update()
-    """
-    def __hit_resources(self, hit):
-        self.main_win.update_gb_banner_resources()
-        if not hit and self.main_win.worker.rect.collidelist(self.main_win.hitbox_trees) > -1:
-            hit = True
-            self.main_win.worker.farm_resources("trees", hit)
-        elif not hit and self.main_win.worker.rect.collidelist(self.main_win.hitbox_stone) > -1:
-            hit = True
-            self.main_win.worker.farm_resources("stone", hit)
-        elif not hit and self.main_win.worker.rect.collidelist(self.main_win.hitbox_ore) > -1:
-            hit = True
-            self.main_win.worker.farm_resources("ore", hit)
-        elif (hit and self.main_win.worker.rect.collidelist(self.main_win.hitbox_trees) == -1 and
-              self.main_win.worker.rect.collidelist(self.main_win.hitbox_stone) == -1 and
-              self.main_win.worker.rect.collidelist(self.main_win.hitbox_ore) == -1):
-            hit = False
-            print("stop")
-            self.main_win.worker.farm_resources(None, hit)
-        return hit
-    """
 
     def __menu_strip_on_click(self):
         while True:
@@ -97,4 +71,3 @@ class MainWindowEvent:
             print("left")
         if pressed[pygame.K_d]:
             print("right")
-            self.main_win.worker.move_right()

@@ -210,6 +210,8 @@ class MainWindow(Window):
             self.user = PlayerInfoModel(**body)
         elif key == 3:
             self.id_game = body.get("id_game")
+        elif key == 4:
+            pass
 
         elif key == 201:
             body = first_or_default(body)

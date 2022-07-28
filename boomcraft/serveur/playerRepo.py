@@ -8,9 +8,10 @@ from gameObjects.worker import Worker
 
 
 class PlayerRepo:
-    def __init__(self):
+    def __init__(self, connect):
         self.lst_player = {}
         self.boomcraft_api = BoomcraftApi()
+        self.connect = connect
 
     def __get_user(self, **data):
         user = None
@@ -74,9 +75,9 @@ class PlayerRepo:
             _game_res.quantity = _game_res.quantity + farm_resources.get(_game_res.resource, 0)
         return p_model
 
-    def create_worker(self, id_user, x_work, y_work):
+    def create_worker(self, id_user, socket_user, x_work, y_work):
         player: Player = self.lst_player.get(id_user)
-        new_worker = Worker(id_user, x=x_work, y=y_work)
+        new_worker = Worker(self.connect, id_user, socket_user, x=x_work, y=y_work)
         player.workers.append(new_worker)
         return new_worker
 

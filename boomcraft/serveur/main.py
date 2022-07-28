@@ -1,5 +1,5 @@
 import logging
-from server import Server
+from app.server import Server
 
 
 def main():

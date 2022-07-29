@@ -38,7 +38,7 @@ class MainWindowEvent:
 
                         for worker in self.main_win.all_worker.values():
                             if worker.id_owner == self.main_win.user.user.id_user:
-                                self.main_win.connection.write({6: {worker.id_worker: (pos_x, pos_y)}})
+                                self.main_win.connection.write({6: {worker.id: (pos_x, pos_y)}})
 
             pygame.display.update()
 

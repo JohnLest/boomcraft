@@ -30,6 +30,7 @@ class MainWindow(Window):
         self.path_resources = "../resources/mainWindows"
         self.dict_resources = {}
         self.all_worker = {}
+        self.all_forum = {}
         self.__set_game()
         if not self.menuWin.new_game:
             self.disconnection = True
@@ -117,8 +118,6 @@ class MainWindow(Window):
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=1)
 
         self.connection.write({5: self.id_game})
-        self.forum = Forum(600, 600)
-        self.group.add(self.forum)
         # self.group.update()
 
         self.group.draw(self.gbGame.surface)
@@ -228,15 +227,25 @@ class MainWindow(Window):
             self.saint = f"{day}/{mounth}/{years} : {name}"
 
         elif key == 500:
-            for id_worker, worker_data in body.items():
+            _all_worker: dict = body[0]
+            _all_forum: dict = body[1]
+            for id_worker, worker_data in _all_worker.items():
                 _worker = self.all_worker.get(id_worker)
                 if _worker is None:
                     new_worker = Worker(id_worker, worker_data.get("owner"), x=worker_data.get("x"), y=worker_data.get("y"))
                     self.group.add(new_worker)
-                    self.all_worker.update({new_worker.id_worker: new_worker})
+                    self.all_worker.update({new_worker.id: new_worker})
                 else:
                     _worker.x = worker_data.get("x")
                     _worker.y = worker_data.get("y")
+
+            for id_forum, forum_data in _all_forum.items():
+                _forum = self.all_forum.get(id_forum)
+                if _forum is None:
+                    new_forum = Forum(id_forum, forum_data.get("owner"), x=forum_data.get("x"), y=forum_data.get("y"))
+                    self.group.add(new_forum)
+                    self.all_forum.update({new_forum.id: new_forum})
+
             self.group.update()
             self.group.draw(self.gbGame.surface)
             self.gbGame.show_groupbox(self.window)

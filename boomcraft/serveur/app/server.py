@@ -6,10 +6,7 @@ from typing import Dict
 import threading
 
 from apis.boomcraftApi import BoomcraftApi
-from dol.forumObj import Forum
-from apis.otherApi import OtherApi
 from app.gameController import GameController
-from models.playerInfoModel import PlayerInfoModel
 from tool import *
 
 class Server:
@@ -102,7 +99,7 @@ class Server:
         elif key == 4:
             self.game_controller.add_player_game(body.get("id_user"))
         elif key == 5:
-            self.game_controller.create_worker(id_user, body)
+            self.game_controller.init_player_in_gui(id_user, body)
         elif key == 6:
             id_worker = first_or_default(body)
             self.game_controller.move_worker(id_worker, body.get(id_worker))

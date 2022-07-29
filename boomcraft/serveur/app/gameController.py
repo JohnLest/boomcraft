@@ -1,12 +1,11 @@
 import time
 import threading
 
-from dol.workerObj import WorkerObj as Worker
-from dol.forumObj import Forum
 from bll.services.playerService import PlayerService
 from bll.services.gameService import GameService
 from bll.services.workerService import WorkerService
 from bll.services.mobileService import MobileService
+from bll.services.buildingService import BuildingService
 
 
 class GameController:
@@ -15,10 +14,8 @@ class GameController:
         self.game_service = GameService()
         self.worker_service = WorkerService()
         self.mobile_service = MobileService()
+        self.building_service = BuildingService()
         self.connect = connect
-
-        # TODO to remove :
-        self.forum = Forum(600, 600)
 
     def new_player(self, key_socket, **data):
         model_player = self.player_service.new_player(key_socket, **data)
@@ -42,12 +39,14 @@ class GameController:
             self.game_service.set_thread_game_event(id_game, thread_game_event)
             thread_game_event.start()
 
-    def create_worker(self, id_user, id_game):
+    def init_player_in_gui(self, id_user, id_game):
         size_game = self.game_service.get_size_game(id_game)
         if size_game == 1:
             self.worker_service.create_worker(id_user, 100, 100)
+            self.building_service.create_forum(id_user, 100, 500)
         elif size_game == 2:
-            self.worker_service.create_worker(id_user, 500, 500)
+            self.worker_service.create_worker(id_user, 1000, 100)
+            self.building_service.create_forum(id_user, 1000, 500)
         self.__update_gui(id_game)
 
     def move_worker(self, id_worker, destination):
@@ -73,13 +72,16 @@ class GameController:
 
     def __update_gui(self, id_game):
         all_worker = {}
+        all_forum = {}
         list_socket = []
         for id_player in self.game_service.get_player_in_game(id_game):
             list_socket.append(self.player_service.get_socket(id_player))
-            for worker in self.worker_service.get_all_id_workers_by_id_player(id_player):
-                all_worker.update({worker.id_worker: {"owner": id_player, "x": worker.x, "y": worker.y}})
+            for worker in self.worker_service.get_all_workers_by_id_player(id_player):
+                all_worker.update({worker.id: {"owner": id_player, "x": worker.x, "y": worker.y}})
+            for forum in self.building_service.get_all_forum_by_id_player(id_player):
+                all_forum.update({forum.id: {"owner": id_player, "x": forum.x, "y": forum.y}})
         for socket in list_socket:
-            self.connect.write(socket, {500: all_worker})
+            self.connect.write(socket, {500: [all_worker, all_forum]})
 
     def __game_event(self, id_game):
         map = self.game_service.get_map()
@@ -88,8 +90,8 @@ class GameController:
 
     def __check_worker_collision(self, id_game, map):
         for player_id in self.game_service.get_player_in_game(id_game):
-            for worker in self.worker_service.get_all_id_workers_by_id_player(player_id):
-                worker_id = worker.id_worker
+            for worker in self.worker_service.get_all_workers_by_id_player(player_id):
+                worker_id = worker.id
                 type_resource = self.worker_service.is_collision_with_resources(worker_id, map)
                 if type_resource is not None and not worker.is_farming:
                     farm_resource_thread = threading.Thread(target=self.__thread_farm, args=(worker, type_resource,), daemon=True)
@@ -100,7 +102,7 @@ class GameController:
 
     def __thread_farm(self, worker, resource):
         count = 0
-        id_player = self.worker_service.get_id_player_by_id_worker(worker.id_worker)
+        id_player = self.worker_service.get_id_player_by_id_worker(worker.id)
         while True:
             player_model = None
             if resource == "trees":
@@ -132,7 +134,7 @@ class GameController:
 
     # region Forum
 
-    def attack(self, attacker: Worker, forum: Forum, key_socket):
+    def attack(self, attacker, forum, key_socket):
         print("avant forum.life --> ", forum.life)
         forum.life = forum.life - attacker.attack
 

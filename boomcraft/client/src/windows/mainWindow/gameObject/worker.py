@@ -11,7 +11,7 @@ class Worker(pygame.sprite.Sprite):
     def __init__(self, id_worker, id_owner, x: int = 0, y: int = 0, width: int = 16, height: int = 32):
         super().__init__()
         self.coord: list = [x, y]
-        self.id_worker = id_worker
+        self.id = id_worker
         self.id_owner: int = id_owner
         self.x: int = x
         self.y: int = y

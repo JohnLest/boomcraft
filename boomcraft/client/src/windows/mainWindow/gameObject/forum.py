@@ -3,9 +3,12 @@ from pygame.sprite import Sprite
 
 FORUM_IMG = "../resources/mainWindows/struct/scifiStructure_07.png"
 
+
 class Forum(Sprite):
-    def __init__(self, x: int = 0, y: int = 0, width: int = 64, height: int = 64, life: int = 100):
+    def __init__(self, id_forum, id_owner, x: int = 0, y: int = 0, width: int = 64, height: int = 64, life: int = 100):
         Sprite.__init__(self)
+        self.id = id_forum
+        self.id_owner = id_owner
         self.x : int = x
         self.y : int = y
         self.width = width

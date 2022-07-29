@@ -136,6 +136,8 @@ class Server:
             # weather = weather_api.get_request("27581?apikey=NM6IwoED21vbDTI6Fc7gosRt9A5rqNTu")
             # self.write(key_socket, {201: weather})
         elif key == 202:
+            pass
+            """
             uri2 = "https://nominis.cef.fr/json"
             saint_api = OtherApi(uri2)
             saint = saint_api.get_request("saintdujour.php")
@@ -148,5 +150,6 @@ class Server:
             test = serialize(saint)
             val = len(test)
             self.write(key_socket, {202: saint})
+            """
 
     # endregion

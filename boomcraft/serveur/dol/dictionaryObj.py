@@ -26,5 +26,14 @@ class DictionaryObj:
                 match.append(_value)
         return match
 
+    def get_attribute(self, attribute_return, attribute_filter=None, filter=None) -> List:
+        match =[]
+        for _key, _value in self.__dict_obj.items():
+            if filter is None:
+                match.append(getattr(_value, attribute_return))
+            elif getattr(_value, attribute_filter) == filter:
+                match.append(getattr(_value, attribute_return))
+        return match
+
     def delete(self, id):
         self.__dict_obj.pop(id)

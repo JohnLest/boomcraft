@@ -11,3 +11,5 @@ class WorkerObj(HitboxObj, MobileObj):
         self.id_owner: int = id_owner
         self.life = life
         self.attack: int = attack
+        self.is_farming = False
+        self.farm_thread = None

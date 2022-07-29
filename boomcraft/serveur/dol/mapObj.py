@@ -1,8 +1,8 @@
 import xml.etree.ElementTree as ET
-from dol.resourcesObj import Resources
+from dol.resourcesObj import ResourcesObj as Resources
 
 
-class Map:
+class MapObj:
     def __init__(self):
         self.lst_trees = []
         self.lst_stone = []

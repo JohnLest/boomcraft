@@ -14,6 +14,7 @@ class MainWindowEvent:
         while True:
             self.main_win.group.update()
             self.main_win.group.draw(self.main_win.gbGame.surface)
+            self.main_win.update_gb_banner_resources()
             self.main_win.gbGame.show_groupbox(self.main_win.window)
             self.__handle_input()
             for event in pygame.event.get():

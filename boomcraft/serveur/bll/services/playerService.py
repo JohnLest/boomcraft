@@ -9,7 +9,7 @@ from dol.dictionaryObj import DictionaryObj
 
 class PlayerService:
     def __init__(self):
-        self.dictionary_player = DictionaryObj()
+        self.__dictionary_player = DictionaryObj()
         self.boomcraft_api = BoomcraftApi()
 
     def __get_user(self, **data):
@@ -55,15 +55,15 @@ class PlayerService:
                                   game_resources=_game_resources,
                                   key_socket=key_socket)
         player = Player(p_model)
-        self.dictionary_player.insert(p_model.user.id_user, player, )
+        self.__dictionary_player.insert(p_model.user.id_user, player, )
         return p_model
 
     def get_socket(self, id_player):
-        player: Player = self.dictionary_player.get_by_id(id_player)
+        player: Player = self.__dictionary_player.get_by_id(id_player)
         return player.model_player.key_socket
 
     def update_resources(self, id_user, game_resources: dict):
-        player: Player = self.dictionary_player.get_by_id(id_user)
+        player: Player = self.__dictionary_player.get_by_id(id_user)
         p_model: PlayerInfoModel = player.model_player
         for _game_res in p_model.game_resources:
             _game_res.quantity = game_resources.get(_game_res.resource, 0)
@@ -72,10 +72,10 @@ class PlayerService:
         return p_model
 
     def get_player_by_id(self, id_player):
-        return self.dictionary_player.get_by_id(id_player)
+        return self.__dictionary_player.get_by_id(id_player)
 
     def farm_resources(self, id_user, farm_resources: dict):
-        player: Player = self.lst_player.get(id_user)
+        player: Player = self.__dictionary_player.get_by_id(id_user)
         p_model: PlayerInfoModel = player.model_player
         for _game_res in p_model.game_resources:
             _game_res.quantity = _game_res.quantity + farm_resources.get(_game_res.resource, 0)

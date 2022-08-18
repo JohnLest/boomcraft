@@ -23,9 +23,9 @@ class PlayerService:
         elif data.get("connection_type") == "facebook":
             data.pop("connection_type")
             user = self.boomcraft_api.connect_with_facebook(json.dumps(data))
-        else:
+        if user is None or user[0] >= 400:
             return "Error"
-        return user
+        return user[1]
 
     def __get_own_resources(self, id_player):
         resources = self.boomcraft_api.get_resources_by_id(id_player)
@@ -48,6 +48,8 @@ class PlayerService:
         :return: user
         """
         _player = self.__get_user(**data)
+        if _player == "Error" or _player is None:
+            return None
         _own_resources = self.__get_own_resources(_player.get("id_user"))
         _game_resources = self.__set_game_resources(_own_resources.get("resource"))
         p_model = PlayerInfoModel(user=_player,

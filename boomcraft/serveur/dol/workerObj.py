@@ -1,4 +1,6 @@
 import uuid
+import time
+import threading
 from dol.hitboxObj import HitboxObj
 from dol.mobileObj import MobileObj
 
@@ -13,3 +15,14 @@ class WorkerObj(HitboxObj, MobileObj):
         self.attack: int = attack
         self.is_farming = False
         self.farm_thread = None
+        self.cooldown = 1
+        self.waiting_cooldown = False
+
+    def __wait_cooldown(self):
+        self.waiting_cooldown = True
+        time.sleep(self.cooldown)
+        self.waiting_cooldown = False
+
+    def start_cooldown(self):
+        wait_cooldown = threading.Thread(target=self.__wait_cooldown)
+        wait_cooldown.start()

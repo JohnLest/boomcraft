@@ -4,6 +4,7 @@ import pyscroll.data
 import pytmx.util_pygame
 import selectors
 import threading
+import logging
 
 from src.models.playerInfoModel import PlayerInfoModel
 from src.windows.mainWindow.gameObject.forum import Forum
@@ -17,6 +18,7 @@ from src.windows.mainWindow.widget import *
 class MainWindow(Window):
     """ Class for main window """
     def __init__(self, connection):
+        self.logger = logging.getLogger(__name__)
         self.connection = connection
         self.disconnection = False
         self.connection.connection()
@@ -43,21 +45,23 @@ class MainWindow(Window):
         self.__gb_game()
         self.__gb_action()
         self.__menu_strip_api()
-        # self.connection.write({5: {"worker_coord": (self.worker.x, self.worker.y),
-        #                            "forum_coord": (self.forum.x, self.forum.y)}
-        #                        })
-
 
     # region Set Game
 
     def __set_game(self):
         time.sleep(0.5)
+        print ("Set new Game")
         self.menuWin = MenuWindow(self.connection, self)
+        print("Close menu window")
         if self.menuWin.new_game:
+            print("Send New game ")
             self.connection.write({4: {"id_user": self.user.user.id_user}})
             while True:
                 if self.id_game is not None:
+                    print("end wait")
                     break
+
+            print("all is OK")
             self.get_game_resources()
         if len(self.menuWin.window.children) != 0:
             self.menuWin.window.destroy()
@@ -197,6 +201,9 @@ class MainWindow(Window):
             data.outb = b''
 
     def __analyse_msg(self, msg: dict):
+        if msg is None:
+            self.logger.warning(f"Empty message ")
+            return
         key = first_or_default(msg)
         if key is None:
             return
@@ -204,7 +211,10 @@ class MainWindow(Window):
         if msg is None:
             return
         if key == 1:
-            self.user = PlayerInfoModel(**body)
+            if body is not None:
+                self.user = PlayerInfoModel(**body)
+            else:
+                self.user = "bad request"
         elif key == 2:
             self.user = PlayerInfoModel(**body)
         elif key == 3:
@@ -240,21 +250,20 @@ class MainWindow(Window):
                     _worker.y = worker_data.get("y")
 
             for id_forum, forum_data in _all_forum.items():
-                _forum = self.all_forum.get(id_forum)
+                _forum: Forum = self.all_forum.get(id_forum)
                 if _forum is None:
                     new_forum = Forum(id_forum, forum_data.get("owner"), x=forum_data.get("x"), y=forum_data.get("y"))
                     self.group.add(new_forum)
                     self.all_forum.update({new_forum.id: new_forum})
+                    continue
+                _forum.life = forum_data.get("life")
+                if _forum.life == 0:
+                    self.all_forum.pop(_forum.id)
+                    self.group.remove(_forum)
+                    del _forum
 
             self.group.update()
             self.group.draw(self.gbGame.surface)
             self.gbGame.show_groupbox(self.window)
             pygame.display.update()
-        elif key == 501:
-            self.group.remove(self.forum)
-            self.group.update()
-            self.group.draw(self.gbGame.surface)
-            self.gbGame.show_groupbox(self.window)
-            pygame.display.update()
-            print("forum detruit")
     # endregion

@@ -45,6 +45,7 @@ class Server:
         if mask & selectors.EVENT_READ:
             recv_data = sock.recv(1024)  # Should be ready to read
             if recv_data:
+                self.logger.info(f'receive data : {recv_data}')
                 data.outb += recv_data
                 new_message = threading.Thread(target=self.__analyse_msg, args=(deserialize(data.outb), key, ), daemon=True)
                 new_message.start()
@@ -86,14 +87,17 @@ class Server:
         if msg is None:
             return
         id_user = get_key(self.dico_connect, key_socket)
+        self.logger.info(f"Receive new message - key : {key} - id user : {id_user}")
         if key == 1:
             body.update({"connection_type": "login"})
             id_user = self.game_controller.new_player(key_socket, **body)
-            self.dico_connect.update({id_user: key_socket})
+            if id_user is not None:
+                self.dico_connect.update({id_user: key_socket})
         elif key == 2:
             body.update({"connection_type": "new"})
             id_user = self.game_controller.new_player(key_socket, **body)
-            self.dico_connect.update({id_user: key_socket})
+            if id_user is not None:
+                self.dico_connect.update({id_user: key_socket})
         elif key == 3:
             self.game_controller.update_resources(id_user, body)
         elif key == 4:

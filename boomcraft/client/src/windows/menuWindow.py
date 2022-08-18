@@ -1,3 +1,4 @@
+import time
 from tkinter import *
 from src.windows.connectWindow import ConnectWindow
 from src.windows.newGameWindow import NewGameWindow
@@ -77,6 +78,9 @@ class MenuWindow:
         if len(conn_win.window.children) != 0:
             conn_win.window.destroy()
         del conn_win
+        if self.main_windows.user == "bad request":
+            self.main_windows.user = None
+            return
         self.btn_connect["state"] = "disabled"
         pseudo = self.main_windows.user.user.pseudo
         self.btn_connect["text"] = f"hello {pseudo}"

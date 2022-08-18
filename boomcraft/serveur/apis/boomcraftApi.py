@@ -2,13 +2,13 @@ import requests
 
 class BoomcraftApi:
     def __init__(self):
-        self.uri = "http://192.168.0.101:8000"
+        self.uri = "http://192.168.0.110:40000"
 
     def connect(self, mail, password):
         req = requests.get(f"{self.uri}/user/connect?mail_user={mail}&password={password}")
         print(req)
         json = req.json()
-        return json
+        return req.status_code, json
 
     def post_new_user(self, data):
         req = requests.post(f"{self.uri}/user/post_new_user", data=data)

@@ -15,34 +15,34 @@ class MobileService:
         '''
         make mobile entity move of one step
         '''
-
-        if (mobile.road_to_destination != [[]]):
+        if mobile.road_to_destination:
             mobile.x += mobile.road_to_destination[0][0]
             mobile.y += mobile.road_to_destination[0][1]
-
+            """"
             direction: int = 0
-            if (mobile.road_to_destination[0] == [0, 1]):
+            if mobile.road_to_destination == [0, 1]:
                 direction = 1
-            elif (mobile.road_to_destination[0] == [0, -1]):
+            elif mobile.road_to_destination == [0, -1]:
                 direction = 2
-            elif (mobile.road_to_destination[0] == [1, 0]):
+            elif mobile.road_to_destination == [1, 0]:
                 direction = 3
-            elif (mobile.road_to_destination[0] == [-1, 0]):
+            elif mobile.road_to_destination == [-1, 0]:
                 direction = 4
-            elif (mobile.road_to_destination[0] == [1, 1]):
+            elif mobile.road_to_destination == [1, 1]:
                 direction = 5
-            elif (mobile.road_to_destination[0] == [-1, -1]):
+            elif mobile.road_to_destination == [-1, -1]:
                 direction = 6
-            elif (mobile.road_to_destination[0] == [-1, 1]):
+            elif mobile.road_to_destination == [-1, 1]:
                 direction = 7
-            elif (mobile.road_to_destination[0] == [1, -1]):
+            elif mobile.road_to_destination == [1, -1]:
                 direction = 8
-
+            """
             mobile.set_hitbox()
             mobile.road_to_destination.pop(0)
 
-            if ([mobile.x, mobile.y] == mobile.destination):
+            if [mobile.x, mobile.y] == mobile.destination:
                 mobile.destination = []
+            # return direction
 
     def find_path(self, mobile):
         """

@@ -1,12 +1,25 @@
 import pickle
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def serialize(obj) -> bytes:
-    return pickle.dumps(obj)
+    try:
+        return pickle.dumps(obj)
+    except Exception as ex:
+        logger.error(f"Exception in serialize() : {ex.args[0]}")
+        logger.error(f"Exception with message {obj}")
+        return b''
 
 
 def deserialize(msg: bytes):
-    return pickle.loads(msg)
+    try:
+        return pickle.loads(msg)
+    except Exception as ex:
+        logger.error(f"Exception in deserialize() : {ex.args[0]}")
+        logger.error(f"Exception with message {msg}")
+        return None
 
 
 def first_or_default(_iter):

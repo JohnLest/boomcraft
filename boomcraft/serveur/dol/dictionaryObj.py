@@ -16,7 +16,7 @@ class DictionaryObj:
             if getattr(_value, attribute) == filter:
                 return _value
 
-    def get_all(self):
+    def get_all(self) -> dict:
         return self.__dict_obj
 
     def get_all_filter(self, attribute, filter) -> List:

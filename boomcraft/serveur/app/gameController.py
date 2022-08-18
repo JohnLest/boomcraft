@@ -1,26 +1,31 @@
 import time
 import threading
+import logging
 
 from bll.services.playerService import PlayerService
 from bll.services.gameService import GameService
-from bll.services.workerService import WorkerService
+from bll.services.itemService import ItemService
 from bll.services.mobileService import MobileService
-from bll.services.buildingService import BuildingService
 
 
 class GameController:
     def __init__(self, connect):
+        self.logger = logging.getLogger(__name__)
         self.player_service = PlayerService()
         self.game_service = GameService()
-        self.worker_service = WorkerService()
+        self.item_service = ItemService()
         self.mobile_service = MobileService()
-        self.building_service = BuildingService()
         self.connect = connect
 
     def new_player(self, key_socket, **data):
         model_player = self.player_service.new_player(key_socket, **data)
+        if model_player is None:
+            self.logger.warning(f" No users found ")
+            self.connect.write(key_socket, {1: None})
+            return None
         to_send = model_player.dict()
         to_send.pop("key_socket")
+        self.logger.info(f"Send message - key : 1 ")
         self.connect.write(key_socket, {1: to_send})
         return model_player.user.id_user
 
@@ -28,11 +33,13 @@ class GameController:
         model_player = self.player_service.update_resources(id_user, game_resources)
         to_send = model_player.dict()
         to_send.pop("key_socket")
+        self.logger.info(f"Send message - key : 2 ")
         self.connect.write(self.player_service.get_socket(id_user), {2: to_send})
         return model_player.user.id_user
 
     def add_player_game(self, id_user):
         id_game = self.game_service.add_player_in_game(id_user)
+        self.logger.info(f"Send message - key : 3 ")
         self.connect.write(self.player_service.get_socket(id_user), {3: {"id_game": id_game}})
         if self.game_service.get_thread_game_event(id_game) is None:
             thread_game_event = threading.Thread(target=self.__game_event, args=(id_game, ), daemon=True)
@@ -42,31 +49,37 @@ class GameController:
     def init_player_in_gui(self, id_user, id_game):
         size_game = self.game_service.get_size_game(id_game)
         if size_game == 1:
-            self.worker_service.create_worker(id_user, 100, 100)
-            self.building_service.create_forum(id_user, 100, 500)
+            self.item_service.create_worker(id_user, 100, 100)
+            self.item_service.create_forum(id_user, 100, 500)
         elif size_game == 2:
-            self.worker_service.create_worker(id_user, 1000, 100)
-            self.building_service.create_forum(id_user, 1000, 500)
+            self.item_service.create_worker(id_user, 1000, 100)
+            self.item_service.create_forum(id_user, 1000, 500)
         self.__update_gui(id_game)
 
     def move_worker(self, id_worker, destination):
-        self.worker_service.set_new_destination(id_worker, destination)
-        worker = self.worker_service.get_worker_by_id(id_worker)
+        self.item_service.set_new_destination(id_worker, destination)
+        worker = self.item_service.get_worker_by_id(id_worker)
         id_game = self.game_service.get_id_game_with_player(worker.id_owner)
-        self.update_road_to_destination(id_game, worker, None)
+        self.update_road_to_destination(id_game, worker)
 
-    def update_road_to_destination(self, id_game, mobile, forums):
+    def update_road_to_destination(self, id_game, mobile):
         '''
         update the road to follow the shorter path
         '''
         mobile.current_step = [mobile.x, mobile.y]
-        # self.calculate_hitbox_forum(forums)
         if mobile.destination:
             while mobile.destination != mobile.current_step and mobile.destination != []:
-                # if forums.life > 0:
-                #    self.check_hitbox_reached(mobile, forums, player)
+                save_position = mobile.current_step.copy()
                 self.mobile_service.find_path(mobile)
                 self.mobile_service.move_mobile(mobile)
+                is_collision = self.item_service.is_collision_with_building(mobile.id)
+                if is_collision is not None:
+                    mobile.current_step = save_position.copy()
+                    mobile.x = mobile.current_step[0]
+                    mobile.y = mobile.current_step[1]
+                    if not mobile.waiting_cooldown:
+                        self.item_service.attack(mobile, is_collision)
+                        mobile.start_cooldown()
                 self.__update_gui(id_game)
                 time.sleep(0.001)
 
@@ -76,11 +89,16 @@ class GameController:
         list_socket = []
         for id_player in self.game_service.get_player_in_game(id_game):
             list_socket.append(self.player_service.get_socket(id_player))
-            for worker in self.worker_service.get_all_workers_by_id_player(id_player):
+            for worker in self.item_service.get_all_workers_by_id_player(id_player):
                 all_worker.update({worker.id: {"owner": id_player, "x": worker.x, "y": worker.y}})
-            for forum in self.building_service.get_all_forum_by_id_player(id_player):
-                all_forum.update({forum.id: {"owner": id_player, "x": forum.x, "y": forum.y}})
+            for forum in self.item_service.get_all_forum_by_id_player(id_player):
+                is_alive = self.item_service.check_forum_is_alive(forum.id)
+                if is_alive is not None:
+                    all_forum.update({forum.id: {"owner": id_player, "x": 0, "y": 0, "life": 0}})
+                    continue
+                all_forum.update({forum.id: {"owner": id_player, "x": forum.x, "y": forum.y, "life": forum.life}})
         for socket in list_socket:
+            # self.logger.info(f"Send message - key : 500 ")
             self.connect.write(socket, {500: [all_worker, all_forum]})
 
     def __game_event(self, id_game):
@@ -90,19 +108,20 @@ class GameController:
 
     def __check_worker_collision(self, id_game, map):
         for player_id in self.game_service.get_player_in_game(id_game):
-            for worker in self.worker_service.get_all_workers_by_id_player(player_id):
+            for worker in self.item_service.get_all_workers_by_id_player(player_id):
                 worker_id = worker.id
-                type_resource = self.worker_service.is_collision_with_resources(worker_id, map)
+                type_resource = self.item_service.is_collision_with_resources(worker_id, map)
+                self.item_service.is_collision_with_building(worker_id)
                 if type_resource is not None and not worker.is_farming:
                     farm_resource_thread = threading.Thread(target=self.__thread_farm, args=(worker, type_resource,), daemon=True)
-                    self.worker_service.set_thread_farm(worker_id, farm_resource_thread)
+                    self.item_service.set_thread_farm(worker_id, farm_resource_thread)
                     farm_resource_thread.start()
                 elif type_resource is None and worker.is_farming:
-                    self.worker_service.stop_thread_farm(worker_id)
+                    self.item_service.stop_thread_farm(worker_id)
 
     def __thread_farm(self, worker, resource):
         count = 0
-        id_player = self.worker_service.get_id_player_by_id_worker(worker.id)
+        id_player = self.item_service.get_id_player_by_id_worker(worker.id)
         while True:
             player_model = None
             if resource == "trees":
@@ -127,6 +146,7 @@ class GameController:
             if player_model is not None:
                 to_send = player_model.dict()
                 to_send.pop("key_socket")
+                self.logger.info(f"Send message - key : 2")
                 self.connect.write(self.player_service.get_socket(id_player), {2: to_send})
             count += 1
 
@@ -140,6 +160,7 @@ class GameController:
 
         if (forum.life <= 0):
             print("Forum est détruit")
+            self.logger.info(f"Send message - key : 501 ")
             self.connect.write(key_socket, {501: {"vie Forum": False}})
         elif (forum.life > 0):
             print(f"Le forum a une vie de {forum.life}")

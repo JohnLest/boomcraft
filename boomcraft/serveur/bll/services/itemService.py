@@ -47,11 +47,16 @@ class ItemService:
                 return "ore"
         return None
 
-    def is_collision_with_building(self, id_worker):
+    def is_collision_with_enemy(self, id_worker):
         worker: Worker = self.__dictionary_worker.get_by_id(id_worker)
         for _key, _forum in self.__dictionary_forum.get_all().items():
             if worker.collision(_forum) and worker.id_owner != _forum.id_owner:
                 return _forum
+
+        for _key, _worker in self.__dictionary_worker.get_all().items():
+            if worker.collision(_worker) and worker.id_owner != _worker.id_owner:
+                return _worker
+
         return None
 
     def set_thread_farm(self, id_worker, thread):
@@ -85,5 +90,10 @@ class ItemService:
             return id_forum
         return None
 
-
-
+    def check_worker_is_alive(self, id_worker):
+        worker: Worker = self.__dictionary_worker.get_by_id(id_worker)
+        if worker.life <= 0:
+            self.__dictionary_worker.delete(id_worker)
+            del worker
+            return id_worker
+        return None

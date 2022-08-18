@@ -245,9 +245,14 @@ class MainWindow(Window):
                     new_worker = Worker(id_worker, worker_data.get("owner"), x=worker_data.get("x"), y=worker_data.get("y"))
                     self.group.add(new_worker)
                     self.all_worker.update({new_worker.id: new_worker})
-                else:
-                    _worker.x = worker_data.get("x")
-                    _worker.y = worker_data.get("y")
+                    continue
+                _worker.x = worker_data.get("x")
+                _worker.y = worker_data.get("y")
+                _worker.life = worker_data.get("life")
+                if _worker.life == 0:
+                    self.all_worker.pop(_worker.id)
+                    self.group.remove(_worker)
+                    del _worker
 
             for id_forum, forum_data in _all_forum.items():
                 _forum: Forum = self.all_forum.get(id_forum)

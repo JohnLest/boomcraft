@@ -72,13 +72,13 @@ class GameController:
                 save_position = mobile.current_step.copy()
                 self.mobile_service.find_path(mobile)
                 self.mobile_service.move_mobile(mobile)
-                is_collision = self.item_service.is_collision_with_building(mobile.id)
-                if is_collision is not None:
+                is_collision_enemy = self.item_service.is_collision_with_enemy(mobile.id)
+                if is_collision_enemy is not None:
                     mobile.current_step = save_position.copy()
                     mobile.x = mobile.current_step[0]
                     mobile.y = mobile.current_step[1]
                     if not mobile.waiting_cooldown:
-                        self.item_service.attack(mobile, is_collision)
+                        self.item_service.attack(mobile, is_collision_enemy)
                         mobile.start_cooldown()
                 self.__update_gui(id_game)
                 time.sleep(0.001)
@@ -90,6 +90,10 @@ class GameController:
         for id_player in self.game_service.get_player_in_game(id_game):
             list_socket.append(self.player_service.get_socket(id_player))
             for worker in self.item_service.get_all_workers_by_id_player(id_player):
+                is_alive = self.item_service.check_worker_is_alive(worker.id)
+                if is_alive is not None:
+                    all_worker.update({worker.id: {"owner": id_player, "x": 0, "y": 0, "life": 0}})
+                    continue
                 all_worker.update({worker.id: {"owner": id_player, "x": worker.x, "y": worker.y}})
             for forum in self.item_service.get_all_forum_by_id_player(id_player):
                 is_alive = self.item_service.check_forum_is_alive(forum.id)

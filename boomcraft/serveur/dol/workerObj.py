@@ -15,14 +15,16 @@ class WorkerObj(HitboxObj, MobileObj):
         self.attack: int = attack
         self.is_farming = False
         self.farm_thread = None
-        self.cooldown = 1
+        self.cooldown_attack = 1
+        self.cooldown_construct = 60
         self.waiting_cooldown = False
+        self.price = {"food": 500, "gold": 50}
 
-    def __wait_cooldown(self):
+    def __wait_cooldown(self, cooldown):
         self.waiting_cooldown = True
-        time.sleep(self.cooldown)
+        time.sleep(cooldown)
         self.waiting_cooldown = False
 
-    def start_cooldown(self):
-        wait_cooldown = threading.Thread(target=self.__wait_cooldown)
+    def start_cooldown(self, cooldown):
+        wait_cooldown = threading.Thread(target=self.__wait_cooldown, args=(cooldown,))
         wait_cooldown.start()

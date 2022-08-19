@@ -19,4 +19,6 @@ class Forum(Sprite):
 
         self.image = pygame.image.load(FORUM_IMG).convert_alpha()
         self.rect = self.image.get_rect()
+        self.absolute_rect = pygame.Rect(self.rect)
         self.rect.topleft = [self.x, self.y]
+        self.absolute_rect.topleft = [self.x + 40, self.y + 45]

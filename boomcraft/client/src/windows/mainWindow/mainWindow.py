@@ -14,6 +14,7 @@ from src.windows.menuWindow import MenuWindow
 from src.windows.mainWindow.window import Window
 from src.windows.mainWindow.widget import *
 from src.windows.mainWindow.gameObject.target import Target
+from src.windows.mainWindow.gameObject.workerButton import WorkerButton
 
 
 class MainWindow(Window):
@@ -35,6 +36,9 @@ class MainWindow(Window):
         self.all_worker = {}
         self.all_forum = {}
         self.target = None
+        self.button_worker = pygame.sprite.Group()
+        self.all_worker_buttons = {}
+        self.all_forum_buttons = {}
         self.__set_game()
         if not self.menuWin.new_game:
             self.disconnection = True
@@ -52,18 +56,12 @@ class MainWindow(Window):
 
     def __set_game(self):
         time.sleep(0.5)
-        print ("Set new Game")
         self.menuWin = MenuWindow(self.connection, self)
-        print("Close menu window")
         if self.menuWin.new_game:
-            print("Send New game ")
             self.connection.write({4: {"id_user": self.user.user.id_user}})
             while True:
                 if self.id_game is not None:
-                    print("end wait")
                     break
-
-            print("all is OK")
             self.get_game_resources()
         if len(self.menuWin.window.children) != 0:
             self.menuWin.window.destroy()
@@ -137,9 +135,10 @@ class MainWindow(Window):
             (self.winX, self.winYPercent * 15),
             (0, 0, 0)
         )
-        self.connection.write({201: {"weather": True}})
-        time.sleep(0.1)
-        self.connection.write({202: {"saint": True}})
+
+        # self.connection.write({201: {"weather": True}})
+        # time.sleep(0.1)
+        # self.connection.write({202: {"saint": True}})
         # while True:
         #     if self.meteo is not None and self.saint is not None:
         #         break
@@ -188,6 +187,30 @@ class MainWindow(Window):
         self.target = None
         self.group.update()
 
+    def set_worker_buttons(self):
+        print(self.gbAction.data_rect.center)
+        new_button = WorkerButton(50, self.gbAction.data_rect.midleft[1] - self.gbAction.data_rect.topleft[1])
+        self.all_worker_buttons.update({new_button.id: new_button})
+        self.button_worker.add(new_button)
+        self.button_worker.update()
+        self.button_worker.draw(self.gbAction.surface)
+        self.gbAction.show_groupbox(self.window)
+
+    def destroy_worker_button(self):
+        for id, button in self.all_worker_buttons.items():
+            self.button_worker.remove(button)
+            del button
+        self.all_worker_buttons.clear()
+        self.button_worker.update()
+        self.gbAction.surface.fill((0, 0, 0))
+        self.button_worker.draw(self.gbAction.surface)
+        self.gbAction.show_groupbox(self.window)
+
+    def set_forum_button(self):
+        pass
+
+    def destroy_forum_button(self):
+        pass
 
 
 

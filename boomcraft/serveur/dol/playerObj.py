@@ -6,4 +6,3 @@ class PlayerObj:
         self.model_player = model_player
         self.id_game = None
         self.id_workers = []
-        self.forum = None

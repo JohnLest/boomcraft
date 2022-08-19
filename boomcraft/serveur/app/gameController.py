@@ -56,6 +56,17 @@ class GameController:
             self.item_service.create_forum(id_user, 1000, 500)
         self.__update_gui(id_game)
 
+    def new_forum(self, id_worker):
+        worker = self.item_service.get_worker_by_id(id_worker)
+        if worker.waiting_cooldown: return
+        player_model = self.player_service.check_if_resource_available(worker.id_owner, {"gold": 500, "iron": 500, "stone": 1000, "wood": 1000, "food": 750})
+        if player_model is None: return
+        worker.start_cooldown(worker.cooldown_construct)
+        self.item_service.create_forum(worker.id_owner, worker.x + 16, worker.y + 32)
+        id_game = self.game_service.get_id_game_with_player(worker.id_owner)
+        self.__send_info_player(player_model)
+        self.__update_gui(id_game)
+
     def move_worker(self, id_worker, destination):
         self.item_service.set_new_destination(id_worker, destination)
         worker = self.item_service.get_worker_by_id(id_worker)
@@ -79,7 +90,7 @@ class GameController:
                     mobile.y = mobile.current_step[1]
                     if not mobile.waiting_cooldown:
                         self.item_service.attack(mobile, is_collision_enemy)
-                        mobile.start_cooldown()
+                        mobile.start_cooldown(mobile.cooldown_attack)
                 self.__update_gui(id_game)
                 time.sleep(0.001)
 
@@ -147,26 +158,12 @@ class GameController:
                     player_model = self.player_service.farm_resources(id_player, {"iron": 10})
             if not worker.is_farming: return
             if player_model is not None:
-                to_send = player_model.dict()
-                to_send.pop("key_socket")
-                self.logger.info(f"Send message - key : 2")
-                self.connect.write(self.player_service.get_socket(id_player), {2: to_send})
+                self.__send_info_player(player_model)
             count += 1
 
-
-
-    # region Forum
-
-    def attack(self, attacker, forum, key_socket):
-        print("avant forum.life --> ", forum.life)
-        forum.life = forum.life - attacker.attack
-
-        if (forum.life <= 0):
-            print("Forum est détruit")
-            self.logger.info(f"Send message - key : 501 ")
-            self.connect.write(key_socket, {501: {"vie Forum": False}})
-        elif (forum.life > 0):
-            print(f"Le forum a une vie de {forum.life}")
-        time.sleep(0.5)
-
-    # endregion
+    def __send_info_player(self, player_model):
+        id_player = player_model.user.id_user
+        to_send = player_model.dict()
+        to_send.pop("key_socket")
+        self.logger.info(f"Send message - key : 2")
+        self.connect.write(self.player_service.get_socket(id_player), {2: to_send})

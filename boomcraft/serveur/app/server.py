@@ -107,15 +107,8 @@ class Server:
         elif key == 6:
             id_worker = first_or_default(body)
             self.game_controller.move_worker(id_worker, body.get(id_worker))
-
         elif key == 7:
-            pass
-            """
-            farm_player = self.game_engine.player_repo.farm_resources(get_key(self.dico_connect, key_socket), body)
-            msg = farm_player.dict()
-            msg.pop("key_socket")
-            self.write(key_socket, {2: msg})
-            """
+            self.game_controller.new_forum(body)
         elif key == 100:
             pass
             # self.s_n_connect.update({body.get("uuid"): key_socket})

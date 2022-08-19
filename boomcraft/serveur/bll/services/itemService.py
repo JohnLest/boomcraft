@@ -20,7 +20,6 @@ class ItemService:
         self.__dictionary_worker.insert(new_worker.id, new_worker)
         return
 
-
     def get_all_workers_by_id_player(self, id_player):
         return self.__dictionary_worker.get_all_filter("id_owner", id_player)
 
@@ -79,7 +78,6 @@ class ItemService:
         return self.__dictionary_forum.get_all_filter("id_owner", id_player)
 
     def attack(self, attacker, defender):
-        print(f"attaquer vs defender {defender.life}")
         defender.life = defender.life - attacker.attack
 
     def check_forum_is_alive(self, id_forum):

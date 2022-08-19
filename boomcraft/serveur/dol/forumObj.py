@@ -8,3 +8,4 @@ class ForumObj(Hitbox):
         self.id = str(uuid.uuid4())
         self.id_owner = id_owner
         self.life = life
+        self.price = {"gold": 500, "iron": 500, "stone": 1000, "wood": 1000, "food": 750}

@@ -25,6 +25,7 @@ class MainWindowEvent:
                     if event.key == pygame.K_ESCAPE:
                         return
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    print(f"click on {event.pos[0]} - {event.pos[1]}")
                     if event.button == 1:
                         self.__left_click(event)
                     elif event.button == 3:
@@ -37,8 +38,14 @@ class MainWindowEvent:
             if worker.absolute_rect.collidepoint(pygame.mouse.get_pos()):
                 if worker.id_owner != self.main_win.user.user.id_user: return
                 self.main_win.set_target(worker.id, worker.x, worker.y)
+                self.main_win.set_worker_buttons()
                 return
-
+        for key, forum in self.main_win.all_forum.items():
+            if forum.absolute_rect.collidepoint(pygame.mouse.get_pos()):
+                if forum.id_owner != self.main_win.user.user.id_user: return
+                self.main_win.set_target(forum.id, forum.x, forum.y)
+                self.main_win.destroy_worker_button()
+                return
         if self.main_win.target is not None and self.main_win.gbGame.data_rect.collidepoint(pygame.mouse.get_pos()):
             if self.main_win.all_worker.get(self.main_win.target.id_to_target) is not None:
                 pos_x = event.pos[0] - self.main_win.gbGame.data_rect.x
@@ -49,6 +56,11 @@ class MainWindowEvent:
                     pos_y = self.main_win.gbGame.data_rect.height - 33
                 self.main_win.connection.write({6: {self.main_win.target.id_to_target: (pos_x, pos_y)}})
             return
+        if self.main_win.target is not None and self.main_win.gbAction.data_rect.collidepoint(pygame.mouse.get_pos()):
+            for id, worker_button in self.main_win.all_worker_buttons.items():
+                if worker_button.absolute_rect.collidepoint(pygame.mouse.get_pos()):
+                    self.main_win.connection.write({7: self.main_win.target.id_to_target})
+                    return
         """
         if btn.btn_rect.collidepoint(pygame.mouse.get_pos()):
             self.main_win.menu_sprite.enlarge()
@@ -59,6 +71,7 @@ class MainWindowEvent:
     def __right_click(self):
         if self.main_win.target is not None:
             self.main_win.destroy_target()
+            self.main_win.destroy_worker_button()
 
     def __menu_strip_on_click(self):
         while True:

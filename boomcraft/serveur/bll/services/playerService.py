@@ -82,3 +82,13 @@ class PlayerService:
         for _game_res in p_model.game_resources:
             _game_res.quantity = _game_res.quantity + farm_resources.get(_game_res.resource, 0)
         return p_model
+
+    def check_if_resource_available(self, id_player, cost: dict):
+        player: Player = self.__dictionary_player.get_by_id(id_player)
+        p_model: PlayerInfoModel = player.model_player
+        for _game_res in p_model.game_resources:
+            if _game_res.quantity < cost.get(_game_res.resource, 0):
+                return None
+        for _game_res in p_model.game_resources:
+            _game_res.quantity = _game_res.quantity - cost.get(_game_res.resource, 0)
+        return p_model

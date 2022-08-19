@@ -24,8 +24,9 @@ class MainWindowEvent:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         return
+                if self.main_win.end_game:
+                    break
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print(f"click on {event.pos[0]} - {event.pos[1]}")
                     if event.button == 1:
                         self.__left_click(event)
                     elif event.button == 3:
@@ -36,14 +37,14 @@ class MainWindowEvent:
     def __left_click(self, event):
         for key, worker in self.main_win.all_worker.items():
             if worker.absolute_rect.collidepoint(pygame.mouse.get_pos()):
-                if worker.id_owner != self.main_win.user.user.id_user: return
+                if worker.id_owner != self.main_win.user.user.id_user: break
                 self.main_win.set_target(worker.id, worker.x, worker.y)
                 self.main_win.destroy_forum_button()
                 self.main_win.set_worker_buttons()
                 return
         for key, forum in self.main_win.all_forum.items():
             if forum.absolute_rect.collidepoint(pygame.mouse.get_pos()):
-                if forum.id_owner != self.main_win.user.user.id_user: return
+                if forum.id_owner != self.main_win.user.user.id_user: break
                 self.main_win.set_target(forum.id, forum.x, forum.y)
                 self.main_win.destroy_worker_button()
                 self.main_win.set_forum_button()

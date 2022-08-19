@@ -50,3 +50,7 @@ class GameService:
 
     def get_map(self):
         return self.__map
+
+    def get_game(self, id):
+        return self.__dictionary_game.get_by_id(id)
+

@@ -37,8 +37,15 @@ class GameController:
         self.connect.write(self.player_service.get_socket(id_user), {2: to_send})
         return model_player.user.id_user
 
+    def add_boss_game(self, id_game):
+        game = self.game_service.get_game(id_game)
+        if game.boss is None:
+            boss = self.item_service.create_boss(name="saint")
+            game.boss = boss
+
     def add_player_game(self, id_user):
         id_game = self.game_service.add_player_in_game(id_user)
+        self.add_boss_game(id_game)
         self.logger.info(f"Send message - key : 3 ")
         self.connect.write(self.player_service.get_socket(id_user), {3: {"id_game": id_game}})
         if self.game_service.get_thread_game_event(id_game) is None:
@@ -110,8 +117,20 @@ class GameController:
         all_worker = {}
         all_forum = {}
         list_socket = []
+        game = self.game_service.get_game(id_game)
+        boss = game.boss
+        boss_data = {}
+        boss_alive = self.item_service.check_boss_is_alive(boss.id)
+        if boss_alive is not None:
+            boss_data = {"id_boss": boss.id, "name": boss.name, "x": 0, "y": 0, "life": 0}
+        else:
+            boss_data = {"id_boss": boss.id, "name": boss.name, "x": boss.x, "y": boss.y, "life": boss.life}
         for id_player in self.game_service.get_player_in_game(id_game):
             list_socket.append(self.player_service.get_socket(id_player))
+            if not self.item_service.get_all_forum_by_id_player(id_player):
+                game.end_game = True
+                game.thread_game_event.join()
+                game.thread_game_event = None
             for worker in self.item_service.get_all_workers_by_id_player(id_player):
                 is_alive = self.item_service.check_worker_is_alive(worker.id)
                 if is_alive is not None:
@@ -125,13 +144,22 @@ class GameController:
                     continue
                 all_forum.update({forum.id: {"owner": id_player, "x": forum.x, "y": forum.y, "life": forum.life}})
         for socket in list_socket:
-            # self.logger.info(f"Send message - key : 500 ")
-            self.connect.write(socket, {500: [all_worker, all_forum]})
+            if not game.end_game:
+                self.connect.write(socket, {500: [all_worker, all_forum, boss_data]})
+            else:
+                self.__end_game(id_game)
+
+                for id, worker in all_worker.items():
+                    self.item_service.destroy_worker(id)
+                for id, forum in all_forum.items():
+                    self.item_service.destroy_forum(id)
 
     def __game_event(self, id_game):
         map = self.game_service.get_map()
         while True:
             self.__check_worker_collision(id_game, map)
+            if self.game_service.get_game(id_game).end_game:
+                break
 
     def __check_worker_collision(self, id_game, map):
         for player_id in self.game_service.get_player_in_game(id_game):
@@ -177,5 +205,22 @@ class GameController:
         id_player = player_model.user.id_user
         to_send = player_model.dict()
         to_send.pop("key_socket")
-        self.logger.info(f"Send message - key : 2")
         self.connect.write(self.player_service.get_socket(id_player), {2: to_send})
+
+    def __end_game(self, id_game):
+        winner = ""
+        looser = ""
+        for id_player in self.game_service.get_player_in_game(id_game):
+            if self.item_service.get_all_forum_by_id_player(id_player):
+                winner = id_player
+            else:
+                looser = id_player
+        if winner == "" or looser == "":
+            return
+        players_model = self.player_service.set_resources_end_game(winner, looser)
+        for player in players_model:
+            self.__send_info_player(player)
+
+        self.connect.write(self.player_service.get_socket(winner), {666: "win"})
+        self.connect.write(self.player_service.get_socket(looser), {666: "loose"})
+        time.sleep(0.01)

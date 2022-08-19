@@ -42,6 +42,7 @@ class MainWindow(Window):
         self.all_worker_buttons = {}
         self.all_forum_buttons = {}
         self.__set_game()
+        self.end_game = False
         if not self.menuWin.new_game:
             self.disconnection = True
             thread.join()
@@ -294,6 +295,7 @@ class MainWindow(Window):
         elif key == 500:
             _all_worker: dict = body[0]
             _all_forum: dict = body[1]
+            _boss: dict = body[2]
             for id_worker, worker_data in _all_worker.items():
                 _worker: Worker = self.all_worker.get(id_worker)
                 if _worker is None:
@@ -329,4 +331,11 @@ class MainWindow(Window):
             self.group.draw(self.gbGame.surface)
             self.gbGame.show_groupbox(self.window)
             pygame.display.update()
+
+        elif key == 666:
+            if body == "win":
+                pass
+            elif body == "loose":
+                pass
+            self.end_game = True
     # endregion

@@ -3,6 +3,7 @@ import threading
 
 from dol.workerObj import WorkerObj as Worker
 from dol.forumObj import ForumObj as Forum
+from dol.bossObj import BossObj as Boss
 from dol.dictionaryObj import DictionaryObj
 from tool import *
 
@@ -10,9 +11,17 @@ class ItemService:
     def __init__(self):
         self.__dictionary_worker = DictionaryObj()
         self.__dictionary_forum = DictionaryObj()
+        self.__dictionary_boss= DictionaryObj()
         self.stop_farm = True
         self.is_farming = False
         self.farm_resource_thread = threading.Thread()
+
+    def create_boss(self, name):
+        new_boss = Boss(name)
+        new_boss.set_hitbox()
+        self.__dictionary_boss.insert(new_boss.id, new_boss)
+        return new_boss
+
 
     def create_worker(self, id_user, x_work, y_work):
         new_worker = Worker(id_user, x=x_work, y=y_work)
@@ -59,6 +68,10 @@ class ItemService:
             if worker.collision(_worker) and worker.id_owner != _worker.id_owner:
                 return _worker
 
+        for _key, _boss in self.__dictionary_boss.get_all().items():
+            if worker.collision(_boss):
+                return _boss
+
         return None
 
     def set_thread_farm(self, id_worker, thread):
@@ -94,7 +107,45 @@ class ItemService:
     def check_worker_is_alive(self, id_worker):
         worker: Worker = self.__dictionary_worker.get_by_id(id_worker)
         if worker.life <= 0:
+            worker.x = 0
+            worker.y = 0
+            worker.height = 1
+            worker.width = 1
+            worker.set_hitbox()
+            time.sleep(0.01)
+            # if worker.is_farming:
+            #   self.stop_thread_farm(id_worker)
             self.__dictionary_worker.delete(id_worker)
             del worker
             return id_worker
         return None
+
+    def check_boss_is_alive(self, id_boss):
+        boss: Boss = self.__dictionary_boss.get_by_id(id_boss)
+        if boss.life <= 0:
+            boss.x = 0
+            boss.y = 0
+            boss.width = 1
+            boss.height = 1
+            boss.set_hitbox()
+            self.__dictionary_boss.delete(id_boss)
+            del boss
+            return id_boss
+        return None
+
+    def destroy_forum(self, id_forum):
+        forum: Forum = self.__dictionary_forum.get_by_id(id_forum)
+        self.__dictionary_forum.delete(id_forum)
+        del forum
+
+    def destroy_worker(self, id_worker):
+        worker: Worker = self.__dictionary_worker.get_by_id(id_worker)
+        worker.x = 0
+        worker.y = 0,
+        worker.height = 0
+        worker.width = 0
+        worker.set_hitbox()
+        if worker.is_farming:
+            self.stop_thread_farm(id_worker)
+        self.__dictionary_worker.delete(id_worker)
+        del worker

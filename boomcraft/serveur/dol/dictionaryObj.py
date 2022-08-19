@@ -1,9 +1,11 @@
 from typing import List
+import logging
 
 
 class DictionaryObj:
     def __init__(self):
         self.__dict_obj = {}
+        self.logger = logging.getLogger(__name__)
 
     def insert(self, id, obj):
         self.__dict_obj.update({id: obj})
@@ -36,4 +38,7 @@ class DictionaryObj:
         return match
 
     def delete(self, id):
-        self.__dict_obj.pop(id)
+        try:
+            self.__dict_obj.pop(id)
+        except Exception as ex:
+            self.logger.error(f"error delete() : {ex.args[0]}")

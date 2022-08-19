@@ -92,3 +92,18 @@ class PlayerService:
         for _game_res in p_model.game_resources:
             _game_res.quantity = _game_res.quantity - cost.get(_game_res.resource, 0)
         return p_model
+
+    def set_resources_end_game(self, winner_id, looser_id):
+        winner: Player = self.__dictionary_player.get_by_id(winner_id)
+        winner_m: PlayerInfoModel = winner.model_player
+        looser: Player = self.__dictionary_player.get_by_id(looser_id)
+        looser_m: PlayerInfoModel = looser.model_player
+
+        pack_looser = {}
+        for _game_res_loose in looser_m.game_resources:
+            pack_looser.update({_game_res_loose.resource: _game_res_loose.quantity})
+            _game_res_loose.quantity = 0
+        for _game_res_win in winner_m.game_resources:
+            _game_res_win.quantity += pack_looser.get(_game_res_win.resource, 0)
+
+        return winner_m, looser_m

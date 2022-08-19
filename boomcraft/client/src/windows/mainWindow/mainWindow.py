@@ -13,6 +13,7 @@ from src.windows.mainWindow.gameObject.worker import Worker
 from src.windows.menuWindow import MenuWindow
 from src.windows.mainWindow.window import Window
 from src.windows.mainWindow.widget import *
+from src.windows.mainWindow.gameObject.target import Target
 
 
 class MainWindow(Window):
@@ -33,6 +34,7 @@ class MainWindow(Window):
         self.dict_resources = {}
         self.all_worker = {}
         self.all_forum = {}
+        self.target = None
         self.__set_game()
         if not self.menuWin.new_game:
             self.disconnection = True
@@ -174,6 +176,21 @@ class MainWindow(Window):
         self.gold.show_image_and_text(self.gbResourceBanner.surface)
         self.gbResourceBanner.show_groupbox(self.window)
 
+    def set_target(self, id_to_target, x, y):
+        if self.target is not None: self.destroy_target()
+        self.target = Target(id_to_target, x, y)
+        self.group.add(self.target)
+        self.group.update()
+
+    def destroy_target(self):
+        self.group.remove(self.target)
+        del self.target
+        self.target = None
+        self.group.update()
+
+
+
+
     # endregion
 
     # region Comunicate
@@ -240,7 +257,7 @@ class MainWindow(Window):
             _all_worker: dict = body[0]
             _all_forum: dict = body[1]
             for id_worker, worker_data in _all_worker.items():
-                _worker = self.all_worker.get(id_worker)
+                _worker: Worker = self.all_worker.get(id_worker)
                 if _worker is None:
                     new_worker = Worker(id_worker, worker_data.get("owner"), x=worker_data.get("x"), y=worker_data.get("y"))
                     self.group.add(new_worker)
@@ -249,6 +266,9 @@ class MainWindow(Window):
                 _worker.x = worker_data.get("x")
                 _worker.y = worker_data.get("y")
                 _worker.life = worker_data.get("life")
+                if self.target is not None and self.target.id_to_target == _worker.id:
+                    self.target.x = _worker.x
+                    self.target.y = _worker.y
                 if _worker.life == 0:
                     self.all_worker.pop(_worker.id)
                     self.group.remove(_worker)

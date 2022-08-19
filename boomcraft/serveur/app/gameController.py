@@ -115,7 +115,6 @@ class GameController:
             for worker in self.item_service.get_all_workers_by_id_player(player_id):
                 worker_id = worker.id
                 type_resource = self.item_service.is_collision_with_resources(worker_id, map)
-                self.item_service.is_collision_with_building(worker_id)
                 if type_resource is not None and not worker.is_farming:
                     farm_resource_thread = threading.Thread(target=self.__thread_farm, args=(worker, type_resource,), daemon=True)
                     self.item_service.set_thread_farm(worker_id, farm_resource_thread)

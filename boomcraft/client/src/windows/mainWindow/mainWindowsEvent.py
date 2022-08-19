@@ -1,6 +1,7 @@
 import time
 import pygame
 
+
 from src.windows.mainWindow.mainWindow import MainWindow
 
 
@@ -10,7 +11,7 @@ class MainWindowEvent:
         self.__event()
 
     def __event(self):
-        btn = self.main_win.btnAPI
+        # btn = self.main_win.btnAPI
         while True:
             self.main_win.group.update()
             self.main_win.group.draw(self.main_win.gbGame.surface)
@@ -24,23 +25,40 @@ class MainWindowEvent:
                     if event.key == pygame.K_ESCAPE:
                         return
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if btn.btn_rect.collidepoint(pygame.mouse.get_pos()):
-                        self.main_win.menu_sprite.enlarge()
-                        self.main_win.menu_sprite.menu_strip_item.draw(self.main_win.window)
-                        self.__menu_strip_on_click()
-                    if self.main_win.gbGame.data_rect.collidepoint(pygame.mouse.get_pos()):
-                        pos_x = event.pos[0] - self.main_win.gbGame.data_rect.x
-                        pos_y = event.pos[1] - self.main_win.gbGame.data_rect.y
-                        if pos_x > self.main_win.gbGame.data_rect.width - 17:
-                            pos_x = self.main_win.gbGame.data_rect.width - 17
-                        if pos_y > self.main_win.gbGame.data_rect.height - 33:
-                            pos_y = self.main_win.gbGame.data_rect.height - 33
-
-                        for worker in self.main_win.all_worker.values():
-                            if worker.id_owner == self.main_win.user.user.id_user:
-                                self.main_win.connection.write({6: {worker.id: (pos_x, pos_y)}})
+                    if event.button == 1:
+                        self.__left_click(event)
+                    elif event.button == 3:
+                        self.__right_click()
 
             pygame.display.update()
+
+    def __left_click(self, event):
+        for key, worker in self.main_win.all_worker.items():
+            if worker.absolute_rect.collidepoint(pygame.mouse.get_pos()):
+                if worker.id_owner != self.main_win.user.user.id_user: return
+                self.main_win.set_target(worker.id, worker.x, worker.y)
+                return
+
+        if self.main_win.target is not None and self.main_win.gbGame.data_rect.collidepoint(pygame.mouse.get_pos()):
+            if self.main_win.all_worker.get(self.main_win.target.id_to_target) is not None:
+                pos_x = event.pos[0] - self.main_win.gbGame.data_rect.x
+                pos_y = event.pos[1] - self.main_win.gbGame.data_rect.y
+                if pos_x > self.main_win.gbGame.data_rect.width - 17:
+                    pos_x = self.main_win.gbGame.data_rect.width - 17
+                if pos_y > self.main_win.gbGame.data_rect.height - 33:
+                    pos_y = self.main_win.gbGame.data_rect.height - 33
+                self.main_win.connection.write({6: {self.main_win.target.id_to_target: (pos_x, pos_y)}})
+            return
+        """
+        if btn.btn_rect.collidepoint(pygame.mouse.get_pos()):
+            self.main_win.menu_sprite.enlarge()
+            self.main_win.menu_sprite.menu_strip_item.draw(self.main_win.window)
+            self.__menu_strip_on_click()
+        """
+
+    def __right_click(self):
+        if self.main_win.target is not None:
+            self.main_win.destroy_target()
 
     def __menu_strip_on_click(self):
         while True:

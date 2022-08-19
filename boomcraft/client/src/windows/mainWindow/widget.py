@@ -135,9 +135,7 @@ class ImageAndText:
         self.rect_text.midleft = self.image_rect.midright
         self.rect_text.x = self.rect_text.x + 5
 
-
     def update_text(self, text):
-
         font = pygame.font.SysFont("Arial", 18)
         self.text_render = font.render(text, True, (255, 255, 255))
 

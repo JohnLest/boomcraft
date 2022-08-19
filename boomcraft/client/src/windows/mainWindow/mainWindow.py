@@ -15,6 +15,7 @@ from src.windows.mainWindow.window import Window
 from src.windows.mainWindow.widget import *
 from src.windows.mainWindow.gameObject.target import Target
 from src.windows.mainWindow.gameObject.workerButton import WorkerButton
+from src.windows.mainWindow.gameObject.forumButton import ForumButton
 
 
 class MainWindow(Window):
@@ -37,6 +38,7 @@ class MainWindow(Window):
         self.all_forum = {}
         self.target = None
         self.button_worker = pygame.sprite.Group()
+        self.button_forum = pygame.sprite.Group()
         self.all_worker_buttons = {}
         self.all_forum_buttons = {}
         self.__set_game()
@@ -188,7 +190,7 @@ class MainWindow(Window):
         self.group.update()
 
     def set_worker_buttons(self):
-        print(self.gbAction.data_rect.center)
+        if self.all_worker_buttons != {}: self.destroy_worker_button()
         new_button = WorkerButton(50, self.gbAction.data_rect.midleft[1] - self.gbAction.data_rect.topleft[1])
         self.all_worker_buttons.update({new_button.id: new_button})
         self.button_worker.add(new_button)
@@ -207,10 +209,23 @@ class MainWindow(Window):
         self.gbAction.show_groupbox(self.window)
 
     def set_forum_button(self):
-        pass
+        if self.all_forum_buttons != {}: self.destroy_forum_button()
+        new_button = ForumButton(50, self.gbAction.data_rect.midleft[1] - self.gbAction.data_rect.topleft[1])
+        self.all_forum_buttons.update({new_button.id: new_button})
+        self.button_forum.add(new_button)
+        self.button_forum.update()
+        self.button_forum.draw(self.gbAction.surface)
+        self.gbAction.show_groupbox(self.window)
 
     def destroy_forum_button(self):
-        pass
+        for id, button in self.all_forum_buttons.items():
+            self.button_forum.remove(button)
+            del button
+        self.all_forum_buttons.clear()
+        self.button_forum.update()
+        self.gbAction.surface.fill((0, 0, 0))
+        self.button_forum.draw(self.gbAction.surface)
+        self.gbAction.show_groupbox(self.window)
 
 
 

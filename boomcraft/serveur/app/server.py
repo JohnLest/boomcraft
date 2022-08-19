@@ -109,6 +109,8 @@ class Server:
             self.game_controller.move_worker(id_worker, body.get(id_worker))
         elif key == 7:
             self.game_controller.new_forum(body)
+        elif key == 8:
+            self.game_controller.new_worker(body)
         elif key == 100:
             pass
             # self.s_n_connect.update({body.get("uuid"): key_socket})

@@ -38,6 +38,7 @@ class MainWindowEvent:
             if worker.absolute_rect.collidepoint(pygame.mouse.get_pos()):
                 if worker.id_owner != self.main_win.user.user.id_user: return
                 self.main_win.set_target(worker.id, worker.x, worker.y)
+                self.main_win.destroy_forum_button()
                 self.main_win.set_worker_buttons()
                 return
         for key, forum in self.main_win.all_forum.items():
@@ -45,6 +46,7 @@ class MainWindowEvent:
                 if forum.id_owner != self.main_win.user.user.id_user: return
                 self.main_win.set_target(forum.id, forum.x, forum.y)
                 self.main_win.destroy_worker_button()
+                self.main_win.set_forum_button()
                 return
         if self.main_win.target is not None and self.main_win.gbGame.data_rect.collidepoint(pygame.mouse.get_pos()):
             if self.main_win.all_worker.get(self.main_win.target.id_to_target) is not None:
@@ -61,6 +63,10 @@ class MainWindowEvent:
                 if worker_button.absolute_rect.collidepoint(pygame.mouse.get_pos()):
                     self.main_win.connection.write({7: self.main_win.target.id_to_target})
                     return
+            for id, forum_button in self.main_win.all_forum_buttons.items():
+                if forum_button.absolute_rect.collidepoint(pygame.mouse.get_pos()):
+                    self.main_win.connection.write({8: self.main_win.target.id_to_target})
+                    return
         """
         if btn.btn_rect.collidepoint(pygame.mouse.get_pos()):
             self.main_win.menu_sprite.enlarge()
@@ -72,6 +78,7 @@ class MainWindowEvent:
         if self.main_win.target is not None:
             self.main_win.destroy_target()
             self.main_win.destroy_worker_button()
+            self.main_win.destroy_forum_button()
 
     def __menu_strip_on_click(self):
         while True:

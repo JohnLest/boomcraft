@@ -29,6 +29,9 @@ class ItemService:
     def get_worker_by_id(self, id_worker):
         return self.__dictionary_worker.get_by_id(id_worker)
 
+    def get_forum_by_id(self, id_forum):
+        return self.__dictionary_forum.get_by_id(id_forum)
+
     def set_new_destination(self, id_worker, destination):
         worker: Worker = self.__dictionary_worker.get_by_id(id_worker)
         worker.destination = [destination[0], destination[1]]

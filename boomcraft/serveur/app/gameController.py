@@ -58,12 +58,24 @@ class GameController:
 
     def new_forum(self, id_worker):
         worker = self.item_service.get_worker_by_id(id_worker)
-        if worker.waiting_cooldown: return
+        if worker.waiting_cooldown:return
         player_model = self.player_service.check_if_resource_available(worker.id_owner, {"gold": 500, "iron": 500, "stone": 1000, "wood": 1000, "food": 750})
         if player_model is None: return
         worker.start_cooldown(worker.cooldown_construct)
         self.item_service.create_forum(worker.id_owner, worker.x + 16, worker.y + 32)
         id_game = self.game_service.get_id_game_with_player(worker.id_owner)
+        self.__send_info_player(player_model)
+        self.__update_gui(id_game)
+
+    def new_worker(self, id_forum):
+        forum = self.item_service.get_forum_by_id(id_forum)
+        if forum.waiting_cooldown:return
+        player_model = self.player_service.check_if_resource_available(forum.id_owner,
+                                                                       {"food": 500, "gold": 50})
+        if player_model is None: return
+        forum.start_cooldown(forum.cooldown_construct)
+        self.item_service.create_worker(forum.id_owner, forum.x - 16, forum.y - 32)
+        id_game = self.game_service.get_id_game_with_player(forum.id_owner)
         self.__send_info_player(player_model)
         self.__update_gui(id_game)
 

@@ -16,6 +16,8 @@ from src.windows.mainWindow.widget import *
 from src.windows.mainWindow.gameObject.target import Target
 from src.windows.mainWindow.gameObject.workerButton import WorkerButton
 from src.windows.mainWindow.gameObject.forumButton import ForumButton
+from src.windows.mainWindow.gameObject.boss import Boss
+from src.windows.mainWindow.gameObject.name import Name
 
 
 class MainWindow(Window):
@@ -36,6 +38,7 @@ class MainWindow(Window):
         self.dict_resources = {}
         self.all_worker = {}
         self.all_forum = {}
+        self.boss = None
         self.target = None
         self.button_worker = pygame.sprite.Group()
         self.button_forum = pygame.sprite.Group()
@@ -326,6 +329,27 @@ class MainWindow(Window):
                     self.all_forum.pop(_forum.id)
                     self.group.remove(_forum)
                     del _forum
+
+            if self.boss is None:
+                self.boss = Boss(id_boss=_boss.get("id_boss"),
+                                 name=_boss.get("name"),
+                                 x=_boss.get("x"),
+                                 y=_boss.get("y"),
+                                 life=_boss.get("life"))
+                self.group.add(self.boss)
+
+                new_name = Name(self.boss.name, self.boss.x, self.boss.y)
+                self.boss.name_items = new_name
+                self.group.add(new_name)
+            else:
+                self.boss.life = _boss.get("life")
+            if self.boss.life == 0:
+                self.boss.x = 0
+                self.boss.y = 0
+                self.boss.height = 0
+                self.boss.width = 0
+                self.group.remove(self.boss.name_items)
+                self.group.remove(self.boss)
 
             self.group.update()
             self.group.draw(self.gbGame.surface)

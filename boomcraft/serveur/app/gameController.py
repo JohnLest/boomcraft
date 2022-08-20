@@ -108,11 +108,17 @@ class GameController:
                     mobile.x = mobile.current_step[0]
                     mobile.y = mobile.current_step[1]
                     if not mobile.waiting_cooldown:
-                        self.item_service.attack(mobile, is_collision_enemy)
+                        bonus_dead = self.item_service.attack(mobile, is_collision_enemy)
+                        if bonus_dead :
+                            self.__kill_enemy(mobile.id_owner, bonus_dead)
                         mobile.start_cooldown(mobile.cooldown_attack)
                 self.__update_gui(id_game)
                 time.sleep(0.001)
 
+    def __kill_enemy(self, id_user, bonus_dead):
+        p_model = self.player_service.farm_resources(id_user, bonus_dead)
+        self.__send_info_player(p_model)
+    
     def __update_gui(self, id_game):
         all_worker = {}
         all_forum = {}

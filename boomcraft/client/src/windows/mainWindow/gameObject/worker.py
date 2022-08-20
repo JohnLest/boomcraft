@@ -29,6 +29,7 @@ class Worker(pygame.sprite.Sprite):
 
         self.image = self.img_down  # pygame.Surface((16, 32))
         self.rect = self.image.get_rect()
+        pygame.draw.rect(self.image, (255, 0, 0), self.rect, 2)
         self.absolute_rect = pygame.Rect(self.rect)
 
         # self.image.blit(self.img_down, (0, 0), (self.x, self.y, self.width, self.height))

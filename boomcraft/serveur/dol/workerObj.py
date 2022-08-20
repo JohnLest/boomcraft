@@ -19,6 +19,7 @@ class WorkerObj(HitboxObj, MobileObj):
         self.cooldown_construct = 60
         self.waiting_cooldown = False
         self.price = {"food": 500, "gold": 50}
+        self.bonus = {}
 
     def __wait_cooldown(self, cooldown):
         self.waiting_cooldown = True

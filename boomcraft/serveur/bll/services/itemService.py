@@ -17,11 +17,10 @@ class ItemService:
         self.farm_resource_thread = threading.Thread()
 
     def create_boss(self, name):
-        new_boss = Boss(name)
+        new_boss = Boss(name, 255, 255)
         new_boss.set_hitbox()
         self.__dictionary_boss.insert(new_boss.id, new_boss)
         return new_boss
-
 
     def create_worker(self, id_user, x_work, y_work):
         new_worker = Worker(id_user, x=x_work, y=y_work)
@@ -95,6 +94,9 @@ class ItemService:
 
     def attack(self, attacker, defender):
         defender.life = defender.life - attacker.attack
+        if defender.life <= 0:
+            return defender.bonus
+        return {}
 
     def check_forum_is_alive(self, id_forum):
         forum: Forum = self.__dictionary_forum.get_by_id(id_forum)
@@ -122,6 +124,7 @@ class ItemService:
 
     def check_boss_is_alive(self, id_boss):
         boss: Boss = self.__dictionary_boss.get_by_id(id_boss)
+        if boss is None: return
         if boss.life <= 0:
             boss.x = 0
             boss.y = 0

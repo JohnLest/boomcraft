@@ -13,6 +13,7 @@ class ForumObj(Hitbox):
         self.price = {"gold": 500, "iron": 500, "stone": 1000, "wood": 1000, "food": 750}
         self.cooldown_construct = 10
         self.waiting_cooldown = False
+        self.bonus = {}
 
     def __wait_cooldown(self, cooldown):
             self.waiting_cooldown = True

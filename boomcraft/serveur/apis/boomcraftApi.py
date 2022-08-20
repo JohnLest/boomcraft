@@ -25,7 +25,6 @@ class BoomcraftApi:
     def connect_with_facebook(self, data):
         req = requests.post(f"{self.uri}/user/facebook_authentication", data=data)
         json = req.json()
-        requests.request()
         return req.status_code, json
 
     def get_weight_resource(self):

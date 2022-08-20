@@ -123,7 +123,7 @@ def facebook_auth():
     profile = resp.json()
     print("Facebook User ", profile)
     profile.update({"uuid": uuid_})
-    serv.write({101: profile})
+    serv.write({103: profile})
     print("end")
     return redirect('/')
 

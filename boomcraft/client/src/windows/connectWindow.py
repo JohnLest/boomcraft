@@ -92,7 +92,7 @@ class ConnectWindow:
 
     def __btn_facebook_click(self):
         _uuid = uuid.uuid4()
-        self.connection.write({100: {"uuid": str(_uuid)}})
+        self.connection.write({106: {"uuid": str(_uuid)}})
         url = f"https://localhost:8000/facebook/{_uuid}"
         webbrowser.open(url)
         while True:

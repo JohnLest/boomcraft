@@ -8,6 +8,7 @@ import threading
 from apis.boomcraftApi import BoomcraftApi
 from apis.pongApi import PongApi
 from apis.flappyApi import FlappyApi
+from apis.otherApi import *
 from app.gameController import GameController
 from tool import *
 
@@ -128,43 +129,16 @@ class Server:
             if id_user is not None:
                 self.dico_connect.update({id_user: key_socket})
         elif key == 103:
-            pass
-            # TODO Connection with Facebook
-            """
             _uuid = body.pop("uuid")
             body.update({"connection_type": "facebook"})
-            user: PlayerInfoModel = self.__new_player(self.s_n_connect.get(_uuid), **body)
-            msg = user.dict()
-            msg.pop("key_socket")
-            self.write(user.key_socket, {1: msg})
-            # self.write(self.dico_connect.get(body.get("id")), {1: msg})
-            """
+            id_user = self.game_controller.new_player(self.s_n_connect.get(_uuid),  **body)
+            if id_user is not None:
+                self.dico_connect.update({id_user: self.s_n_connect.get(_uuid)})
         elif key == 104:
             self.game_controller.get_flappy_resources(body)
         elif key == 105:
             self.game_controller.transfer_flappy_resources(body)
-
-        elif key == 201:
-            pass
-            # uri = "http://dataservice.accuweather.com/currentconditions/v1/"
-            # weather_api = OtherApi(uri)
-            # weather = weather_api.get_request("27581?apikey=NM6IwoED21vbDTI6Fc7gosRt9A5rqNTu")
-            # self.write(key_socket, {201: weather})
-        elif key == 202:
-            pass
-            """
-            uri2 = "https://nominis.cef.fr/json"
-            saint_api = OtherApi(uri2)
-            saint = saint_api.get_request("saintdujour.php")
-            light_saint = saint.get("response").get("saintdujour")
-            light_saint.pop("contenu")
-            light_saint.pop("lien")
-            light_saint.update(saint.get("response").get("query"))
-
-            print(saint)
-            test = serialize(saint)
-            val = len(test)
-            self.write(key_socket, {202: saint})
-            """
+        elif key == 106:
+            self.s_n_connect.update({body.get("uuid"): key_socket})
 
     # endregion

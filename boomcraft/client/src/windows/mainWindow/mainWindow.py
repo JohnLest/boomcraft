@@ -142,19 +142,6 @@ class MainWindow(Window):
             (self.winX, self.winYPercent * 15),
             (0, 0, 0)
         )
-
-        # self.connection.write({201: {"weather": True}})
-        # time.sleep(0.1)
-        # self.connection.write({202: {"saint": True}})
-        # while True:
-        #     if self.meteo is not None and self.saint is not None:
-        #         break
-        # font = pygame.font.SysFont("Arial", 18)
-        # text_render = font.render(f"{self.saint} - {self.meteo}", True, (255, 255, 255))
-        # rect_text = text_render.get_rect()
-        # rect_text.x = rect_text.x + 5
-        # pygame.draw.rect(self.gbAction.surface, (0, 0, 0), rect_text, 1)
-        # self.gbAction.surface.blit(text_render, (250, 50))
         self.gbAction.show_groupbox(self.window)
         return self
 

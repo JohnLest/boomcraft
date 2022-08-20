@@ -7,4 +7,6 @@ class GameObj:
         self.thread_game_event = None
         self.end_game = False
         self.boss = None
+        self.rarity_gold = 1
+        self.rarity_food = 0
 

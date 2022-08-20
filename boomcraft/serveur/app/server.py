@@ -6,6 +6,8 @@ from typing import Dict
 import threading
 
 from apis.boomcraftApi import BoomcraftApi
+from apis.pongApi import PongApi
+from apis.flappyApi import FlappyApi
 from app.gameController import GameController
 from tool import *
 
@@ -18,7 +20,9 @@ class Server:
         self.dico_connect = {}
         self.s_n_connect = {}
         self.boomcraft_api = BoomcraftApi()
-        self.game_controller = GameController(self)
+        self.pong_api = PongApi()
+        self.flappy_api = FlappyApi()
+        self.game_controller = GameController(self, self.boomcraft_api, self.pong_api, self.flappy_api)
 
     # region communication
     def __connection(self):
@@ -111,11 +115,21 @@ class Server:
             self.game_controller.new_forum(body)
         elif key == 8:
             self.game_controller.new_worker(body)
-        elif key == 100:
-            pass
-            # self.s_n_connect.update({body.get("uuid"): key_socket})
+
+
         elif key == 101:
+            body.update({"connection_type": "pong"})
+            id_user = self.game_controller.new_player(key_socket, **body)
+            if id_user is not None:
+                self.dico_connect.update({id_user: key_socket})
+        elif key == 102:
+            body.update({"connection_type": "flappy"})
+            id_user = self.game_controller.new_player(key_socket, **body)
+            if id_user is not None:
+                self.dico_connect.update({id_user: key_socket})
+        elif key == 103:
             pass
+            # TODO Connection with Facebook
             """
             _uuid = body.pop("uuid")
             body.update({"connection_type": "facebook"})
@@ -125,6 +139,11 @@ class Server:
             self.write(user.key_socket, {1: msg})
             # self.write(self.dico_connect.get(body.get("id")), {1: msg})
             """
+        elif key == 104:
+            self.game_controller.get_flappy_resources(body)
+        elif key == 105:
+            self.game_controller.transfer_flappy_resources(body)
+
         elif key == 201:
             pass
             # uri = "http://dataservice.accuweather.com/currentconditions/v1/"

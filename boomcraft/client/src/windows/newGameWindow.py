@@ -1,10 +1,12 @@
 from tkinter import *
 
+
 class NewGameWindow:
-    def __init__(self, player_info):
+    def __init__(self, player_info, flappy_resources):
         self.player_info = player_info
         self.new_game = False
         self.window = Tk()
+        self.__flappy_resources: dict = flappy_resources
         self.__set_labels()
         self.__set_buttons()
         self.__get_own_resource()
@@ -65,12 +67,17 @@ class NewGameWindow:
         self.resources_import = {}
 
         # region self variable
-        self.wood = IntVar(self.window)
-        self.stone = IntVar(self.window)
-        self.food = IntVar(self.window)
-        self.iron = IntVar(self.window)
-        self.gold = IntVar(self.window)
-        self.worker = IntVar(self.window)
+        self.wood_bc = IntVar(self.window)
+        self.stone_bc = IntVar(self.window)
+        self.food_bc = IntVar(self.window)
+        self.iron_bc = IntVar(self.window)
+        self.gold_bc = IntVar(self.window)
+
+        self.wood_flp = IntVar(self.window)
+        self.stone_flp = IntVar(self.window)
+        self.food_flp = IntVar(self.window)
+        self.iron_flp = IntVar(self.window)
+        self.gold_flp = IntVar(self.window)
         # endregion
 
         # region Header
@@ -80,79 +87,112 @@ class NewGameWindow:
                                 bg='#DDDBDB',
                                 font=("Helvetica", 12),
                                 width=20)
-        lbl_header_name.place(x=278, y=420)
-        lbl_header_own = Label(self.window,
-                               text="Resources own",
+        lbl_header_name.place(x=50, y=420)
+        lbl_header_bc = Label(self.window,
+                               text="Resources boomcraft",
                                fg='black',
                                bg='#DDDBDB',
                                font=("Helvetica", 12),
                                width=20)
-        lbl_header_own.place(x=464, y=420)
-        lbl_header_resources = Label(self.window,
+        lbl_header_bc.place(x=250, y=420)
+        lbl_header_resources_bc = Label(self.window,
                                      text="Resources to import",
                                      fg='black',
                                      bg='#DDDBDB',
                                      font=("Helvetica", 12),
                                      width=21)
-        lbl_header_resources.place(x=650, y=420)
+        lbl_header_resources_bc.place(x=450, y=420)
+        lbl_header_flappy = Label(self.window,
+                              text="Resources flappy",
+                              fg='black',
+                              bg='#DDDBDB',
+                              font=("Helvetica", 12),
+                              width=20)
+        lbl_header_flappy.place(x=650, y=420)
+        lbl_header_resources_flappy = Label(self.window,
+                                     text="Resources to import",
+                                     fg='black',
+                                     bg='#DDDBDB',
+                                     font=("Helvetica", 12),
+                                     width=21)
+        lbl_header_resources_flappy.place(x=850, y=420)
         lbl_header_all = Label(self.window,
                                text="Import all",
                                fg='black',
                                bg='#DDDBDB',
                                font=("Helvetica", 12),
                                width=9)
-        lbl_header_all.place(x=836, y=420)
+        lbl_header_all.place(x=1050, y=420)
         # endregion
 
-        self.__create_table_resource("Wood", self.own_resources_dict.get("wood"), self.wood, 450)
-        self.__create_table_resource("Stone", self.own_resources_dict.get("stone"), self.stone, 480)
-        self.__create_table_resource("Food", self.own_resources_dict.get("food"), self.food, 510)
-        self.__create_table_resource("Iron", self.own_resources_dict.get("iron"), self.iron, 540)
-        self.__create_table_resource("Gold", self.own_resources_dict.get("gold"), self.gold, 570)
-        self.__create_table_resource("Worker", self.own_resources_dict.get("worker"), self.worker, 600)
+        self.__create_table_resource("Wood", self.own_resources_dict.get("wood"), self.wood_bc, self.__flappy_resources.get("Wood", 0), self.wood_flp, 450)
+        self.__create_table_resource("Stone", self.own_resources_dict.get("stone"), self.stone_bc, self.__flappy_resources.get("Stone", 0), self.stone_flp, 480)
+        self.__create_table_resource("Food", self.own_resources_dict.get("food"), self.food_bc, self.__flappy_resources.get("Food", 0), self.food_flp, 510)
+        self.__create_table_resource("Iron", self.own_resources_dict.get("iron"), self.iron_bc, self.__flappy_resources.get("Iron", 0), self.iron_flp, 540)
+        self.__create_table_resource("Gold", self.own_resources_dict.get("gold"), self.gold_bc, self.__flappy_resources.get("Gold", 0), self.gold_flp, 570)
 
-    def __create_table_resource(self, name_resource, resource_own, resource, y):
+    def __create_table_resource(self, name_resource, resource_own, set_resource_bc, flappy_resource, set_resource_flappy, y):
         lbl_res = Label(self.window,
                          text=name_resource,
                          fg='black',
                          bg='white',
                          font=("Helvetica", 12),
                          width=20)
-        lbl_res.place(x=278, y=y)
-        lbl_res_own = Label(self.window,
+        lbl_res.place(x=50, y=y)
+        lbl_res_bc = Label(self.window,
                              text=resource_own,
                              fg='black',
                              bg='white',
                              font=("Helvetica", 12),
                              width=20)
-        lbl_res_own.place(x=464, y=y)
-        entry_res = Entry(self.window,
-                          textvariable=resource,
+        lbl_res_bc.place(x=250, y=y)
+        entry_res_bc = Entry(self.window,
+                          textvariable=set_resource_bc,
                           width=21,
                           font=("Helvetica", 12))
-        entry_res.place(x=651, y=y)
+        entry_res_bc.place(x=450, y=y)
+        lbl_res_flappy = Label(self.window,
+                             text=flappy_resource,
+                             fg='black',
+                             bg='white',
+                             font=("Helvetica", 12),
+                             width=20)
+        lbl_res_flappy.place(x=650, y=y)
+        entry_res_flappy = Entry(self.window,
+                          textvariable=set_resource_flappy,
+                          width=21,
+                          font=("Helvetica", 12))
+        entry_res_flappy.place(x=850, y=y)
         btn = Button(self.window,
                           text="All",
                           fg='blue',
                           width=8,
                           font=("Helvetica", 10),
-                          command=lambda: self.__btn_click(resource_own, resource))
-        btn.place(x=849, y=y-3)
+                          command=lambda: self.__btn_click(resource_own, flappy_resource, set_resource_bc, set_resource_flappy)
+                     )
+        btn.place(x=1050, y=y-3)
 
-    def __btn_click(self, max_res, import_res):
-        import_res.set(max_res)
+    def __btn_click(self, resource_own, flappy_resource, set_resource_bc, set_resource_flappy):
+        set_resource_bc.set(resource_own)
+        set_resource_flappy.set(flappy_resource)
 
     def __btn_quit_click(self):
         self.window.quit()
 
     def __btn_start_click(self):
         self.game_resources_dict = {
-            "wood": self.wood.get(),
-            "stone": self.stone.get(),
-            "food": self.food.get(),
-            "iron": self.iron.get(),
-            "gold": self.gold.get(),
-            "worker": self.worker.get()
+            "wood": self.wood_bc.get(),
+            "stone": self.stone_bc.get(),
+            "food": self.food_bc.get(),
+            "iron": self.iron_bc.get(),
+            "gold": self.gold_bc.get(),
+        }
+        self.game_flappy_resources_dict = {
+            "Wood": self.wood_flp.get(),
+            "Stone": self.stone_flp.get(),
+            "Food": self.food_flp.get(),
+            "Iron": self.iron_flp.get(),
+            "Gold": self.gold_flp.get(),
         }
         self.new_game = True
         self.window.quit()

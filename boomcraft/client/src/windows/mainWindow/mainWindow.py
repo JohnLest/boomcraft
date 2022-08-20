@@ -34,6 +34,7 @@ class MainWindow(Window):
         self.id_game = None
         self.saint = None
         self.meteo = None
+        self.flappy_resources = {}
         self.path_resources = "../resources/mainWindows"
         self.dict_resources = {}
         self.all_worker = {}
@@ -281,19 +282,21 @@ class MainWindow(Window):
         elif key == 4:
             pass
 
-        elif key == 201:
+        elif key == 101:
             body = first_or_default(body)
             w_text = body.get("WeatherText")
             temp = body.get("Temperature").get("Metric").get("Value")
             unit = body.get("Temperature").get("Metric").get("Unit")
 
             self.meteo = f"Brussels meteo : {w_text} - {temp}.{unit}"
-        elif key == 202:
+        elif key == 102:
             day = body.get("response").get("saintdujour").get("jour")
             mounth = body.get("response").get("saintdujour").get("mois")
             years = body.get("response").get("saintdujour").get("annee")
             name = body.get("response").get("saintdujour").get("nom")
             self.saint = f"{day}/{mounth}/{years} : {name}"
+        elif key == 103:
+            self.flappy_resources = body
 
         elif key == 500:
             _all_worker: dict = body[0]
@@ -355,7 +358,6 @@ class MainWindow(Window):
             self.group.draw(self.gbGame.surface)
             self.gbGame.show_groupbox(self.window)
             pygame.display.update()
-
         elif key == 666:
             if body == "win":
                 pass

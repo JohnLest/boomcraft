@@ -84,15 +84,18 @@ class MenuWindow:
         self.btn_connect["state"] = "disabled"
         pseudo = self.main_windows.user.user.pseudo
         self.btn_connect["text"] = f"hello {pseudo}"
+        self.connection.write({104: self.main_windows.user.user.id_user})
         self.btn_new_game["state"] = "active"
 
     def __btn_new_game_click(self):
-        new_game_win = NewGameWindow(self.main_windows.user)
+        new_game_win = NewGameWindow(self.main_windows.user, self.main_windows.flappy_resources)
         if len(new_game_win.window.children) != 0:
             new_game_win.window.destroy()
         if new_game_win.new_game:
             self.new_game = True
             self.connection.write({3: new_game_win.game_resources_dict})
+            new_game_win.game_flappy_resources_dict.update({"id_user": self.main_windows.user.user.id_user})
+            self.connection.write({105: new_game_win.game_flappy_resources_dict})
         del new_game_win
         self.window.quit()
 

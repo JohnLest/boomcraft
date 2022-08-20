@@ -1,6 +1,6 @@
 import logging
 from app.server import Server
-
+from apis.pongApi import PongApi
 
 def main():
     logging.basicConfig(
@@ -13,8 +13,11 @@ def main():
     serv.connect()
 
 # region Test
-
+def test():
+    pongApi = PongApi()
+    pongApi.login("")
 # endregion
 
 if __name__ == "__main__":
     main()
+    # test()

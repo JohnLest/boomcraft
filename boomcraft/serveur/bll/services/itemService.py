@@ -1,6 +1,9 @@
 import time
 import threading
 
+from tool import *
+from apis.boomcraftApi import BoomcraftApi
+from apis.otherApi import *
 from dol.workerObj import WorkerObj as Worker
 from dol.forumObj import ForumObj as Forum
 from dol.bossObj import BossObj as Boss
@@ -8,15 +11,17 @@ from dol.dictionaryObj import DictionaryObj
 from tool import *
 
 class ItemService:
-    def __init__(self):
+    def __init__(self, boomcraft_api):
         self.__dictionary_worker = DictionaryObj()
         self.__dictionary_forum = DictionaryObj()
-        self.__dictionary_boss= DictionaryObj()
-        self.stop_farm = True
+        self.__dictionary_boss = DictionaryObj()
+        self.__boomcraft_api: BoomcraftApi = boomcraft_api
+        self.__stop_farm = True
+        self.__farm_resource_thread = threading.Thread()
         self.is_farming = False
-        self.farm_resource_thread = threading.Thread()
 
-    def create_boss(self, name):
+    def create_boss(self):
+        name = self.__get_name_saint()
         new_boss = Boss(name, 255, 255)
         new_boss.set_hitbox()
         self.__dictionary_boss.insert(new_boss.id, new_boss)
@@ -144,7 +149,7 @@ class ItemService:
     def destroy_worker(self, id_worker):
         worker: Worker = self.__dictionary_worker.get_by_id(id_worker)
         worker.x = 0
-        worker.y = 0,
+        worker.y = 0
         worker.height = 0
         worker.width = 0
         worker.set_hitbox()
@@ -152,3 +157,13 @@ class ItemService:
             self.stop_thread_farm(id_worker)
         self.__dictionary_worker.delete(id_worker)
         del worker
+
+    def __get_name_saint(self):
+        uri = "https://nominis.cef.fr/json"
+        request = "saintdujour.php"
+        saint = get_request(uri, request)
+        full_name = saint.get("response").get("saintdujour").get("nom")
+        name_split = full_name.split(' ')
+        if len(name_split) > 1:
+            return name_split[1]
+        return first_or_default(name_split)

@@ -1,9 +1,15 @@
 # IDEs folders
 /.vs/*
+.vscode/*
 /.idea/*
+boomcraft/client/.idea/*
+boomcraft/serveur/.idea/*
+__pycache__/
 
 # Python folders
 /venv/*
 */__pycache__/*
 resources/char01.jpg
 resources/char02.jpg
+/.pytest_cache
+/*.pycs

@@ -114,7 +114,7 @@ class GameController:
                     mobile.y = mobile.current_step[1]
                     if not mobile.waiting_cooldown:
                         bonus_dead = self.__item_service.attack(mobile, is_collision_enemy)
-                        if bonus_dead :
+                        if bonus_dead:
                             self.__kill_enemy(mobile.id_owner, bonus_dead)
                         mobile.start_cooldown(mobile.cooldown_attack)
                 self.__update_gui(id_game)

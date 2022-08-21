@@ -98,6 +98,7 @@ class ItemService:
         return self.__dictionary_forum.get_all_filter("id_owner", id_player)
 
     def attack(self, attacker, defender):
+        print(f"attaker attack {attacker.attack} defender {defender.life}")
         defender.life = defender.life - attacker.attack
         if defender.life <= 0:
             return defender.bonus
